@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOP — BARE MONDRIAN</title>
+    <meta name="description"
+        content="Shop the full BARE MONDRIAN collection. High-end streetwear merging raw energy with disciplined structure.">
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/pages/shop.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="nav-brand">BARE MONDRIAN</div>
+
+        <nav class="nav-links">
+            <a href="index.html" class="nav-link" id="nav-home">HOME</a>
+            <a href="javascript:void(0)" class="nav-link active" id="nav-shop">SHOP</a>
+            <a href="about.html" class="nav-link" id="nav-about">ABOUT US</a>
+        </nav>
+
+        <div class="nav-icons">
+            <button class="icon-btn" id="btn-search" aria-label="Search">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <circle cx="11" cy="11" r="7" />
+                    <line x1="16.5" y1="16.5" x2="21.5" y2="21.5" stroke-linecap="round" />
+                </svg>
+            </button>
+
+            <button class="icon-btn" id="btn-cart" aria-label="Shopping Bag">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M6 7L4 20H20L18 7H6Z" stroke-linejoin="round" />
+                    <path d="M9 10V6C9 4.34315 10.3431 3 12 3C13.6569 3 15 4.34315 15 6V10" />
+                </svg>
+            </button>
+
+            <button class="icon-btn" id="btn-account" aria-label="Account">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <circle cx="12" cy="7" r="4" />
+                    <path d="M4 21C4 16.5817 7.58172 13 12 13C16.4183 13 20 16.5817 20 21" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="shop-main">
+
+        <!-- Page Header Row -->
+        <div class="shop-header" id="shop-header">
+            <h1 class="shop-title">ALL PRODUCTS</h1>
+            <div class="shop-sort">
+                <span class="sort-label">SORT BY:</span>
+                <div class="sort-dropdown" id="sort-dropdown">
+                    <select id="sort-select" aria-label="Sort products">
+                        <option value="featured" selected>FEATURED</option>
+                        <option value="newest">NEWEST</option>
+                        <option value="price-low">PRICE: LOW TO HIGH</option>
+                        <option value="price-high">PRICE: HIGH TO LOW</option>
+                    </select>
+                    <svg class="sort-chevron" viewBox="0 0 24 24" width="16" height="16">
+                        <polyline points="6 9 12 15 18 9" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <hr class="shop-divider">
+
+        <!-- Product Grid -->
+        <section class="shop-grid" id="shop-grid">
+
+            <!-- Product Card 1 — with NEW badge -->
+            <div class="shop-card" id="shop-card-1">
+                <div class="shop-card-image-wrapper">
+                    <a href="product-detail.html" class="shop-card-image-link" aria-label="Monolith Trench Coat">
+                        <img src="assets/images/products/produk1.jpg" alt="Monolith Trench Coat"
+                            class="shop-card-img" onerror="this.style.display='none'">
+                        <div class="shop-card-placeholder">
+                            <svg viewBox="0 0 24 24" width="32" height="32">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg>
+                        </div>
+                    </a>
+                    <span class="shop-badge-new">NEW</span>
+                    <button class="shop-wishlist-btn" id="wishlist-1" aria-label="Add to wishlist">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="shop-card-info">
+                    <a href="product-detail.html" class="shop-card-name">MONOLITH TRENCH COAT</a>
+                    <span class="shop-card-price">IDR 3,500,000</span>
+                    <a href="product-detail.html" class="shop-card-buy">BUY</a>
+                </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div class="shop-card" id="shop-card-2">
+                <div class="shop-card-image-wrapper">
+                    <a href="product-detail.html" class="shop-card-image-link" aria-label="Heavyweight Tee 01">
+                        <img src="assets/images/products/produk2.jpg" alt="Heavyweight Tee 01"
+                            class="shop-card-img" onerror="this.style.display='none'">
+                        <div class="shop-card-placeholder">
+                            <svg viewBox="0 0 24 24" width="32" height="32">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg>
+                        </div>
+                    </a>
+                    <button class="shop-wishlist-btn" id="wishlist-2" aria-label="Add to wishlist">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="shop-card-info">
+                    <a href="product-detail.html" class="shop-card-name">HEAVYWEIGHT TEE 01</a>
+                    <span class="shop-card-price">IDR 850,000</span>
+                    <a href="product-detail.html" class="shop-card-buy">BUY</a>
+                </div>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div class="shop-card" id="shop-card-3">
+                <div class="shop-card-image-wrapper">
+                    <a href="product-detail.html" class="shop-card-image-link" aria-label="Architectural Denim">
+                        <img src="assets/images/products/produk3.jpg" alt="Architectural Denim"
+                            class="shop-card-img" onerror="this.style.display='none'">
+                        <div class="shop-card-placeholder">
+                            <svg viewBox="0 0 24 24" width="32" height="32">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg>
+                        </div>
+                    </a>
+                    <button class="shop-wishlist-btn" id="wishlist-3" aria-label="Add to wishlist">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="shop-card-info">
+                    <a href="product-detail.html" class="shop-card-name">ARCHITECTURAL DENIM</a>
+                    <span class="shop-card-price">IDR 2,100,000</span>
+                    <a href="product-detail.html" class="shop-card-buy">BUY</a>
+                </div>
+            </div>
+
+            <!-- Product Card 4 -->
+            <div class="shop-card" id="shop-card-4">
+                <div class="shop-card-image-wrapper">
+                    <a href="product-detail.html" class="shop-card-image-link" aria-label="Utility Harness Bag">
+                        <img src="/assets/images/products/utility-harness-bag.jpg" alt="Utility Harness Bag"
+                            class="shop-card-img" onerror="this.style.display='none'">
+                        <div class="shop-card-placeholder">
+                            <svg viewBox="0 0 24 24" width="32" height="32">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <polyline points="21 15 16 10 5 21" />
+                            </svg>
+                        </div>
+                    </a>
+                    <button class="shop-wishlist-btn" id="wishlist-4" aria-label="Add to wishlist">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path
+                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="shop-card-info">
+                    <a href="product-detail.html" class="shop-card-name">UTILITY HARNESS BAG</a>
+                    <span class="shop-card-price">IDR 4,200,000</span>
+                    <a href="product-detail.html" class="shop-card-buy">BUY</a>
+                </div>
+
+        </section>
+
+        <!-- Load More Section 
+        <div class="shop-load-more-section">
+            <hr class="shop-divider">
+            <button class="shop-load-more" id="load-more-btn">
+                <span>LOAD MORE CATALOGUE</span>
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                    <line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round" />
+                    <polyline points="19 12 12 19 5 12" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+            <hr class="shop-divider">
+        </div> 
+        -->
+
+    </main>
+
+    <!-- Footer (simplified — no tagline, no social icons) -->
+    <footer class="footer footer--simple" id="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <div class="footer-logo">BARE MONDRIAN</div>
+                <p class="footer-copyright">&copy; 2026 BARE MONDRIAN. ALL RIGHTS RESERVED.</p>
+            </div>
+
+            <div class="footer-right">
+                <nav class="footer-nav footer-nav--row">
+                    <a href="#" class="footer-link" id="footer-privacy">PRIVACY POLICY</a>
+                    <a href="#" class="footer-link" id="footer-terms">TERMS OF SERVICE</a>
+                    <a href="#" class="footer-link" id="footer-contact">CONTACT</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Shop Interactivity -->
+    <script src="../scripts/product.js"></script>
+
+</body>
+
+</html>

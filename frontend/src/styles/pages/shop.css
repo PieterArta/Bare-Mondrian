@@ -1,0 +1,303 @@
+/* Shop Page Styles */
+
+/* ─── Main Container ─── */
+.shop-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 48px 0 48px;
+}
+
+/* ─── Header Row ─── */
+.shop-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 0 20px 0;
+}
+
+.shop-title {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+
+/* Sort Controls */
+.shop-sort {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sort-label {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--color-gray-muted);
+  text-transform: uppercase;
+}
+
+.sort-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.sort-dropdown select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-black);
+  padding: 10px 40px 10px 16px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.sort-dropdown select:hover,
+.sort-dropdown select:focus {
+  border-color: var(--color-gray-muted);
+}
+
+.sort-chevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  stroke: var(--color-black);
+  stroke-width: 2;
+  fill: none;
+}
+
+/* ─── Divider ─── */
+.shop-divider {
+  border: none;
+  border-top: 1px solid var(--color-border-light);
+  margin: 0;
+}
+
+/* ─── Product Grid ─── */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  padding: 32px 0 64px 0;
+}
+
+/* ─── Product Card ─── */
+.shop-card {
+  position: relative;
+}
+
+.shop-card-image-link {
+  display: block;
+}
+
+.shop-card-image-wrapper {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  background-color: #E8E8E8;
+  overflow: hidden;
+}
+
+.shop-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Placeholder (shown when img fails or src missing) */
+.shop-card-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #E8E8E8;
+  z-index: 0;
+}
+
+.shop-card-placeholder svg {
+  stroke: #BDBDBD;
+  stroke-width: 1.5;
+  fill: none;
+  opacity: 0.6;
+}
+
+/* If img loads successfully, it covers the placeholder */
+.shop-card-img:not([style*="display: none"]) {
+  position: relative;
+  z-index: 1;
+}
+
+/* NEW Badge */
+.shop-badge-new {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 3;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-black);
+  padding: 4px 10px;
+  line-height: 1;
+}
+
+/* Wishlist Heart Icon */
+.shop-wishlist-btn {
+  position: absolute;
+  right: 12px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.shop-wishlist-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--color-black);
+  stroke-width: 1.5;
+  fill: none;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+
+.shop-wishlist-btn:hover svg {
+  stroke: var(--color-black);
+  fill: rgba(0, 0, 0, 0.08);
+}
+
+.shop-wishlist-btn.active svg {
+  fill: var(--color-black);
+  stroke: var(--color-black);
+}
+
+.shop-wishlist-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Card Info (below image) */
+.shop-card-info {
+  padding: 14px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.shop-card-name {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  transition: opacity 0.2s ease;
+}
+
+.shop-card-name:hover {
+  opacity: 0.7;
+}
+
+.shop-card-price {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-gray-muted);
+  letter-spacing: 0.02em;
+}
+
+.shop-card-buy {
+  display: inline-block;
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--color-black);
+  padding-bottom: 2px;
+  align-self: flex-start;
+  transition: opacity 0.2s ease;
+}
+
+.shop-card-buy:hover {
+  opacity: 0.6;
+}
+
+/* ─── Load More Section ─── */
+.shop-load-more-section {
+  padding: 0 0 80px 0;
+}
+
+.shop-load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 28px 0;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.shop-load-more svg {
+  stroke: var(--color-black);
+  stroke-width: 2;
+  fill: none;
+  transition: transform 0.3s ease;
+}
+
+.shop-load-more:hover {
+  opacity: 0.6;
+}
+
+.shop-load-more:hover svg {
+  transform: translateY(3px);
+}
+
+/* ─── Footer Overrides for Shop (simplified) ─── */
+.footer--simple .footer-tagline {
+  display: none;
+}
+
+.footer--simple .footer-socials {
+  display: none;
+}
+
+.footer-nav--row {
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 32px !important;
+}
