@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHECKOUT — BARE MONDRIAN</title>
+    <meta name="description" content="BARE MONDRIAN Checkout page. Securely place your streetwear order.">
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/components.css?v=5">
+    <link rel="stylesheet" href="../styles/pages/checkout.css?v=5">
+</head>
+
+<body class="checkout-page">
+
+    <!-- Simplified Top Bar -->
+    <header class="checkout-header">
+        <div class="checkout-header-left">
+            <a href="/pages/index.html?openCart=true" class="back-to-cart-link">← BACK TO CART</a>
+        </div>
+        <div class="checkout-header-center">
+            <div class="nav-brand">BARE MONDRIAN</div>
+        </div>
+        <div class="checkout-header-right"></div>
+    </header>
+    <hr class="checkout-top-line">
+
+    <!-- Two-Column Desktop Layout -->
+    <main class="checkout-container">
+        <!-- Left Column: Shipping Information Form -->
+        <section class="checkout-form-column">
+            <h1 class="section-title">SHIPPING INFORMATION</h1>
+            <hr class="section-divider">
+
+            <form id="shipping-form" class="shipping-form" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="full-name">FULL NAME <span class="translation">(NAMA LENGKAP)</span></label>
+                    <input type="text" id="full-name" name="fullName" required placeholder="e.g. Jean Grey">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone-number">PHONE NUMBER <span class="translation">(NOMOR TELEPON)</span></label>
+                    <input type="tel" id="phone-number" name="phoneNumber" required placeholder="e.g. 088888888888">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-half">
+                        <label for="province">PROVINCE <span class="translation">(PROVINSI)</span></label>
+                        <div class="select-wrapper">
+                            <select id="province" name="province" required>
+                                <option value="" disabled selected>Select Province</option>
+                                <option value="DKI Jakarta">DKI Jakarta</option>
+                                <option value="Jawa Barat">Jawa Barat</option>
+                                <option value="Jawa Tengah">Jawa Tengah</option>
+                                <option value="Jawa Timur">Jawa Timur</option>
+                                <option value="Lampung">Lampung</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-half">
+                        <label for="city">CITY/REGENCY <span class="translation">(KOTA/KABUPATEN)</span></label>
+                        <div class="select-wrapper">
+                            <select id="city" name="city" required>
+                                <option value="" disabled selected>Select City/Regency</option>
+                                <option value="Jakarta Barat">Jakarta Barat</option>
+                                <option value="Jakarta Selatan">Jakarta Selatan</option>
+                                <option value="Bandung">Bandung</option>
+                                <option value="Surabaya">Surabaya</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-half">
+                        <label for="district">DISTRICT <span class="translation">(KECAMATAN)</span></label>
+                        <div class="select-wrapper">
+                            <select id="district" name="district" required>
+                                <option value="" disabled selected>Select District</option>
+                                <option value="Kebon Jeruk">Kebon Jeruk</option>
+                                <option value="Cilandak">Cilandak</option>
+                                <option value="Dago">Dago</option>
+                                <option value="Tegalsari">Tegalsari</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-half">
+                        <label for="postal-code">POSTAL CODE <span class="translation">(KODE POS)</span></label>
+                        <input type="text" id="postal-code" name="postalCode" required placeholder="e.g. 11530">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="complete-address">COMPLETE ADDRESS <span class="translation">(ALAMAT
+                            LENGKAP)</span></label>
+                    <textarea id="complete-address" name="completeAddress" required
+                        placeholder="e.g. Jl. Panjang No. 123, RT 01/RW 02"></textarea>
+                </div>
+            </form>
+        </section>
+
+        <!-- Right Column: Order Summary Card -->
+        <section class="checkout-summary-column">
+            <div class="order-summary-card">
+                <div class="order-summary-header">
+                    ORDER SUMMARY
+                </div>
+                <div class="order-summary-content">
+                    <div class="checkout-items-list" id="checkout-items-list">
+                        <!-- Populated dynamically via checkout.js -->
+                    </div>
+                    <div class="checkout-totals-section">
+                        <div class="totals-row">
+                            <span>SUBTOTAL</span>
+                            <span id="checkout-subtotal">Rp0</span>
+                        </div>
+                        <div class="totals-row shipping-row">
+                            <span>SHIPPING</span>
+                            <span id="checkout-shipping">COMPLIMENTARY</span>
+                        </div>
+                        <hr class="totals-divider">
+                        <div class="totals-row total-row">
+                            <span>TOTAL</span>
+                            <span id="checkout-total">Rp0</span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" form="shipping-form" class="confirm-order-btn" id="confirm-order-btn">
+                    CONFIRM ORDER <span class="arrow-icon">→</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Simple Centered Footer -->
+    <footer class="checkout-footer">
+        &copy; 2026 BARE MONDRIAN. SECURE CHECKOUT.
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../scripts/cart.js?v=5"></script>
+    <script src="../scripts/checkout.js?v=5"></script>
+
+</body>
+
+</html>

@@ -8,7 +8,7 @@
     <meta name="description"
         content="Learn about BARE MONDRIAN. High-end streetwear merging raw energy with disciplined structure.">
     <link rel="stylesheet" href="../styles/base.css">
-    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/components.css?v=4">
     <link rel="stylesheet" href="../styles/pages/about.css">
 </head>
 
@@ -19,8 +19,8 @@
         <div class="nav-brand">BARE MONDRIAN</div>
 
         <nav class="nav-links">
-            <a href="index.html" class="nav-link" id="nav-home">HOME</a>
-            <a href="shop.html" class="nav-link" id="nav-shop">SHOP</a>
+            <a href="/pages/index.html" class="nav-link" id="nav-home">HOME</a>
+            <a href="/pages/shop.html" class="nav-link" id="nav-shop">SHOP</a>
             <a href="javascript:void(0)" class="nav-link active" id="nav-about">ABOUT US</a>
         </nav>
 
@@ -32,7 +32,7 @@
                 </svg>
             </button>
 
-            <button class="icon-btn" id="btn-cart" aria-label="Shopping Bag">
+            <button class="icon-btn" id="btn-cart" aria-label="Shopping Bag" onclick="openCart()">
                 <svg viewBox="0 0 24 24" width="20" height="20">
                     <path d="M6 7L4 20H20L18 7H6Z" stroke-linejoin="round" />
                     <path d="M9 10V6C9 4.34315 10.3431 3 12 3C13.6569 3 15 4.34315 15 6V10" />
@@ -98,6 +98,8 @@
             </div>
         </div>
     </footer>
+
+    <script src="../scripts/cart.js?v=5"></script>
 
 </body>
 

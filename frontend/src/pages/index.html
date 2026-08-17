@@ -8,7 +8,7 @@
     <meta name="description"
         content="High-end streetwear merging raw energy with disciplined structure. Discover the collection at BARE MONDRIAN.">
     <link rel="stylesheet" href="../styles/base.css">
-    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/components.css?v=4">
     <link rel="stylesheet" href="../styles/pages/home.css">
 </head>
 
@@ -19,9 +19,9 @@
         <div class="nav-brand">BARE MONDRIAN</div>
 
         <nav class="nav-links">
-            <a href="index.html" class="nav-link active" id="nav-home">HOME</a>
-            <a href="shop.html" class="nav-link" id="nav-shop">SHOP</a>
-            <a href="about.html" class="nav-link" id="nav-about">ABOUT US</a>
+            <a href="/pages/index.html" class="nav-link active" id="nav-home">HOME</a>
+            <a href="/pages/shop.html" class="nav-link" id="nav-shop">SHOP</a>
+            <a href="/pages/about.html" class="nav-link" id="nav-about">ABOUT US</a>
         </nav>
 
         <div class="nav-icons">
@@ -32,7 +32,7 @@
                 </svg>
             </button>
 
-            <button class="icon-btn" id="btn-cart" aria-label="Shopping Bag">
+            <button class="icon-btn" id="btn-cart" aria-label="Shopping Bag" onclick="openCart()">
                 <svg viewBox="0 0 24 24" width="20" height="20">
                     <path d="M6 7L4 20H20L18 7H6Z" stroke-linejoin="round" />
                     <path d="M9 10V6C9 4.34315 10.3431 3 12 3C13.6569 3 15 4.34315 15 6V10" />
@@ -62,19 +62,19 @@
     <section class="products-section" id="products">
         <div class="products-grid">
             <a href="shop.html" class="product-card" id="product-card-1" aria-label="Collection 1">
-                <img src="collection_1.png" alt="Avant-Garde Black Structured Suit" class="product-card-image">
+                <img src="collection_1.png" alt="Foto Produk 1" class="product-card-image">
                 <div class="product-card-overlay">
                     <span class="product-card-cta">VIEW COLLECTION</span>
                 </div>
             </a>
             <a href="shop.html" class="product-card" id="product-card-2" aria-label="Collection 2">
-                <img src="collection_2.png" alt="Geometric White Structured Dress" class="product-card-image">
+                <img src="collection_2.png" alt="Foto Produk 2" class="product-card-image">
                 <div class="product-card-overlay">
                     <span class="product-card-cta">VIEW COLLECTION</span>
                 </div>
             </a>
             <a href="shop.html" class="product-card" id="product-card-3" aria-label="Collection 3">
-                <img src="collection_3.png" alt="Leather Cage Harness Over White Shirt" class="product-card-image">
+                <img src="collection_3.png" alt="Foto Produk 3" class="product-card-image">
                 <div class="product-card-overlay">
                     <span class="product-card-cta">VIEW COLLECTION</span>
                 </div>
@@ -101,19 +101,20 @@
 
     <!-- Header Scroll Interactivity -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navbar = document.getElementById('navbar');
-            const handleScroll = () => {
+        (function () {
+            var navbar = document.getElementById('navbar');
+            function handleScroll() {
                 if (window.scrollY > 50) {
                     navbar.classList.add('scrolled');
                 } else {
                     navbar.classList.remove('scrolled');
                 }
-            };
+            }
             window.addEventListener('scroll', handleScroll);
-            handleScroll(); // Run initially in case page is refreshed while scrolled down
-        });
+            handleScroll();
+        })();
     </script>
+    <script src="../scripts/cart.js?v=5"></script>
 
 </body>
 

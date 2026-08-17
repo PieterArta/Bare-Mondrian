@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORM 001 - — BARE MONDRIAN</title>
+    <meta name="description" content="FORM 001 - structured jacket. High-end minimalist streetwear by BARE MONDRIAN.">
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/components.css?v=5">
+    <link rel="stylesheet" href="../styles/pages/product-detail.css?v=5">
+</head>
+
+<body class="product-detail-page">
+
+    <!-- Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="nav-brand">BARE MONDRIAN</div>
+
+        <nav class="nav-links">
+            <a href="/pages/index.html" class="nav-link" id="nav-home">HOME</a>
+            <a href="/pages/shop.html" class="nav-link" id="nav-shop">SHOP</a>
+            <a href="/pages/about.html" class="nav-link" id="nav-about">ABOUT US</a>
+        </nav>
+
+        <div class="nav-icons">
+            <button class="icon-btn" id="btn-search" aria-label="Search">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <circle cx="11" cy="11" r="7" />
+                    <line x1="16.5" y1="16.5" x2="21.5" y2="21.5" stroke-linecap="round" />
+                </svg>
+            </button>
+
+            <button class="icon-btn" id="btn-cart" aria-label="Shopping Bag" onclick="openCart()">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M6 7L4 20H20L18 7H6Z" stroke-linejoin="round" />
+                    <path d="M9 10V6C9 4.34315 10.3431 3 12 3C13.6569 3 15 4.34315 15 6V10" />
+                </svg>
+            </button>
+
+            <button class="icon-btn" id="btn-account" aria-label="Account">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <circle cx="12" cy="7" r="4" />
+                    <path d="M4 21C4 16.5817 7.58172 13 12 13C16.4183 13 20 16.5817 20 21" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Three-Column Layout -->
+    <main class="product-detail-container">
+
+        <!-- Left Column: Size & Actions -->
+        <section class="product-actions-column">
+            <div class="size-selection-section">
+                <span class="actions-label">SIZE</span>
+                <div class="size-toggles-row">
+                    <button class="size-toggle-btn active" data-size="S/M">S/M</button>
+                    <button class="size-toggle-btn" data-size="L/XL">L/XL</button>
+                </div>
+            </div>
+
+            <div class="quantity-section">
+                <div class="qty-stepper-box">
+                    <button class="qty-btn" id="detail-qty-minus">&minus;</button>
+                    <input type="number" id="detail-qty-input" value="1" min="1" readonly>
+                    <button class="qty-btn" id="detail-qty-plus">+</button>
+                </div>
+            </div>
+
+            <div class="action-buttons-group">
+                <button class="btn-add-to-cart" id="btn-add-to-cart">ADD TO CART</button>
+                <button class="btn-buy-now" id="btn-buy-now">BUY NOW</button>
+            </div>
+        </section>
+
+        <!-- Middle Column: Main Image & Info Accordions -->
+        <section class="product-photo-info-column">
+            <div class="product-image-wrapper">
+                <img src="/assets/images/products/form-001-espresso.jpg" alt="FORM 001 Structured Jacket"
+                    class="detail-product-img"
+                    onerror="this.onerror=null; this.src='/pages/assets/images/products/produk3.jpg';">
+            </div>
+
+            <div class="product-info-block">
+                <h1 class="detail-product-title">Produk 001 -</h1>
+                <span class="detail-product-price">RP 549.000</span>
+            </div>
+
+            <!-- Interactive Accordions -->
+            <div class="accordions-container">
+                <div class="accordion-item">
+                    <button class="accordion-header" data-target="desc">
+                        <span>DESCRIPTION</span>
+                        <svg class="chevron-icon" viewBox="0 0 24 24" width="16" height="16">
+                            <polyline points="6 9 12 15 18 9" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <div class="accordion-content" id="accordion-desc">
+                        <p>A cropped jacket featuring a flat lapel collar with a distinct back collar seam cut. Designed
+                            with a classic front button closure and volumetric barrel sleeves that create a structured
+                            silhouette. Fully lined for comfort and an elevated interior finish.</p>
+                    </div>
+                </div>
+                <hr class="accordion-divider">
+
+                <div class="accordion-item">
+                    <button class="accordion-header" data-target="fit">
+                        <span>FIT & SIZING</span>
+                        <svg class="chevron-icon" viewBox="0 0 24 24" width="16" height="16">
+                            <polyline points="6 9 12 15 18 9" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <div class="accordion-content" id="accordion-fit">
+                        <p>Volumetric cropped fit. The jacket has an oversized structured drape. Select S/M for a
+                            tailored cropped look, or L/XL for a more volumetric silhouette.</p>
+                    </div>
+                </div>
+                <hr class="accordion-divider">
+
+                <div class="accordion-item">
+                    <button class="accordion-header" data-target="material">
+                        <span>MATERIAL & CARE</span>
+                        <svg class="chevron-icon" viewBox="0 0 24 24" width="16" height="16">
+                            <polyline points="6 9 12 15 18 9" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <div class="accordion-content" id="accordion-material">
+                        <p>Polyester, Wool Blend (Semi-Wool). Dry clean recommended. Machine washable on a gentle cold
+                            cycle using a laundry net, or gentle hand wash.</p>
+                    </div>
+                </div>
+                <hr class="accordion-divider">
+
+                <div class="accordion-item">
+                    <button class="accordion-header" data-target="shipping">
+                        <span>SHIPPING</span>
+                        <svg class="chevron-icon" viewBox="0 0 24 24" width="16" height="16">
+                            <polyline points="6 9 12 15 18 9" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <div class="accordion-content" id="accordion-shipping">
+                        <p>Complimentary shipping is automatically applied to all domestic orders. Standard courier
+                            options are available at checkout.</p>
+                    </div>
+                </div>
+                <hr class="accordion-divider">
+            </div>
+
+            <!-- Color Selection -->
+            <div class="color-selection-section">
+                <span class="actions-label">COLOR</span>
+                <div class="color-options-row">
+                    <button class="color-option-btn" data-color="ESPRESSO">ESPRESSO</button>
+                    <button class="color-option-btn active" data-color="ASH GREY">ASH GREY</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Column: Dark Detail Panel -->
+        <section class="product-detail-panel">
+            <div class="panel-content-wrapper">
+
+                <!-- Description -->
+                <div class="panel-section">
+                    <h3 class="panel-section-title">DESCRIPTION</h3>
+                    <p class="panel-paragraph">A cropped jacket featuring a flat lapel collar with a distinct back
+                        collar seam cut. Designed with a classic front button closure and volumetric barrel sleeves that
+                        create a structured silhouette. Fully lined for comfort and an elevated interior finish.</p>
+                </div>
+
+                <!-- Fit & Sizing Table -->
+                <div class="panel-section">
+                    <h3 class="panel-section-title">FIT & SIZING</h3>
+                    <span class="panel-subtitle">MEASUREMENTS (CM)</span>
+
+                    <div class="measurements-table-wrapper">
+                        <table class="measurements-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="col-sm active">S/M</th>
+                                    <th class="col-lxl">L/XL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Bust</td>
+                                    <td class="col-sm active">110</td>
+                                    <td class="col-lxl">130</td>
+                                </tr>
+                                <tr>
+                                    <td>Shoulder Width</td>
+                                    <td class="col-sm active">12.5</td>
+                                    <td class="col-lxl">14.5</td>
+                                </tr>
+                                <tr>
+                                    <td>Armhole</td>
+                                    <td class="col-sm active">50</td>
+                                    <td class="col-lxl">58</td>
+                                </tr>
+                                <tr>
+                                    <td>Length</td>
+                                    <td class="col-sm active">53</td>
+                                    <td class="col-lxl">58</td>
+                                </tr>
+                                <tr>
+                                    <td>Sleeve Length</td>
+                                    <td class="col-sm active">55</td>
+                                    <td class="col-lxl">60</td>
+                                </tr>
+                                <tr>
+                                    <td>Sleeve Width</td>
+                                    <td class="col-sm active">22.5</td>
+                                    <td class="col-lxl">24.5</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Material & Care -->
+                <div class="panel-section">
+                    <h3 class="panel-section-title">MATERIAL & CARE</h3>
+                    <div class="panel-subsection">
+                        <span class="panel-subtitle-small">COMPOSITION</span>
+                        <p class="panel-paragraph-small">Polyester, Wool Blend (Semi-Wool)</p>
+                    </div>
+                    <div class="panel-subsection" style="margin-top: 16px;">
+                        <span class="panel-subtitle-small">CARE INSTRUCTIONS</span>
+                        <p class="panel-paragraph-small">Dry clean recommended. Machine washable on a gentle cold cycle
+                            using a laundry net, or gentle hand wash. Avoid scrubbing or wringing the fabric to preserve
+                            its texture and shape. Do not tumble dry; dry flat or hang in the shade. Iron on low to
+                            medium heat, preferably using a press cloth or garment steamer to avoid shine.</p>
+                    </div>
+                </div>
+
+                <!-- Shipping -->
+                <div class="panel-section">
+                    <h3 class="panel-section-title">SHIPPING</h3>
+                    <p class="panel-paragraph-small">Complimentary shipping is automatically applied to all domestic
+                        orders. Standard courier options are available at checkout.</p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer footer--simple" id="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <div class="footer-logo">BARE MONDRIAN</div>
+                <p class="footer-copyright">&copy; 2026 BARE MONDRIAN. ALL RIGHTS RESERVED.</p>
+            </div>
+
+            <div class="footer-right">
+                <nav class="footer-nav footer-nav--row">
+                    <a href="#" class="footer-link" id="footer-privacy">PRIVACY POLICY</a>
+                    <a href="#" class="footer-link" id="footer-terms">TERMS OF SERVICE</a>
+                    <a href="#" class="footer-link" id="footer-contact">CONTACT</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../scripts/cart.js?v=5"></script>
+    <script src="../scripts/product.js?v=5"></script>
+
+</body>
+
+</html>
