@@ -16,6 +16,15 @@
 
     <!-- Navbar -->
     <header class="navbar" id="navbar">
+        <button class="mobile-hamburger-btn" id="mobile-hamburger-btn" aria-label="Open Navigation Menu">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+            </svg>
+        </button>
+
         <div class="nav-brand">BARE MONDRIAN</div>
 
         <nav class="nav-links">
@@ -47,6 +56,20 @@
             </button>
         </div>
     </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+        <div class="mobile-nav-header">
+            <span class="mobile-nav-title">MENU</span>
+            <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close Menu">&times;</button>
+        </div>
+        <nav class="mobile-nav-links">
+            <a href="/pages/index.html" class="mobile-nav-link">HOME</a>
+            <a href="/pages/shop.html" class="mobile-nav-link active">SHOP</a>
+            <a href="/pages/about.html" class="mobile-nav-link">ABOUT US</a>
+        </nav>
+    </div>
 
     <!-- Main Content -->
     <main class="shop-main">
@@ -222,6 +245,36 @@
             </div>
         </div>
     </footer>
+
+    <!-- Mobile Nav Toggle -->
+    <script>
+        (function () {
+            var hamburgerBtn = document.getElementById('mobile-hamburger-btn');
+            var closeBtn = document.getElementById('mobile-nav-close');
+            var overlay = document.getElementById('mobile-nav-overlay');
+            var drawer = document.getElementById('mobile-nav-drawer');
+
+            function openMobileNav() {
+                if (overlay && drawer) {
+                    overlay.classList.add('active');
+                    drawer.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            function closeMobileNav() {
+                if (overlay && drawer) {
+                    overlay.classList.remove('active');
+                    drawer.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMobileNav);
+            if (closeBtn) closeBtn.addEventListener('click', closeMobileNav);
+            if (overlay) overlay.addEventListener('click', closeMobileNav);
+        })();
+    </script>
 
     <!-- Shop Interactivity -->
     <script src="../scripts/product.js"></script>

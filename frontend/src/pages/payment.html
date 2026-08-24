@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAYMENT — BARE MONDRIAN</title>
+    <meta name="description" content="BARE MONDRIAN Payment page. Upload your QRIS payment proof to complete your order.">
+    <!--
+        SECURITY NOTE: This page handles payment proof uploads and must ONLY be served
+        over HTTPS in production. Netlify/Vercel enforce this by default. Do NOT serve
+        this page over plain HTTP.
+    -->
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/pages/checkout.css">
+    <link rel="stylesheet" href="../styles/pages/payment.css">
+</head>
+
+<body class="payment-page">
+
+    <!-- Simplified Top Bar (same pattern as checkout.html) -->
+    <header class="checkout-header">
+        <div class="checkout-header-left">
+            <a href="/pages/checkout.html" class="back-to-cart-link" id="payment-back-link">← BACK</a>
+        </div>
+        <div class="checkout-header-center">
+            <div class="nav-brand">BARE MONDRIAN</div>
+        </div>
+        <div class="checkout-header-right"></div>
+    </header>
+    <hr class="checkout-top-line">
+
+    <!-- Two-Column Desktop Layout -->
+    <main class="checkout-container payment-container">
+
+        <!-- Left Column: Payment Instructions + Upload -->
+        <section class="checkout-form-column payment-form-column">
+
+            <!-- Title & Order ID -->
+            <h1 class="section-title" id="payment-page-title">COMPLETE YOUR PAYMENT</h1>
+            <!--
+                SECURITY NOTE: The order ID below must come from the backend session/response
+                when the order is created — it must NOT be generated or guessed from the frontend.
+                The value is populated by payment.js from a server-provided source (e.g. API response
+                or a signed token stored after checkout). Never trust a client-supplied order ID.
+            -->
+            <p class="payment-order-id" id="payment-order-id">ORDER ID: <span id="payment-order-id-value">—</span></p>
+
+            <!-- QRIS Box -->
+            <div class="qris-section">
+                <p class="qris-label">SCAN TO PAY WITH QRIS</p>
+                <div class="qris-box" id="qris-box">
+                    <!--
+                        SECURITY NOTE: The actual QRIS image (with embedded merchant credentials)
+                        must be served from a secure backend endpoint — NOT hardcoded here.
+                        This placeholder src path is intentional; it will be replaced with a
+                        dynamically fetched, authenticated URL in production.
+                    -->
+                    <img
+                        src="/assets/images/qris/qris-placeholder.png"
+                        alt="QRIS Payment Code Placeholder"
+                        class="qris-img"
+                        id="qris-img"
+                        onerror="this.onerror=null; this.style.display='none'; document.getElementById('qris-fallback').style.display='flex';"
+                    >
+                    <div class="qris-fallback" id="qris-fallback">
+                        <span class="qris-fallback-label">QRIS</span>
+                    </div>
+                </div>
+
+                <!-- Total Amount -->
+                <p class="payment-total-amount" id="payment-total-display">Rp0</p>
+
+                <!-- Instructional text -->
+                <p class="payment-instruction">
+                    Scan the QRIS code above using your mobile banking or e-wallet app, then upload your payment proof below.
+                </p>
+            </div>
+
+            <hr class="section-divider payment-divider">
+
+            <!-- Upload Payment Proof -->
+            <div class="upload-section">
+                <label class="upload-section-label" for="payment-proof-input">UPLOAD PAYMENT PROOF</label>
+
+                <!-- Drag & Drop Upload Box -->
+                <div
+                    class="upload-dropzone"
+                    id="upload-dropzone"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Upload payment proof. Drag and drop an image here or click to select."
+                >
+                    <!-- Hidden real file input -->
+                    <input
+                        type="file"
+                        id="payment-proof-input"
+                        name="paymentProof"
+                        accept="image/jpeg,image/png,image/webp"
+                        class="upload-file-input"
+                        aria-label="Select payment proof image"
+                    >
+
+                    <!-- Default state: icon + text -->
+                    <div class="upload-default-state" id="upload-default-state">
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M4 16V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M12 4V15M12 4L8.5 7.5M12 4L15.5 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <p class="upload-dropzone-text">DRAG FILE HERE OR CLICK TO UPLOAD</p>
+                        <p class="upload-dropzone-hint">JPEG, PNG, WEBP — MAX 5MB</p>
+                    </div>
+
+                    <!-- Preview state (hidden by default) -->
+                    <div class="upload-preview-state" id="upload-preview-state" style="display: none;">
+                        <img src="" alt="Payment proof preview" class="upload-preview-img" id="upload-preview-img">
+                        <div class="upload-preview-meta">
+                            <span class="upload-preview-filename" id="upload-preview-filename"></span>
+                            <button
+                                type="button"
+                                class="upload-remove-btn"
+                                id="upload-remove-btn"
+                                aria-label="Remove uploaded file"
+                            >✕ REMOVE</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Validation error message (hidden by default) -->
+                <p class="upload-error-msg" id="upload-error-msg" role="alert" style="display: none;"></p>
+
+                <!--
+                    SECURITY NOTE: This button submits the proof for human review only.
+                    It must NOT mark the payment as verified/successful from the frontend.
+                    Real approval happens server-side by an admin. The status after submission
+                    should be "pending_verification" — never "paid" or "approved".
+                -->
+                <button
+                    type="button"
+                    class="confirm-payment-btn"
+                    id="confirm-payment-btn"
+                    disabled
+                    aria-disabled="true"
+                >
+                    CONFIRM PAYMENT
+                </button>
+            </div>
+
+        </section>
+
+        <!-- Right Column: Order Summary (same card as checkout.html) -->
+        <section class="checkout-summary-column">
+            <div class="order-summary-card">
+                <div class="order-summary-header">
+                    ORDER SUMMARY
+                </div>
+                <div class="order-summary-content">
+                    <div class="checkout-items-list" id="payment-items-list">
+                        <!-- Populated dynamically via payment.js -->
+                    </div>
+                    <div class="checkout-totals-section">
+                        <div class="totals-row">
+                            <span>SUBTOTAL</span>
+                            <span id="payment-subtotal">Rp0</span>
+                        </div>
+                        <div class="totals-row shipping-row">
+                            <span>SHIPPING</span>
+                            <span id="payment-shipping">Rp10.000</span>
+                        </div>
+                        <hr class="totals-divider">
+                        <div class="totals-row total-row">
+                            <span>TOTAL</span>
+                            <span id="payment-total">Rp0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Simple Centered Footer -->
+    <footer class="checkout-footer">
+        &copy; 2026 BARE MONDRIAN. SECURE CHECKOUT.
+    </footer>
+
+    <!-- Scripts -->
+    <!--
+        cart.js is loaded first so its cart state (localStorage) is accessible.
+        payment.js reads the cart state and order ID from storage/session.
+    -->
+    <script src="../scripts/cart.js"></script>
+    <script src="../scripts/payment.js"></script>
+
+</body>
+
+</html>

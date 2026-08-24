@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — BARE MONDRIAN Admin</title>
+    <meta name="description" content="BARE MONDRIAN Admin Dashboard — overview of orders, products, and revenue.">
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/pages/admin.css">
+</head>
+
+<body class="admin-page">
+
+    <!-- Admin Layout Wrapper -->
+    <div class="admin-layout">
+
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="sidebar-top">
+                <a href="dashboard.html" class="sidebar-brand" id="sidebar-brand">
+                    <span class="sidebar-brand-main">BARE</span>
+                    <span class="sidebar-brand-sub">MONDRIAN</span>
+                </a>
+
+                <nav class="sidebar-nav" id="sidebar-nav">
+                    <a href="dashboard.html" class="sidebar-nav-item active" id="nav-dashboard">
+                        <!-- Grid icon -->
+                        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                        </svg>
+                        DASHBOARD
+                    </a>
+                    <a href="orders.html" class="sidebar-nav-item" id="nav-orders">
+                        <!-- Package icon -->
+                        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                        ORDERS
+                    </a>
+                    <a href="products.html" class="sidebar-nav-item" id="nav-products">
+                        <!-- Tag icon -->
+                        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                            <line x1="7" y1="7" x2="7.01" y2="7"/>
+                        </svg>
+                        PRODUCTS
+                    </a>
+                    <a href="homepage-settings.html" class="sidebar-nav-item" id="nav-homepage">
+                        <!-- Home icon -->
+                        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        HOMEPAGE
+                    </a>
+                </nav>
+            </div>
+
+            <div class="sidebar-bottom">
+                <a href="login.html" class="sidebar-logout" id="btn-logout">
+                    <!-- Logout icon -->
+                    <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    LOGOUT
+                </a>
+            </div>
+        </aside>
+
+        <!-- ===== MAIN CONTENT AREA ===== -->
+        <div class="admin-main">
+
+            <!-- TOP BAR -->
+            <header class="admin-topbar" id="admin-topbar">
+                <span class="topbar-brand" id="topbar-brand">BARE MONDRIAN ADMIN</span>
+                <div class="topbar-actions">
+                    <button class="topbar-icon-btn" id="btn-topbar-search" aria-label="Search">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="7"/>
+                            <line x1="16.5" y1="16.5" x2="21.5" y2="21.5"/>
+                        </svg>
+                    </button>
+                    <button class="topbar-icon-btn" id="btn-topbar-notifications" aria-label="Notifications">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </button>
+                    <button class="topbar-icon-btn" id="btn-topbar-account" aria-label="Account">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <main class="admin-content" id="admin-dashboard-content">
+
+                <!-- ===== PAGE HEADER ===== -->
+                <div class="dashboard-header" id="dashboard-header">
+                    <h1 class="dashboard-title" id="dashboard-title">DASHBOARD</h1>
+                    <div class="dashboard-header-actions">
+                        <a href="add-product.html" class="btn-admin-primary" id="btn-add-product">
+                            + ADD NEW<br>PRODUCT
+                        </a>
+                        <a href="orders.html" class="btn-admin-outline" id="btn-view-orders">
+                            VIEW ALL<br>ORDERS
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ===== SUMMARY CARDS ===== -->
+                <div class="summary-cards-row" id="summary-cards">
+                    <div class="summary-card" id="card-todays-orders">
+                        <span class="summary-card-label">TODAY'S ORDERS</span>
+                        <span class="summary-card-value">12</span>
+                    </div>
+                    <div class="summary-card summary-card--highlight" id="card-pending-approval">
+                        <span class="summary-card-label">PENDING<br>APPROVAL</span>
+                        <span class="summary-card-value">5</span>
+                    </div>
+                    <div class="summary-card" id="card-active-products">
+                        <span class="summary-card-label">ACTIVE PRODUCTS</span>
+                        <span class="summary-card-value">48</span>
+                    </div>
+                    <div class="summary-card" id="card-low-stock">
+                        <span class="summary-card-label">LOW STOCK</span>
+                        <span class="summary-card-value">3</span>
+                    </div>
+                    <div class="summary-card summary-card--last" id="card-revenue">
+                        <span class="summary-card-label">REVENUE THIS<br>MONTH</span>
+                        <span class="summary-card-value summary-card-value--revenue">Rp<br>15.400.000</span>
+                    </div>
+                </div>
+
+                <!-- ===== TWO-COLUMN SECTION ===== -->
+                <div class="dashboard-two-col" id="dashboard-two-col">
+
+                    <!-- LEFT: PENDING APPROVALS -->
+                    <div class="dashboard-card" id="card-pending-approvals">
+                        <div class="dashboard-card-header">
+                            <h2 class="dashboard-card-title">PENDING APPROVALS</h2>
+                            <a href="orders.html" class="dashboard-card-link" id="link-view-all-pending">VIEW ALL</a>
+                        </div>
+
+                        <!-- Row 1 -->
+                        <div class="approval-row" id="approval-row-1">
+                            <div class="approval-avatar-wrapper">
+                                <img src="/assets/images/customers/alex-mercer.jpg"
+                                     alt="Alex Mercer"
+                                     class="approval-avatar"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="approval-avatar-placeholder" style="display:none;">AM</div>
+                            </div>
+                            <div class="approval-info">
+                                <span class="approval-customer-name">ALEX MERCER</span>
+                                <span class="approval-meta">ORD-9014 &bull; 10 mins ago</span>
+                            </div>
+                            <span class="approval-amount">Rp 1.250.000</span>
+                        </div>
+                        <hr class="dashboard-divider">
+
+                        <!-- Row 2 -->
+                        <div class="approval-row" id="approval-row-2">
+                            <div class="approval-avatar-wrapper">
+                                <img src="/assets/images/customers/sarah-chen.jpg"
+                                     alt="Sarah Chen"
+                                     class="approval-avatar"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="approval-avatar-placeholder" style="display:none;">SC</div>
+                            </div>
+                            <div class="approval-info">
+                                <span class="approval-customer-name">SARAH CHEN</span>
+                                <span class="approval-meta">ORD-9013 &bull; 45 mins ago</span>
+                            </div>
+                            <span class="approval-amount">Rp 3.400.000</span>
+                        </div>
+                        <hr class="dashboard-divider">
+
+                        <!-- Row 3 -->
+                        <div class="approval-row" id="approval-row-3">
+                            <div class="approval-avatar-wrapper">
+                                <img src="/assets/images/customers/marcus-wright.jpg"
+                                     alt="Marcus Wright"
+                                     class="approval-avatar"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="approval-avatar-placeholder" style="display:none;">MW</div>
+                            </div>
+                            <div class="approval-info">
+                                <span class="approval-customer-name">MARCUS WRIGHT</span>
+                                <span class="approval-meta">ORD-9011 &bull; 2 hrs ago</span>
+                            </div>
+                            <span class="approval-amount">Rp 890.000</span>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: LOW STOCK ALERTS -->
+                    <div class="dashboard-card" id="card-low-stock-alerts">
+                        <div class="dashboard-card-header">
+                            <h2 class="dashboard-card-title">LOW STOCK ALERTS</h2>
+                            <a href="products.html" class="dashboard-card-link" id="link-view-all-stock">VIEW ALL</a>
+                        </div>
+
+                        <!-- Stock Row 1 -->
+                        <div class="stock-row" id="stock-row-1">
+                            <div class="stock-img-wrapper">
+                                <img src="/assets/images/products/form-001-blk.jpg"
+                                     alt="Form 001"
+                                     class="stock-img"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="stock-img-placeholder" style="display:none;"></div>
+                            </div>
+                            <div class="stock-info">
+                                <span class="stock-product-name">FORM 001</span>
+                                <span class="stock-sku">SKU: F001-BLK</span>
+                            </div>
+                            <div class="stock-status-block">
+                                <span class="stock-count stock-count--critical">2 LEFT</span>
+                                <span class="stock-badge stock-badge--critical" id="badge-form001">CRITICAL</span>
+                            </div>
+                        </div>
+                        <hr class="dashboard-divider">
+
+                        <!-- Stock Row 2 -->
+                        <div class="stock-row" id="stock-row-2">
+                            <div class="stock-img-wrapper">
+                                <img src="/assets/images/products/structure-02-wht.jpg"
+                                     alt="Structure 02"
+                                     class="stock-img"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="stock-img-placeholder" style="display:none;"></div>
+                            </div>
+                            <div class="stock-info">
+                                <span class="stock-product-name">STRUCTURE 02</span>
+                                <span class="stock-sku">SKU: S002-WHT</span>
+                            </div>
+                            <div class="stock-status-block">
+                                <span class="stock-count">5 LEFT</span>
+                                <span class="stock-badge stock-badge--warning" id="badge-structure02">WARNING</span>
+                            </div>
+                        </div>
+                        <hr class="dashboard-divider">
+
+                        <!-- Stock Row 3 -->
+                        <div class="stock-row" id="stock-row-3">
+                            <div class="stock-img-wrapper">
+                                <img src="/assets/images/products/base-trouser-gry.jpg"
+                                     alt="Base Trouser"
+                                     class="stock-img"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="stock-img-placeholder" style="display:none;"></div>
+                            </div>
+                            <div class="stock-info">
+                                <span class="stock-product-name">BASE TROUSER</span>
+                                <span class="stock-sku">SKU: BT01-GRY</span>
+                            </div>
+                            <div class="stock-status-block">
+                                <span class="stock-count">8 LEFT</span>
+                                <span class="stock-badge stock-badge--warning" id="badge-basetrouser">WARNING</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- end two-col -->
+
+                <!-- ===== RECENT ACTIVITY TABLE ===== -->
+                <div class="recent-activity-card" id="recent-activity-card">
+                    <h2 class="dashboard-card-title" id="recent-activity-title">RECENT ACTIVITY</h2>
+
+                    <div class="recent-table-wrapper">
+                        <table class="recent-table" id="recent-activity-table">
+                            <thead>
+                                <tr class="recent-table-head-row">
+                                    <th class="recent-th" id="th-order-id">ORDER ID</th>
+                                    <th class="recent-th" id="th-customer">CUSTOMER</th>
+                                    <th class="recent-th" id="th-product">PRODUCT</th>
+                                    <th class="recent-th" id="th-total">TOTAL</th>
+                                    <th class="recent-th" id="th-status">STATUS</th>
+                                    <th class="recent-th recent-th--right" id="th-date">DATE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="recent-table-row" id="row-ord-9015">
+                                    <td class="recent-td recent-td--order-id">#ORD-9015</td>
+                                    <td class="recent-td recent-td--customer">JAMES HOWARD</td>
+                                    <td class="recent-td recent-td--product">FORM 001, STRUCTURE 02</td>
+                                    <td class="recent-td recent-td--total">Rp 4.650.000</td>
+                                    <td class="recent-td">
+                                        <span class="status-badge status-badge--approved" id="status-9015">APPROVED</span>
+                                    </td>
+                                    <td class="recent-td recent-td--date">TODAY, 14:32</td>
+                                </tr>
+                                <tr class="recent-table-row" id="row-ord-9014">
+                                    <td class="recent-td recent-td--order-id">#ORD-9014</td>
+                                    <td class="recent-td recent-td--customer">ALEX MERCER</td>
+                                    <td class="recent-td recent-td--product">BASE TROUSER</td>
+                                    <td class="recent-td recent-td--total">Rp 1.250.000</td>
+                                    <td class="recent-td">
+                                        <span class="status-badge status-badge--pending" id="status-9014">PENDING</span>
+                                    </td>
+                                    <td class="recent-td recent-td--date">TODAY, 14:10</td>
+                                </tr>
+                                <tr class="recent-table-row" id="row-ord-9013">
+                                    <td class="recent-td recent-td--order-id">#ORD-9013</td>
+                                    <td class="recent-td recent-td--customer">SARAH CHEN</td>
+                                    <td class="recent-td recent-td--product">VOID JACKET</td>
+                                    <td class="recent-td recent-td--total">Rp 3.400.000</td>
+                                    <td class="recent-td">
+                                        <span class="status-badge status-badge--pending" id="status-9013">PENDING</span>
+                                    </td>
+                                    <td class="recent-td recent-td--date">TODAY, 13:45</td>
+                                </tr>
+                                <tr class="recent-table-row" id="row-ord-9012">
+                                    <td class="recent-td recent-td--order-id">#ORD-9012</td>
+                                    <td class="recent-td recent-td--customer">EMILY BLUNT</td>
+                                    <td class="recent-td recent-td--product">FORM 001</td>
+                                    <td class="recent-td recent-td--total">Rp 2.100.000</td>
+                                    <td class="recent-td">
+                                        <span class="status-badge status-badge--approved" id="status-9012">APPROVED</span>
+                                    </td>
+                                    <td class="recent-td recent-td--date">YESTERDAY</td>
+                                </tr>
+                                <tr class="recent-table-row recent-table-row--last" id="row-ord-9011">
+                                    <td class="recent-td recent-td--order-id">#ORD-9011</td>
+                                    <td class="recent-td recent-td--customer">MARCUS WRIGHT</td>
+                                    <td class="recent-td recent-td--product">ESSENTIAL TEE</td>
+                                    <td class="recent-td recent-td--total">Rp 890.000</td>
+                                    <td class="recent-td">
+                                        <span class="status-badge status-badge--pending" id="status-9011">PENDING</span>
+                                    </td>
+                                    <td class="recent-td recent-td--date">YESTERDAY</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+            <!-- end admin-content -->
+
+        </div>
+        <!-- end admin-main -->
+
+    </div>
+    <!-- end admin-layout -->
+
+    <script src="../scripts/admin-dashboard.js"></script>
+
+</body>
+
+</html>

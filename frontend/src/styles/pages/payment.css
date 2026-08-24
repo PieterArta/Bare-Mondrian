@@ -1,0 +1,313 @@
+/* Payment Page Styles
+ * Extends checkout.css patterns — reuses all .checkout-*, .order-summary-*,
+ * .totals-*, .section-title, .section-divider, and .checkout-footer classes
+ * already defined there. Only payment-specific overrides live here.
+ */
+
+/* ─── Page Root ─────────────────────────────────────────────── */
+.payment-page {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    font-family: var(--font-sans);
+}
+
+/* ─── Two-Column Container override for payment-specific column widths ─── */
+.payment-container {
+    align-items: flex-start;
+}
+
+/* Left column slightly wider than checkout to accommodate the QRIS box */
+.payment-form-column {
+    flex: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* controlled manually with margins below */
+}
+
+/* ─── Order ID ───────────────────────────────────────────────── */
+.payment-order-id {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--color-gray-muted);
+    text-transform: uppercase;
+    margin-top: 10px;
+    margin-bottom: 40px;
+}
+
+/* ─── QRIS Section ───────────────────────────────────────────── */
+.qris-section {
+    border: 1px solid var(--color-black);
+    padding: 32px 40px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 32px;
+}
+
+.qris-label {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Bordered square QRIS image box */
+.qris-box {
+    width: 200px;
+    height: 200px;
+    border: 1px solid var(--color-black);
+    background-color: var(--color-bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.qris-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* Fallback shown when QRIS image fails to load */
+.qris-fallback {
+    display: none;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg-light);
+}
+
+.qris-fallback-label {
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--color-gray-muted);
+    text-transform: uppercase;
+}
+
+/* Total amount below QRIS */
+.payment-total-amount {
+    font-family: var(--font-sans);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-black);
+    text-align: center;
+    margin-bottom: 16px;
+    letter-spacing: 0.01em;
+}
+
+/* Instruction text — sentence case, gray, centered */
+.payment-instruction {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--color-gray-muted);
+    text-align: center;
+    line-height: 1.6;
+    max-width: 380px;
+}
+
+/* ─── Section Divider override for payment ───────────────────── */
+.payment-divider {
+    margin-top: 0;
+    margin-bottom: 32px;
+}
+
+/* ─── Upload Section ─────────────────────────────────────────── */
+.upload-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.upload-section-label {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    display: block;
+}
+
+/* Drag-and-drop zone */
+.upload-dropzone {
+    border: 1.5px dashed #999999;
+    background-color: var(--color-white);
+    min-height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    outline: none;
+}
+
+.upload-dropzone:hover,
+.upload-dropzone:focus-visible {
+    border-color: var(--color-black);
+    background-color: #FAFAFA;
+}
+
+/* Drag-over state (toggled via JS) */
+.upload-dropzone.drag-over {
+    border-color: var(--color-black);
+    background-color: #F5F5F5;
+}
+
+/* Hidden file input — covers the whole zone for click-to-upload */
+.upload-file-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+
+/* Default state (icon + text) */
+.upload-default-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 28px 24px;
+    pointer-events: none; /* clicks pass through to file input */
+    width: 100%;
+}
+
+.upload-icon {
+    width: 36px;
+    height: 36px;
+    color: var(--color-gray-muted);
+}
+
+.upload-dropzone-text {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    text-align: center;
+}
+
+.upload-dropzone-hint {
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-gray-muted);
+    text-align: center;
+}
+
+/* Preview state */
+.upload-preview-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px;
+    width: 100%;
+}
+
+.upload-preview-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid var(--color-black);
+    display: block;
+}
+
+.upload-preview-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none; /* prevents clicks sinking into file input */
+}
+
+.upload-preview-filename {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    color: var(--color-gray-muted);
+    text-align: center;
+    word-break: break-all;
+    max-width: 260px;
+}
+
+.upload-remove-btn {
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    background: none;
+    border: 1px solid var(--color-black);
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    pointer-events: auto; /* re-enable so it can be clicked inside preview-meta */
+    position: relative;
+    z-index: 2;
+}
+
+.upload-remove-btn:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
+}
+
+/* Validation error */
+.upload-error-msg {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    color: #CC0000;
+    letter-spacing: 0.02em;
+    margin-top: -4px;
+}
+
+/* ─── Confirm Payment Button ─────────────────────────────────── */
+.confirm-payment-btn {
+    display: block;
+    width: 100%;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    padding: 16px 0;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.confirm-payment-btn:hover:not(:disabled) {
+    background-color: #333333;
+}
+
+/* Disabled / not-yet-uploaded state */
+.confirm-payment-btn:disabled,
+.confirm-payment-btn[aria-disabled="true"] {
+    opacity: 0.4;
+    cursor: not-allowed;
+}

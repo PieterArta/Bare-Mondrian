@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — BARE MONDRIAN</title>
+    <meta name="description"
+        content="Create your BARE MONDRIAN account. Join the community and get exclusive access to new drops and member benefits.">
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/components.css?v=5">
+    <link rel="stylesheet" href="../styles/pages/auth.css">
+</head>
+
+<body class="auth-page">
+
+    <!-- Navbar -->
+    <header class="navbar" id="navbar">
+        <a href="/pages/index.html" class="nav-brand">BARE MONDRIAN</a>
+
+        <nav class="nav-links">
+            <a href="/pages/index.html" class="nav-link" id="nav-home">HOME</a>
+            <a href="/pages/shop.html" class="nav-link" id="nav-shop">SHOP</a>
+            <a href="/pages/about.html" class="nav-link" id="nav-about">ABOUT US</a>
+        </nav>
+
+        <div class="nav-icons">
+            <button class="icon-btn" id="btn-search" aria-label="Search">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <circle cx="11" cy="11" r="7" />
+                    <line x1="16.5" y1="16.5" x2="21.5" y2="21.5" stroke-linecap="round" />
+                </svg>
+            </button>
+
+            <button class="icon-btn" id="btn-account" aria-label="Account">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <circle cx="12" cy="7" r="4" />
+                    <path d="M4 21C4 16.5817 7.58172 13 12 13C16.4183 13 20 16.5817 20 21"
+                        stroke-linecap="round" />
+                </svg>
+            </button>
+
+            <button class="icon-btn" id="btn-cart" aria-label="Shopping Bag" onclick="openCart()">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M6 7L4 20H20L18 7H6Z" stroke-linejoin="round" />
+                    <path d="M9 10V6C9 4.34315 10.3431 3 12 3C13.6569 3 15 4.34315 15 6V10" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Register Main -->
+    <main class="auth-main">
+        <div class="auth-card">
+            <h1 class="auth-title">REGISTER</h1>
+
+            <form class="auth-form" id="register-form" novalidate>
+
+                <!-- Full Name -->
+                <div class="auth-field" id="field-fullname">
+                    <label class="auth-label" for="register-fullname">FULL NAME</label>
+                    <div class="auth-input-wrapper">
+                        <input
+                            type="text"
+                            id="register-fullname"
+                            name="fullname"
+                            class="auth-input"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                            required>
+                    </div>
+                    <span class="auth-field-error" id="error-fullname" aria-live="polite"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="auth-field" id="field-reg-email">
+                    <label class="auth-label" for="register-email">EMAIL</label>
+                    <div class="auth-input-wrapper">
+                        <input
+                            type="email"
+                            id="register-email"
+                            name="email"
+                            class="auth-input"
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            required>
+                    </div>
+                    <span class="auth-field-error" id="error-reg-email" aria-live="polite"></span>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="auth-field" id="field-phone">
+                    <label class="auth-label" for="register-phone">PHONE NUMBER</label>
+                    <div class="auth-input-wrapper">
+                        <input
+                            type="tel"
+                            id="register-phone"
+                            name="phone"
+                            class="auth-input"
+                            placeholder="Enter your phone number"
+                            autocomplete="tel"
+                            required>
+                    </div>
+                    <span class="auth-field-error" id="error-phone" aria-live="polite"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="auth-field" id="field-reg-password">
+                    <label class="auth-label" for="register-password">PASSWORD</label>
+                    <div class="auth-input-wrapper">
+                        <input
+                            type="password"
+                            id="register-password"
+                            name="password"
+                            class="auth-input has-toggle"
+                            placeholder="Create a password"
+                            autocomplete="new-password"
+                            required>
+                        <button
+                            type="button"
+                            class="auth-toggle-btn"
+                            id="toggle-reg-password"
+                            aria-label="Show password">
+                            <svg id="icon-eye-reg-pw" viewBox="0 0 24 24">
+                                <path d="M1 12C1 12 5 5 12 5s11 7 11 7-4 7-11 7S1 12 1 12z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg id="icon-eye-off-reg-pw" viewBox="0 0 24 24" style="display:none">
+                                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19C5 19 1 12 1 12a18.09 18.09 0 0 1 5.06-5.94"/>
+                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="auth-field-error" id="error-reg-password" aria-live="polite"></span>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="auth-field" id="field-confirm-password">
+                    <label class="auth-label" for="register-confirm-password">CONFIRM PASSWORD</label>
+                    <div class="auth-input-wrapper">
+                        <input
+                            type="password"
+                            id="register-confirm-password"
+                            name="confirm_password"
+                            class="auth-input has-toggle"
+                            placeholder="Re-enter your password"
+                            autocomplete="new-password"
+                            required>
+                        <button
+                            type="button"
+                            class="auth-toggle-btn"
+                            id="toggle-confirm-password"
+                            aria-label="Show confirm password">
+                            <svg id="icon-eye-confirm" viewBox="0 0 24 24">
+                                <path d="M1 12C1 12 5 5 12 5s11 7 11 7-4 7-11 7S1 12 1 12z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg id="icon-eye-off-confirm" viewBox="0 0 24 24" style="display:none">
+                                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19C5 19 1 12 1 12a18.09 18.09 0 0 1 5.06-5.94"/>
+                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="auth-field-error" id="error-confirm-password" aria-live="polite"></span>
+                </div>
+
+                <!-- Actions -->
+                <div class="auth-actions">
+                    <button type="submit" class="auth-submit-btn" id="btn-register">REGISTER</button>
+
+                    <div class="auth-divider">
+                        <span class="auth-divider-line"></span>
+                        <span class="auth-divider-text">OR</span>
+                        <span class="auth-divider-line"></span>
+                    </div>
+
+                    <button type="button" class="auth-google-btn" id="btn-google-register">
+                        <!-- Google "G" icon -->
+                        <svg class="google-icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+                            <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
+                            <path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A9.013 9.013 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+                            <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58z" fill="#EA4335"/>
+                        </svg>
+                        SIGN IN WITH GOOGLE
+                    </button>
+
+                    <p class="auth-switch">
+                        Already have an account? <a href="/pages/login.html" id="link-to-login">LOGIN</a>
+                    </p>
+                </div>
+
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <div class="footer-logo">BARE MONDRIAN</div>
+                <p class="footer-tagline">High-end streetwear merging raw energy with disciplined structure.</p>
+                <p class="footer-copyright">&copy; 2026 BARE MONDRIAN. ALL RIGHTS RESERVED.</p>
+            </div>
+
+            <div class="footer-right">
+                <nav class="footer-nav footer-nav--row">
+                    <a href="#" class="footer-link" id="footer-privacy">PRIVACY POLICY</a>
+                    <a href="#" class="footer-link" id="footer-terms">TERMS OF SERVICE</a>
+                    <a href="#" class="footer-link" id="footer-contact">CONTACT</a>
+                </nav>
+                <div class="footer-socials">
+                    <a href="#" class="social-btn" id="footer-ig" aria-label="Instagram">IG</a>
+                    <a href="#" class="social-btn" id="footer-wa" aria-label="WhatsApp">WA</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../scripts/cart.js?v=5"></script>
+    <script src="../scripts/auth.js"></script>
+
+</body>
+
+</html>

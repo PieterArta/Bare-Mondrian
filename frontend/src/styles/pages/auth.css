@@ -1,0 +1,256 @@
+/* =====================================================
+   AUTH PAGES — Login & Register
+   Shared styles for authentication pages
+   ===================================================== */
+
+/* Page Layout */
+.auth-page {
+  background-color: var(--color-bg-light);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+}
+
+/* ── Card ── */
+.auth-card {
+  background-color: var(--color-white);
+  width: 100%;
+  max-width: 460px;
+  padding: 48px 44px 44px;
+}
+
+/* ── Page Title ── */
+.auth-title {
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 36px;
+  color: var(--color-black);
+}
+
+/* ── Form ── */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Field Group ── */
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.auth-label {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gray-muted);
+}
+
+.auth-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border-light);
+  background-color: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  color: var(--color-black);
+  outline: none;
+  transition: border-color 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.auth-input::placeholder {
+  color: #b0b0b0;
+  font-size: 0.85rem;
+}
+
+.auth-input:focus {
+  border-color: var(--color-black);
+}
+
+.auth-input.has-toggle {
+  padding-right: 44px;
+}
+
+/* Error state */
+.auth-input.error {
+  border-color: #c0392b;
+}
+
+.auth-field-error {
+  font-size: 0.7rem;
+  color: #c0392b;
+  letter-spacing: 0.02em;
+  min-height: 16px;
+  margin-top: 2px;
+}
+
+/* ── Password Toggle ── */
+.auth-toggle-btn {
+  position: absolute;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.auth-toggle-btn:hover {
+  color: var(--color-black);
+}
+
+.auth-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+/* ── Forgot Password (login only) ── */
+.auth-forgot {
+  display: block;
+  text-align: right;
+  font-size: 0.75rem;
+  color: var(--color-gray-muted);
+  margin-top: -8px;
+  transition: color 0.2s ease;
+}
+
+.auth-forgot:hover {
+  color: var(--color-black);
+}
+
+/* ── Primary Button ── */
+.auth-submit-btn {
+  display: block;
+  width: 100%;
+  height: 48px;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.auth-submit-btn:hover {
+  background-color: #222222;
+}
+
+/* ── OR Divider ── */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0;
+}
+
+.auth-divider-line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-border-light);
+}
+
+.auth-divider-text {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--color-gray-muted);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+/* ── Google Button ── */
+.auth-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 48px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.auth-google-btn:hover {
+  border-color: var(--color-black);
+  background-color: #fafafa;
+}
+
+.google-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* ── Switch Link (e.g. "Already have an account?") ── */
+.auth-switch {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--color-gray-muted);
+  margin-top: 4px;
+}
+
+.auth-switch a {
+  font-weight: 700;
+  color: var(--color-black);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.auth-switch a:hover {
+  opacity: 0.7;
+}
+
+/* ── Actions group (combines submit + divider + google + switch) ── */
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}

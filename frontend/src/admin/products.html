@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management — BARE MONDRIAN Admin</title>
+    <meta name="description" content="BARE MONDRIAN Admin — manage your product catalogue.">
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/pages/admin.css">
+</head>
+
+<body class="admin-page">
+<div class="admin-layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+        <div class="sidebar-top">
+            <a href="dashboard.html" class="sidebar-brand" id="sidebar-brand">
+                <span class="sidebar-brand-main">BARE</span>
+                <span class="sidebar-brand-sub">MONDRIAN</span>
+            </a>
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <a href="dashboard.html" class="sidebar-nav-item" id="nav-dashboard">
+                    <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                    DASHBOARD
+                </a>
+                <a href="orders.html" class="sidebar-nav-item" id="nav-orders">
+                    <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    ORDERS
+                </a>
+                <a href="products.html" class="sidebar-nav-item active" id="nav-products">
+                    <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                    PRODUCTS
+                </a>
+                <a href="homepage-settings.html" class="sidebar-nav-item" id="nav-homepage">
+                    <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    HOMEPAGE
+                </a>
+            </nav>
+        </div>
+        <div class="sidebar-bottom">
+            <a href="login.html" class="sidebar-logout" id="btn-logout">
+                <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                LOGOUT
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <div class="admin-main">
+
+        <!-- TOP BAR -->
+        <header class="admin-topbar" id="admin-topbar">
+            <span class="topbar-brand">BARE MONDRIAN ADMIN</span>
+            <div class="topbar-actions">
+                <button class="topbar-icon-btn" id="btn-topbar-search" aria-label="Search">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21.5" y2="21.5"/></svg>
+                </button>
+                <button class="topbar-icon-btn" id="btn-topbar-notifications" aria-label="Notifications">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </button>
+                <button class="topbar-icon-btn" id="btn-topbar-account" aria-label="Account">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <main class="admin-content" id="products-content">
+
+            <!-- Page Header -->
+            <div class="pm-header" id="pm-header">
+                <h1 class="pm-title" id="pm-title">PRODUCT MANAGEMENT</h1>
+                <a href="add-product.html" class="btn-admin-primary pm-add-btn" id="btn-add-product">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    ADD NEW PRODUCT
+                </a>
+            </div>
+            <hr class="pm-divider">
+
+            <!-- Products Table -->
+            <div class="pm-table-wrapper" id="pm-table-wrapper">
+                <table class="pm-table" id="pm-table">
+                    <thead>
+                        <tr class="pm-thead-row">
+                            <th class="pm-th pm-th--image" id="th-image">IMAGE</th>
+                            <th class="pm-th" id="th-name">PRODUCT NAME</th>
+                            <th class="pm-th" id="th-category">CATEGORY</th>
+                            <th class="pm-th" id="th-price">PRICE (RP)</th>
+                            <th class="pm-th" id="th-stock">STOCK</th>
+                            <th class="pm-th pm-th--right" id="th-actions">ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pm-tbody">
+                        <!-- JS-rendered rows -->
+                    </tbody>
+                </table>
+                <div class="pm-empty-state" id="pm-empty-state" style="display:none;">
+                    <span>No products found.</span>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<script src="../scripts/admin/product-list.js"></script>
+</body>
+</html>

@@ -10,12 +10,22 @@
     <link rel="stylesheet" href="../styles/base.css">
     <link rel="stylesheet" href="../styles/components.css?v=4">
     <link rel="stylesheet" href="../styles/pages/home.css">
+    <link rel="stylesheet" href="../styles/responsive.css?v=1">
 </head>
 
 <body class="home-page">
 
     <!-- Navbar -->
     <header class="navbar" id="navbar">
+        <button class="mobile-hamburger-btn" id="mobile-hamburger-btn" aria-label="Open Navigation Menu">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+            </svg>
+        </button>
+
         <div class="nav-brand">BARE MONDRIAN</div>
 
         <nav class="nav-links">
@@ -32,21 +42,35 @@
                 </svg>
             </button>
 
-            <button class="icon-btn" id="btn-cart" aria-label="Shopping Bag" onclick="openCart()">
-                <svg viewBox="0 0 24 24" width="20" height="20">
-                    <path d="M6 7L4 20H20L18 7H6Z" stroke-linejoin="round" />
-                    <path d="M9 10V6C9 4.34315 10.3431 3 12 3C13.6569 3 15 4.34315 15 6V10" />
-                </svg>
-            </button>
-
             <button class="icon-btn" id="btn-account" aria-label="Account">
                 <svg viewBox="0 0 24 24" width="20" height="20">
                     <circle cx="12" cy="7" r="4" />
                     <path d="M4 21C4 16.5817 7.58172 13 12 13C16.4183 13 20 16.5817 20 21" stroke-linecap="round" />
                 </svg>
             </button>
+
+            <button class="icon-btn" id="btn-cart" aria-label="Shopping Bag" onclick="openCart()">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M6 7L4 20H20L18 7H6Z" stroke-linejoin="round" />
+                    <path d="M9 10V6C9 4.34315 10.3431 3 12 3C13.6569 3 15 4.34315 15 6V10" />
+                </svg>
+            </button>
         </div>
     </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-overlay" id="mobile-nav-overlay"></div>
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+        <div class="mobile-nav-header">
+            <span class="mobile-nav-title">MENU</span>
+            <button class="mobile-nav-close" id="mobile-nav-close" aria-label="Close Menu">&times;</button>
+        </div>
+        <nav class="mobile-nav-links">
+            <a href="/pages/index.html" class="mobile-nav-link active">HOME</a>
+            <a href="/pages/shop.html" class="mobile-nav-link">SHOP</a>
+            <a href="/pages/about.html" class="mobile-nav-link">ABOUT US</a>
+        </nav>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero-section" id="hero">
@@ -54,9 +78,17 @@
             <div class="hero-image-wrapper">
                 <img src="hero_model.png" alt="BARE Mondrian Avant-Garde Structured Outfit" class="hero-image">
                 <div class="hero-wordmark">BARE Mondrian</div>
+                <a href="shop.html" class="mobile-hero-badge">NEW ARRIVALS</a>
             </div>
         </div>
     </section>
+
+    <!-- Shop CTA Section (Mobile Only block in CSS) -->
+    <a href="shop.html" class="mobile-shop-cta-section" id="shop-cta-section" aria-label="Shop the collection">
+        <img src="about-story.png" alt="BARE Mondrian Collection" class="mobile-cta-bg">
+        <div class="mobile-cta-badge">SHOP THE COLLECTION</div>
+    </a>
+    <hr class="mobile-section-divider">
 
     <!-- Product Grid Section -->
     <section class="products-section" id="products">
@@ -86,20 +118,28 @@
         <div class="footer-container">
             <div class="footer-left">
                 <div class="footer-logo">BARE MONDRIAN</div>
+                <div class="mobile-footer-tagline">RAW ENERGY. DISCIPLINED STRUCTURE.</div>
                 <p class="footer-copyright">&copy; 2026 BARE MONDRIAN. ALL RIGHTS RESERVED.</p>
             </div>
 
             <div class="footer-right">
                 <nav class="footer-nav footer-nav--row">
                     <a href="#" class="footer-link" id="footer-privacy">PRIVACY POLICY</a>
+                    <span class="mobile-link-divider">/</span>
                     <a href="#" class="footer-link" id="footer-terms">TERMS OF SERVICE</a>
+                    <span class="mobile-link-divider">/</span>
                     <a href="#" class="footer-link" id="footer-contact">CONTACT</a>
                 </nav>
+                <div class="mobile-social-buttons">
+                    <a href="https://instagram.com" target="_blank" class="mobile-social-btn">INSTAGRAM</a>
+                    <a href="https://whatsapp.com" target="_blank" class="mobile-social-btn">WHATSAPP</a>
+                </div>
+                <hr class="mobile-footer-divider">
             </div>
         </div>
     </footer>
 
-    <!-- Header Scroll Interactivity -->
+    <!-- Header Scroll & Mobile Nav Interactivity -->
     <script>
         (function () {
             var navbar = document.getElementById('navbar');
@@ -112,6 +152,32 @@
             }
             window.addEventListener('scroll', handleScroll);
             handleScroll();
+
+            // Mobile Menu Toggle
+            var hamburgerBtn = document.getElementById('mobile-hamburger-btn');
+            var closeBtn = document.getElementById('mobile-nav-close');
+            var overlay = document.getElementById('mobile-nav-overlay');
+            var drawer = document.getElementById('mobile-nav-drawer');
+
+            function openMobileNav() {
+                if (overlay && drawer) {
+                    overlay.classList.add('active');
+                    drawer.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            function closeMobileNav() {
+                if (overlay && drawer) {
+                    overlay.classList.remove('active');
+                    drawer.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            if (hamburgerBtn) hamburgerBtn.addEventListener('click', openMobileNav);
+            if (closeBtn) closeBtn.addEventListener('click', closeMobileNav);
+            if (overlay) overlay.addEventListener('click', closeMobileNav);
         })();
     </script>
     <script src="../scripts/cart.js?v=5"></script>

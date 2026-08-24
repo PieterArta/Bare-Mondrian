@@ -1,0 +1,2520 @@
+/* ============================================================
+   BARE MONDRIAN — Admin Panel Styles
+   File: admin.css
+   Covers: Layout, Sidebar, Topbar, Dashboard components
+   ============================================================ */
+
+/* -------------------------------------------------------
+   1. CSS VARIABLES (Admin-specific overrides)
+   ------------------------------------------------------- */
+:root {
+    --admin-sidebar-width: 176px;
+    --admin-topbar-height: 56px;
+    --admin-red: #CC0000;
+    --admin-red-light: #F5E0E0;
+    --admin-gray-bg: #F5F5F5;
+    --admin-border: #000000;
+    --admin-border-light: #E0E0E0;
+    --admin-text-muted: #888888;
+    --admin-spacing-sm: 12px;
+    --admin-spacing-md: 20px;
+    --admin-spacing-lg: 32px;
+}
+
+/* -------------------------------------------------------
+   2. BASE ADMIN PAGE RESET
+   ------------------------------------------------------- */
+.admin-page {
+    background-color: var(--color-white);
+    min-height: 100vh;
+}
+
+/* -------------------------------------------------------
+   3. LAYOUT: Sidebar + Main
+   ------------------------------------------------------- */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* -------------------------------------------------------
+   4. SIDEBAR
+   ------------------------------------------------------- */
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--admin-sidebar-width);
+    height: 100vh;
+    background-color: var(--color-white);
+    border-right: 1px solid var(--admin-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 200;
+}
+
+/* Sidebar Brand / Logo */
+.sidebar-brand {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px 24px 20px;
+    border-bottom: 1px solid var(--admin-border);
+    text-decoration: none;
+    line-height: 1.1;
+}
+
+.sidebar-brand-main {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+.sidebar-brand-sub {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+/* Sidebar Nav */
+.sidebar-top {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+}
+
+.sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-gray-muted);
+    text-decoration: none;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.sidebar-nav-item:hover {
+    color: var(--color-black);
+    background-color: var(--admin-gray-bg);
+}
+
+.sidebar-nav-item.active {
+    background-color: var(--color-black);
+    color: var(--color-white);
+}
+
+.sidebar-nav-item.active .nav-icon {
+    stroke: var(--color-white);
+}
+
+.nav-icon {
+    flex-shrink: 0;
+    stroke: currentColor;
+    transition: stroke 0.15s ease;
+}
+
+/* Sidebar Bottom (Logout) */
+.sidebar-bottom {
+    padding: 0 0 8px 0;
+    border-top: 1px solid var(--admin-border-light);
+}
+
+.sidebar-logout {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-gray-muted);
+    text-decoration: none;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.sidebar-logout:hover {
+    color: var(--color-black);
+    background-color: var(--admin-gray-bg);
+}
+
+/* -------------------------------------------------------
+   5. MAIN AREA (offset by sidebar)
+   ------------------------------------------------------- */
+.admin-main {
+    margin-left: var(--admin-sidebar-width);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* -------------------------------------------------------
+   6. TOP BAR
+   ------------------------------------------------------- */
+.admin-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--admin-topbar-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.topbar-brand {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.topbar-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-black);
+    padding: 4px;
+    transition: opacity 0.15s ease;
+}
+
+.topbar-icon-btn:hover {
+    opacity: 0.6;
+}
+
+.topbar-icon-btn svg {
+    display: block;
+}
+
+/* -------------------------------------------------------
+   7. CONTENT AREA
+   ------------------------------------------------------- */
+.admin-content {
+    flex: 1;
+    padding: 36px 40px 48px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+/* -------------------------------------------------------
+   8. DASHBOARD PAGE HEADER
+   ------------------------------------------------------- */
+.dashboard-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.dashboard-title {
+    font-family: var(--font-sans);
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    line-height: 1;
+    flex: 1;
+}
+
+.dashboard-header-actions {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    padding-top: 8px;
+    flex-shrink: 0;
+}
+
+/* Primary black button */
+.btn-admin-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 14px 20px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1.35;
+    border: 1px solid var(--color-black);
+    transition: background-color 0.15s ease, color 0.15s ease;
+    min-width: 110px;
+}
+
+.btn-admin-primary:hover {
+    background-color: #222;
+    border-color: #222;
+}
+
+/* Outline button */
+.btn-admin-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 14px 20px;
+    background-color: var(--color-white);
+    color: var(--color-black);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 1.35;
+    border: 1px solid var(--color-black);
+    transition: background-color 0.15s ease, color 0.15s ease;
+    min-width: 110px;
+}
+
+.btn-admin-outline:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
+}
+
+/* -------------------------------------------------------
+   9. SUMMARY CARDS ROW
+   ------------------------------------------------------- */
+.summary-cards-row {
+    display: flex;
+    border: 1px solid var(--admin-border);
+}
+
+.summary-card {
+    flex: 1;
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    border-right: 1px solid var(--admin-border);
+    background-color: var(--color-white);
+}
+
+.summary-card--last {
+    border-right: none;
+}
+
+/* "Pending Approval" highlighted card */
+.summary-card--highlight {
+    background-color: var(--color-black);
+}
+
+.summary-card-label {
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+    line-height: 1.4;
+}
+
+.summary-card--highlight .summary-card-label {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.summary-card-value {
+    font-family: var(--font-sans);
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--color-black);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.summary-card--highlight .summary-card-value {
+    color: var(--color-white);
+}
+
+/* Revenue value uses slightly smaller font due to longer text */
+.summary-card-value--revenue {
+    font-size: 1.6rem;
+    line-height: 1.15;
+}
+
+/* -------------------------------------------------------
+   10. TWO-COLUMN CARDS (Pending Approvals + Low Stock)
+   ------------------------------------------------------- */
+.dashboard-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.dashboard-card {
+    border: 1px solid var(--admin-border);
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.dashboard-card-title {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+.dashboard-card-link {
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-black);
+    padding-bottom: 1px;
+    transition: opacity 0.15s ease;
+}
+
+.dashboard-card-link:hover {
+    opacity: 0.6;
+}
+
+.dashboard-divider {
+    border: none;
+    border-top: 1px solid var(--admin-border-light);
+    margin: 0 24px;
+}
+
+/* -------------------------------------------------------
+   11. PENDING APPROVALS LIST
+   ------------------------------------------------------- */
+.approval-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 24px;
+}
+
+.approval-avatar-wrapper {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border: 1px solid var(--admin-border-light);
+    overflow: hidden;
+    background-color: var(--admin-gray-bg);
+}
+
+.approval-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.approval-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-gray-muted);
+    background-color: var(--admin-gray-bg);
+}
+
+.approval-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.approval-customer-name {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+.approval-meta {
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 400;
+    color: var(--admin-text-muted);
+    letter-spacing: 0.02em;
+}
+
+.approval-amount {
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--color-black);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* -------------------------------------------------------
+   12. LOW STOCK ALERTS LIST
+   ------------------------------------------------------- */
+.stock-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 24px;
+}
+
+.stock-img-wrapper {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border: 1px solid var(--admin-border-light);
+    overflow: hidden;
+    background-color: var(--admin-gray-bg);
+}
+
+.stock-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.stock-img-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--admin-gray-bg);
+}
+
+.stock-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stock-product-name {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+.stock-sku {
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 400;
+    color: var(--admin-text-muted);
+    letter-spacing: 0.02em;
+}
+
+.stock-status-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.stock-count {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--color-black);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.stock-count--critical {
+    color: var(--admin-red);
+}
+
+.stock-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 8px;
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid;
+}
+
+.stock-badge--critical {
+    color: var(--admin-red);
+    border-color: var(--admin-red);
+    background-color: var(--color-white);
+}
+
+.stock-badge--warning {
+    color: var(--color-gray-muted);
+    border-color: var(--admin-border-light);
+    background-color: var(--color-white);
+}
+
+/* -------------------------------------------------------
+   13. RECENT ACTIVITY TABLE
+   ------------------------------------------------------- */
+.recent-activity-card {
+    border: 1px solid var(--admin-border);
+    display: flex;
+    flex-direction: column;
+}
+
+.recent-activity-card .dashboard-card-title {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.recent-table-wrapper {
+    overflow-x: auto;
+}
+
+.recent-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.recent-table-head-row {
+    background-color: var(--admin-gray-bg);
+}
+
+.recent-th {
+    padding: 12px 24px;
+    font-family: var(--font-sans);
+    font-size: 0.63rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-gray-muted);
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--admin-border-light);
+}
+
+.recent-th--right {
+    text-align: right;
+}
+
+.recent-table-row {
+    border-bottom: 1px solid var(--admin-border-light);
+}
+
+.recent-table-row--last {
+    border-bottom: none;
+}
+
+.recent-td {
+    padding: 16px 24px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--color-black);
+    vertical-align: middle;
+}
+
+.recent-td--order-id {
+    font-size: 0.75rem;
+    color: var(--admin-text-muted);
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.recent-td--customer {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.recent-td--product {
+    font-size: 0.72rem;
+    color: var(--admin-text-muted);
+    font-weight: 400;
+}
+
+.recent-td--total {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.recent-td--date {
+    font-size: 0.7rem;
+    color: var(--admin-text-muted);
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* -------------------------------------------------------
+   14. STATUS BADGES (Recent Activity Table)
+   ------------------------------------------------------- */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid;
+    white-space: nowrap;
+}
+
+.status-badge--approved {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border-color: var(--color-black);
+}
+
+.status-badge--pending {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    border-color: var(--color-black);
+}
+
+/* -------------------------------------------------------
+   15. TOPBAR — SEARCH VARIANT (Orders page)
+   ------------------------------------------------------- */
+.admin-topbar--search {
+    gap: 20px;
+}
+
+.topbar-search-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.topbar-search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--admin-border-light);
+    padding: 0 12px;
+    height: 34px;
+    background-color: var(--color-white);
+    transition: border-color 0.15s ease;
+}
+
+.topbar-search-box:focus-within {
+    border-color: var(--color-black);
+}
+
+.topbar-search-icon {
+    flex-shrink: 0;
+    color: var(--admin-text-muted);
+}
+
+.topbar-search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    width: 180px;
+}
+
+.topbar-search-input::placeholder {
+    color: var(--admin-text-muted);
+}
+
+/* -------------------------------------------------------
+   16. ORDERS PAGE HEADER
+   ------------------------------------------------------- */
+.orders-page-header {
+    padding-bottom: 4px;
+}
+
+.orders-page-title {
+    font-family: var(--font-sans);
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    line-height: 1;
+}
+
+/* -------------------------------------------------------
+   17. FILTER TABS
+   ------------------------------------------------------- */
+.orders-filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.filter-tabs {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding-bottom: 12px;
+}
+
+.filter-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+    padding: 0 0 10px 0;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.filter-tab:hover {
+    color: var(--color-black);
+}
+
+.filter-tab--active {
+    color: var(--color-black);
+    font-weight: 700;
+    border-bottom-color: var(--color-black);
+}
+
+.filter-divider {
+    border: none;
+    border-top: 1px solid var(--admin-border-light);
+    margin: 0;
+}
+
+/* -------------------------------------------------------
+   18. ORDERS TABLE
+   ------------------------------------------------------- */
+.orders-table-wrapper {
+    border: 1px solid var(--admin-border-light);
+    overflow-x: auto;
+}
+
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Header row */
+.orders-thead-row {
+    background-color: var(--admin-gray-bg);
+}
+
+.orders-th {
+    padding: 13px 20px;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--admin-border-light);
+    vertical-align: middle;
+}
+
+.orders-th--right {
+    text-align: right;
+}
+
+/* Data rows */
+.orders-tr {
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--admin-border-light);
+    transition: background-color 0.1s ease;
+}
+
+.orders-tr:last-child {
+    border-bottom: none;
+}
+
+.orders-tr:hover {
+    background-color: #fafafa;
+}
+
+.orders-td {
+    padding: 18px 20px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--color-black);
+    vertical-align: middle;
+}
+
+/* Order ID cell */
+.orders-td--id {
+    font-size: 0.72rem;
+    color: var(--admin-text-muted);
+    white-space: nowrap;
+    font-weight: 400;
+}
+
+/* Customer cell */
+.orders-td--customer {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* Product cell */
+.orders-td--product {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--color-black);
+}
+
+/* Total cell */
+.orders-td--total {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* Proof thumbnail cell */
+.orders-td--proof {
+    /* nothing special; thumbnail handles its own sizing */
+}
+
+.proof-thumb-wrapper {
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--admin-border-light);
+    overflow: hidden;
+    background-color: var(--admin-gray-bg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s ease;
+    flex-shrink: 0;
+}
+
+.proof-thumb-wrapper:hover {
+    border-color: var(--color-black);
+}
+
+.proof-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.proof-thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--admin-gray-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.proof-thumb-placeholder svg {
+    opacity: 0.3;
+}
+
+/* Status cell */
+.orders-td--status {
+    white-space: nowrap;
+}
+
+/* Inline "PENDING" label (not a badge, just bold text per Figma) */
+.orders-status-pending {
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+/* "APPROVED" filled badge */
+.orders-status-approved {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background-color: var(--admin-text-muted);
+    color: var(--color-white);
+    border: 1px solid var(--admin-text-muted);
+    white-space: nowrap;
+}
+
+/* "REJECTED" filled badge */
+.orders-status-rejected {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background-color: var(--admin-red);
+    color: var(--color-white);
+    border: 1px solid var(--admin-red);
+    white-space: nowrap;
+}
+
+/* Date cell */
+.orders-td--date {
+    font-size: 0.72rem;
+    color: var(--admin-text-muted);
+    white-space: nowrap;
+}
+
+/* Actions cell */
+.orders-td--actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.orders-actions-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* APPROVE button */
+.btn-approve {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: 1px solid var(--color-black);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    white-space: nowrap;
+}
+
+.btn-approve:hover {
+    background-color: #222;
+    border-color: #222;
+}
+
+/* REJECT text link */
+.btn-reject {
+    background: none;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+    cursor: pointer;
+    transition: color 0.15s ease;
+    padding: 0;
+    white-space: nowrap;
+}
+
+.btn-reject:hover {
+    color: var(--admin-red);
+}
+
+/* PROCESSED text */
+.orders-processed-label {
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+}
+
+/* -------------------------------------------------------
+   19. EMPTY STATE
+   ------------------------------------------------------- */
+.orders-empty-state {
+    padding: 48px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.orders-empty-text {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+}
+
+/* -------------------------------------------------------
+   20. PROOF LIGHTBOX MODAL
+   ------------------------------------------------------- */
+.proof-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.proof-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.72);
+    cursor: pointer;
+}
+
+.proof-modal-box {
+    position: relative;
+    z-index: 1;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-black);
+    max-width: 560px;
+    width: calc(100vw - 80px);
+    max-height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 40px;
+}
+
+.proof-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: var(--color-black);
+    line-height: 1;
+    transition: opacity 0.15s ease;
+    z-index: 2;
+}
+
+.proof-modal-close:hover {
+    opacity: 0.5;
+}
+
+.proof-modal-img {
+    max-width: 100%;
+    max-height: calc(100vh - 200px);
+    object-fit: contain;
+    display: block;
+}
+
+.proof-modal-placeholder {
+    width: 100%;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+}
+
+/* -------------------------------------------------------
+   21. HOMEPAGE SETTINGS — Page Header
+   ------------------------------------------------------- */
+.hs-page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hs-page-title {
+    font-family: var(--font-sans);
+    font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    line-height: 1;
+}
+
+.hs-page-subtitle {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--admin-text-muted);
+    letter-spacing: 0.01em;
+}
+
+.hs-page-divider {
+    border: none;
+    border-top: 1px solid var(--admin-border-light);
+    margin: 0;
+}
+
+/* -------------------------------------------------------
+   22. HOMEPAGE SETTINGS — Section Cards
+   ------------------------------------------------------- */
+.hs-card {
+    border: 1px solid var(--admin-border-light);
+    display: flex;
+    flex-direction: column;
+}
+
+.hs-card-header {
+    padding: 22px 28px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.hs-card-title {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+.hs-card-subtitle {
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 400;
+    color: var(--admin-text-muted);
+}
+
+.hs-card-divider {
+    border: none;
+    border-top: 1px solid var(--admin-border-light);
+    margin: 0;
+}
+
+.hs-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 20px 28px;
+    border-top: 1px solid var(--admin-border-light);
+}
+
+.btn-hs-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 22px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: 1px solid var(--color-black);
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.btn-hs-primary:hover {
+    background-color: #222;
+    border-color: #222;
+}
+
+.btn-hs-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 22px;
+    background-color: var(--color-white);
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-hs-outline:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
+}
+
+/* -------------------------------------------------------
+   23. HERO IMAGE MANAGEMENT — Two-column body
+   ------------------------------------------------------- */
+.hero-image-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 28px;
+}
+
+.hero-col-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+    margin-bottom: 12px;
+}
+
+.hero-current-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-preview-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    border: 1px solid var(--admin-border-light);
+    overflow: hidden;
+    background-color: var(--admin-gray-bg);
+}
+
+.hero-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-preview-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--admin-text-muted);
+    background-color: var(--admin-gray-bg);
+}
+
+.hero-live-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    pointer-events: none;
+}
+
+.hero-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+.hero-filename,
+.hero-dimensions {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--admin-text-muted);
+}
+
+.hero-upload-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-dropzone {
+    flex: 1;
+    border: 1.5px dashed var(--admin-border-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 40px 24px;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    text-align: center;
+}
+
+.hero-dropzone:hover,
+.hero-dropzone.dragover {
+    border-color: var(--color-black);
+    background-color: #fafafa;
+}
+
+.hero-file-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.dropzone-icon {
+    color: var(--color-black);
+    flex-shrink: 0;
+    pointer-events: none;
+}
+
+.dropzone-heading {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    pointer-events: none;
+}
+
+.dropzone-subtext {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--admin-text-muted);
+    pointer-events: none;
+}
+
+.dropzone-select-btn {
+    position: relative;
+    z-index: 2;
+    padding: 9px 20px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: 1px solid var(--color-black);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    margin-top: 6px;
+}
+
+.dropzone-select-btn:hover {
+    background-color: #222;
+    border-color: #222;
+}
+
+.dropzone-caption {
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 400;
+    color: var(--admin-text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+/* -------------------------------------------------------
+   24. PRODUCT SELECTION — Filter row
+   ------------------------------------------------------- */
+.products-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 28px;
+}
+
+.products-search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--admin-border-light);
+    padding: 0 12px;
+    height: 36px;
+    flex: 1;
+    max-width: 360px;
+    background-color: var(--color-white);
+    transition: border-color 0.15s ease;
+}
+
+.products-search-box:focus-within {
+    border-color: var(--color-black);
+}
+
+.products-search-icon {
+    flex-shrink: 0;
+    color: var(--admin-text-muted);
+}
+
+.products-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: var(--color-black);
+}
+
+.products-search-input::placeholder {
+    color: var(--admin-text-muted);
+    text-transform: uppercase;
+}
+
+.products-category-select {
+    height: 36px;
+    padding: 0 32px 0 12px;
+    border: 1px solid var(--admin-border-light);
+    background-color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.products-category-select:focus {
+    border-color: var(--color-black);
+}
+
+.products-selected-pill {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border: 1px solid var(--color-black);
+    background-color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* -------------------------------------------------------
+   25. PRODUCT SELECTION — Grid & Cards
+   ------------------------------------------------------- */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 0 28px 28px;
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--admin-border-light);
+    background-color: var(--color-white);
+    cursor: default;
+    transition: border-color 0.15s ease;
+}
+
+.product-card.selected {
+    border-color: var(--color-black);
+}
+
+.product-card-thumb-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background-color: var(--admin-gray-bg);
+    flex-shrink: 0;
+}
+
+.product-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.product-card-img-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--admin-gray-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #cccccc;
+}
+
+/* Checkbox overlay — top-right corner of thumbnail */
+.product-card-thumb-check {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--color-black);
+    background-color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: background-color 0.15s ease;
+    flex-shrink: 0;
+}
+
+.product-card-thumb-check.checked {
+    background-color: var(--color-black);
+}
+
+.product-card-thumb-check svg {
+    display: none;
+}
+
+.product-card-thumb-check.checked svg {
+    display: block;
+}
+
+.product-card-info {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 12px 0;
+}
+
+.product-card-name {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+.product-card-price {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--color-black);
+    white-space: nowrap;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.product-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px 14px;
+}
+
+.product-card-checkbox {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--color-black);
+    background-color: var(--color-white);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    transition: background-color 0.15s ease;
+    margin: 0;
+}
+
+.product-card-checkbox:checked {
+    background-color: var(--color-black);
+}
+
+.product-card-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 0px;
+    width: 5px;
+    height: 9px;
+    border: 2px solid var(--color-white);
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+}
+
+.product-card-checkbox-label {
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    cursor: pointer;
+    user-select: none;
+}
+
+.products-grid-empty {
+    grid-column: 1 / -1;
+    padding: 40px 0;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+}
+
+/* -------------------------------------------------------
+   26. PRODUCT MANAGEMENT — Page Header
+   ------------------------------------------------------- */
+.pm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.pm-title {
+    font-family: var(--font-sans);
+    font-size: clamp(2rem, 4.5vw, 3.6rem);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    line-height: 1;
+}
+
+.pm-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.pm-divider {
+    border: none;
+    border-top: 1px solid var(--admin-border-light);
+    margin: 0;
+}
+
+/* -------------------------------------------------------
+   27. PRODUCT MANAGEMENT — Table
+   ------------------------------------------------------- */
+.pm-table-wrapper {
+    border: 1px solid var(--admin-border-light);
+    overflow-x: auto;
+}
+
+.pm-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.pm-thead-row {
+    background-color: var(--admin-gray-bg);
+}
+
+.pm-th {
+    padding: 13px 20px;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--admin-border-light);
+    vertical-align: middle;
+}
+
+.pm-th--image { width: 80px; }
+.pm-th--right { text-align: right; }
+
+.pm-tr {
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--admin-border-light);
+    transition: background-color 0.1s ease;
+}
+
+.pm-tr:last-child { border-bottom: none; }
+.pm-tr:hover { background-color: #fafafa; }
+
+.pm-td {
+    padding: 16px 20px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--color-black);
+    vertical-align: middle;
+}
+
+.pm-td--image { width: 80px; padding: 12px 16px; }
+
+.pm-td--name {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.pm-td--category {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--admin-text-muted);
+    font-size: 0.74rem;
+}
+
+.pm-td--price { white-space: nowrap; }
+.pm-td--actions { text-align: right; }
+
+/* Product thumbnail */
+.pm-thumb-wrapper {
+    width: 52px;
+    height: 52px;
+    border: 1px solid var(--admin-border-light);
+    overflow: hidden;
+    background-color: var(--admin-gray-bg);
+    flex-shrink: 0;
+}
+
+.pm-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.pm-thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: var(--admin-gray-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Stock badges */
+.pm-stock-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid;
+    white-space: nowrap;
+}
+
+.pm-stock-badge--in {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    border-color: var(--color-black);
+}
+
+.pm-stock-badge--low {
+    background-color: var(--admin-text-muted);
+    color: var(--color-white);
+    border-color: var(--admin-text-muted);
+}
+
+/* Action icon buttons */
+.pm-actions-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.pm-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--admin-border-light);
+    background-color: var(--color-white);
+    color: var(--color-black);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    padding: 0;
+}
+
+.pm-action-btn:hover {
+    border-color: var(--color-black);
+}
+
+.pm-action-btn--delete:hover {
+    border-color: var(--admin-red);
+    color: var(--admin-red);
+}
+
+/* Empty state */
+.pm-empty-state {
+    padding: 48px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+}
+
+/* -------------------------------------------------------
+   28. ADD PRODUCT — Page Header
+   ------------------------------------------------------- */
+.ap-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.ap-title {
+    font-family: var(--font-sans);
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    line-height: 1.05;
+    flex: 1;
+}
+
+.ap-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 6px;
+    flex-shrink: 0;
+}
+
+.ap-divider {
+    border: none;
+    border-top: 1px solid var(--admin-border-light);
+    margin: 0;
+}
+
+/* -------------------------------------------------------
+   29. ADD PRODUCT — Two-column section (photos + details)
+   ------------------------------------------------------- */
+.ap-two-col-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.ap-col-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+    margin-bottom: 14px;
+}
+
+/* -------------------------------------------------------
+   30. ADD PRODUCT — Photo Upload
+   ------------------------------------------------------- */
+.ap-photos-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.ap-dropzone {
+    position: relative;
+    border: 1.5px dashed var(--admin-border-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 36px 20px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    margin-bottom: 14px;
+}
+
+.ap-dropzone:hover,
+.ap-dropzone--over {
+    border-color: var(--color-black);
+    background-color: #fafafa;
+}
+
+.ap-file-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.ap-dropzone-icon {
+    color: var(--admin-text-muted);
+    pointer-events: none;
+}
+
+.ap-dropzone-heading {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    pointer-events: none;
+}
+
+.ap-dropzone-subtext {
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    color: var(--admin-text-muted);
+    pointer-events: none;
+}
+
+/* Photo slot row */
+.ap-photo-slots {
+    display: flex;
+    gap: 10px;
+}
+
+.ap-photo-slot {
+    position: relative;
+    flex: 1;
+    aspect-ratio: 3 / 4;
+    border: 1px solid var(--admin-border-light);
+    overflow: hidden;
+    background-color: var(--admin-gray-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ap-slot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.ap-slot-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #cccccc;
+}
+
+.ap-main-photo-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.ap-slot-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: opacity 0.15s ease;
+}
+
+.ap-slot-remove:hover { opacity: 0.7; }
+
+/* -------------------------------------------------------
+   31. ADD PRODUCT — Basic Details Form
+   ------------------------------------------------------- */
+.ap-details-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ap-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ap-field-label {
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+}
+
+.ap-input {
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--admin-border-light);
+    background-color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--color-black);
+    outline: none;
+    transition: border-color 0.15s ease;
+    width: 100%;
+}
+
+.ap-input:focus { border-color: var(--color-black); }
+
+.ap-input--error {
+    border-color: var(--admin-red) !important;
+}
+
+.ap-field-error {
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    color: var(--admin-red);
+    min-height: 16px;
+    display: block;
+}
+
+/* Select */
+.ap-select {
+    height: 38px;
+    padding: 0 32px 0 12px;
+    border: 1px solid var(--admin-border-light);
+    background-color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--color-black);
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    outline: none;
+    width: 100%;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+}
+
+.ap-select:focus { border-color: var(--color-black); }
+
+/* Price prefix */
+.ap-input-prefix-wrap {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--admin-border-light);
+    background-color: var(--color-white);
+    transition: border-color 0.15s ease;
+}
+
+.ap-input-prefix-wrap:focus-within { border-color: var(--color-black); }
+
+.ap-input-prefix {
+    padding: 0 10px;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--admin-text-muted);
+    border-right: 1px solid var(--admin-border-light);
+    height: 38px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.ap-input--prefixed {
+    border: none;
+    flex: 1;
+    height: 38px;
+}
+
+.ap-input--prefixed:focus { border: none; outline: none; }
+
+/* Two-fields row */
+.ap-two-fields-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* -------------------------------------------------------
+   32. ADD PRODUCT — Stock Toggle
+   ------------------------------------------------------- */
+.ap-stock-toggle {
+    display: flex;
+}
+
+.ap-stock-btn {
+    flex: 1;
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--color-black);
+    font-family: var(--font-sans);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: var(--color-white);
+    color: var(--color-black);
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.ap-stock-btn + .ap-stock-btn { border-left: none; }
+
+.ap-stock-btn--active {
+    background-color: var(--color-black);
+    color: var(--color-white);
+}
+
+/* -------------------------------------------------------
+   33. ADD PRODUCT — Color Tags
+   ------------------------------------------------------- */
+.ap-color-tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+}
+
+.ap-color-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--color-black);
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    background-color: var(--color-white);
+    white-space: nowrap;
+}
+
+.ap-color-tag-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1;
+    color: var(--color-black);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.15s ease;
+}
+
+.ap-color-tag-remove:hover { opacity: 0.5; }
+
+.ap-add-color-btn {
+    display: inline-flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.ap-add-color-btn:hover { opacity: 0.6; }
+
+.ap-color-input {
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid var(--color-black);
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--color-black);
+    background-color: var(--color-white);
+    outline: none;
+    width: 120px;
+}
+
+/* -------------------------------------------------------
+   34. ADD PRODUCT — Size Options
+   ------------------------------------------------------- */
+.ap-size-options {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.ap-size-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ap-size-checkbox {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--color-black);
+    background-color: var(--color-white);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    transition: background-color 0.15s ease;
+    margin: 0;
+}
+
+.ap-size-checkbox:checked { background-color: var(--color-black); }
+
+.ap-size-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 0;
+    width: 5px;
+    height: 9px;
+    border: 2px solid var(--color-white);
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+}
+
+.ap-size-label {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+/* -------------------------------------------------------
+   35. ADD PRODUCT — Sections (description, material, shipping)
+   ------------------------------------------------------- */
+.ap-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ap-section-title {
+    font-family: var(--font-sans);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+.ap-section-divider {
+    border: none;
+    border-top: 1px solid var(--admin-border-light);
+    margin: 0;
+}
+
+.ap-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--admin-border-light);
+    background-color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--color-black);
+    resize: vertical;
+    outline: none;
+    line-height: 1.6;
+    transition: border-color 0.15s ease;
+}
+
+.ap-textarea:focus { border-color: var(--color-black); }
+
+.ap-textarea::placeholder { color: var(--admin-text-muted); }
+
+/* -------------------------------------------------------
+   36. ADD PRODUCT — Fit & Sizing Table
+   ------------------------------------------------------- */
+.ap-sizing-table-wrapper {
+    border: 1px solid var(--admin-border-light);
+    overflow-x: auto;
+}
+
+.ap-sizing-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ap-sizing-thead-row {
+    background-color: var(--admin-gray-bg);
+}
+
+.ap-sizing-th {
+    padding: 11px 20px;
+    font-family: var(--font-sans);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+    text-align: left;
+    border-bottom: 1px solid var(--admin-border-light);
+}
+
+.ap-sizing-th--label { width: 40%; }
+
+.ap-sizing-tr {
+    border-bottom: 1px solid var(--admin-border-light);
+}
+
+.ap-sizing-tr:last-child { border-bottom: none; }
+
+.ap-sizing-td {
+    padding: 10px 20px;
+    vertical-align: middle;
+}
+
+.ap-sizing-td--label {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-black);
+}
+
+.ap-sizing-input {
+    width: 80px;
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--admin-border-light);
+    background-color: var(--color-white);
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--color-black);
+    text-align: center;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.ap-sizing-input:focus { border-color: var(--color-black); }
+
+/* -------------------------------------------------------
+   37. ADD PRODUCT — Form Footer
+   ------------------------------------------------------- */
+.ap-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-bottom: 8px;
+}

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage Settings — BARE MONDRIAN Admin</title>
+    <meta name="description" content="BARE MONDRIAN Admin — manage storefront hero image and featured products.">
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/pages/admin.css">
+</head>
+
+<body class="admin-page">
+
+    <div class="admin-layout">
+
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="sidebar-top">
+                <a href="dashboard.html" class="sidebar-brand" id="sidebar-brand">
+                    <span class="sidebar-brand-main">BARE</span>
+                    <span class="sidebar-brand-sub">MONDRIAN</span>
+                </a>
+
+                <nav class="sidebar-nav" id="sidebar-nav">
+                    <a href="dashboard.html" class="sidebar-nav-item" id="nav-dashboard">
+                        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                        </svg>
+                        DASHBOARD
+                    </a>
+                    <a href="orders.html" class="sidebar-nav-item" id="nav-orders">
+                        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                        ORDERS
+                    </a>
+                    <a href="products.html" class="sidebar-nav-item" id="nav-products">
+                        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                            <line x1="7" y1="7" x2="7.01" y2="7"/>
+                        </svg>
+                        PRODUCTS
+                    </a>
+                    <a href="homepage-settings.html" class="sidebar-nav-item active" id="nav-homepage">
+                        <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        HOMEPAGE
+                    </a>
+                </nav>
+            </div>
+
+            <div class="sidebar-bottom">
+                <a href="login.html" class="sidebar-logout" id="btn-logout">
+                    <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    LOGOUT
+                </a>
+            </div>
+        </aside>
+
+        <!-- ===== MAIN ===== -->
+        <div class="admin-main">
+
+            <!-- TOP BAR -->
+            <header class="admin-topbar" id="admin-topbar">
+                <span class="topbar-brand" id="topbar-brand">BARE MONDRIAN ADMIN</span>
+                <div class="topbar-actions">
+                    <button class="topbar-icon-btn" id="btn-topbar-notifications" aria-label="Notifications">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </button>
+                    <button class="topbar-icon-btn" id="btn-topbar-account" aria-label="Account">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <main class="admin-content" id="homepage-settings-content">
+
+                <!-- Page Header -->
+                <div class="hs-page-header" id="hs-page-header">
+                    <h1 class="hs-page-title" id="hs-page-title">HOMEPAGE SETTINGS</h1>
+                    <p class="hs-page-subtitle" id="hs-page-subtitle">Manage the primary visual elements of the customer-facing storefront.</p>
+                </div>
+                <hr class="hs-page-divider" id="hs-page-divider">
+
+                <!-- ===== SECTION 1: HERO IMAGE MANAGEMENT ===== -->
+                <section class="hs-card" id="hero-section" aria-labelledby="hero-section-title">
+                    <div class="hs-card-header">
+                        <h2 class="hs-card-title" id="hero-section-title">HERO IMAGE MANAGEMENT</h2>
+                        <p class="hs-card-subtitle">Manage the primary 'New Arrival' photo displayed on the homepage.</p>
+                    </div>
+                    <hr class="hs-card-divider">
+
+                    <div class="hero-image-body">
+                        <!-- LEFT: Current Hero -->
+                        <div class="hero-current-col" id="hero-current-col">
+                            <span class="hero-col-label">CURRENT HERO IMAGE</span>
+                            <div class="hero-preview-wrapper" id="hero-preview-wrapper">
+                                <img
+                                    src="/hero_model.png"
+                                    alt="Current hero image"
+                                    class="hero-preview-img"
+                                    id="hero-preview-img"
+                                    onerror="this.style.display='none'; document.getElementById('hero-preview-placeholder').style.display='flex';"
+                                >
+                                <div class="hero-preview-placeholder" id="hero-preview-placeholder" style="display:none;">
+                                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                </div>
+                                <span class="hero-live-badge" id="hero-live-badge">LIVE</span>
+                            </div>
+                            <div class="hero-meta-row">
+                                <span class="hero-filename" id="hero-filename">hero_new_arrival_fw24.jpg</span>
+                                <span class="hero-dimensions" id="hero-dimensions">1892 x 899px</span>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: Upload New Photo -->
+                        <div class="hero-upload-col" id="hero-upload-col">
+                            <span class="hero-col-label">UPLOAD NEW PHOTO</span>
+                            <div
+                                class="hero-dropzone"
+                                id="hero-dropzone"
+                                role="button"
+                                tabindex="0"
+                                aria-label="Drop zone: drag and drop a hero image or click to browse"
+                            >
+                                <!-- Hidden real file input -->
+                                <input
+                                    type="file"
+                                    id="hero-file-input"
+                                    class="hero-file-input"
+                                    accept=".jpg,.jpeg,.png,.webp"
+                                    aria-label="Select hero image file"
+                                >
+
+                                <svg class="dropzone-icon" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="12" y1="18" x2="12" y2="12"/>
+                                    <polyline points="9 15 12 12 15 15"/>
+                                </svg>
+
+                                <p class="dropzone-heading">DRAG AND DROP FILE HERE</p>
+                                <p class="dropzone-subtext">or click to browse from your computer</p>
+
+                                <button class="dropzone-select-btn" id="dropzone-select-btn" type="button">SELECT FILE</button>
+
+                                <p class="dropzone-caption">MAX FILE SIZE 10MB. JPG, PNG, WEBP.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section Footer Actions -->
+                    <div class="hs-card-footer">
+                        <button class="btn-hs-outline" id="btn-hero-cancel" type="button">CANCEL</button>
+                        <button class="btn-hs-primary" id="btn-hero-save" type="button">SAVE CHANGES</button>
+                    </div>
+                </section>
+
+                <!-- ===== SECTION 2: SELECT PRODUCTS FOR HOMEPAGE ===== -->
+                <section class="hs-card" id="products-section" aria-labelledby="products-section-title">
+                    <div class="hs-card-header">
+                        <h2 class="hs-card-title" id="products-section-title">SELECT PRODUCTS FOR HOMEPAGE</h2>
+                        <p class="hs-card-subtitle">Choose which products to feature in the homepage grid.</p>
+                    </div>
+                    <hr class="hs-card-divider">
+
+                    <!-- Filter Row -->
+                    <div class="products-filter-row" id="products-filter-row">
+                        <!-- Search -->
+                        <div class="products-search-box" id="products-search-box">
+                            <svg class="products-search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="7"/>
+                                <line x1="16.5" y1="16.5" x2="21.5" y2="21.5"/>
+                            </svg>
+                            <input
+                                type="text"
+                                id="products-search-input"
+                                class="products-search-input"
+                                placeholder="SEARCH PRODUCTS..."
+                                autocomplete="off"
+                                aria-label="Search products"
+                            >
+                        </div>
+
+                        <!-- Category dropdown -->
+                        <select class="products-category-select" id="products-category-select" aria-label="Filter by category">
+                            <option value="all">ALL CATEGORIES</option>
+                            <option value="jackets">JACKETS</option>
+                            <option value="trousers">TROUSERS</option>
+                            <option value="tops">TOPS</option>
+                            <option value="footwear">FOOTWEAR</option>
+                        </select>
+
+                        <!-- Selected counter pill -->
+                        <span class="products-selected-pill" id="products-selected-pill" aria-live="polite">
+                            0 PRODUCTS SELECTED
+                        </span>
+                    </div>
+
+                    <!-- Product Grid -->
+                    <div class="products-grid" id="products-grid">
+                        <!-- Cards injected by JS -->
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <script src="../scripts/admin/homepage-settings.js"></script>
+
+</body>
+
+</html>

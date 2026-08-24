@@ -1,0 +1,368 @@
+/* Product Detail Page Styles */
+
+.product-detail-page {
+    background-color: var(--color-white);
+    color: var(--color-black);
+}
+
+.product-detail-container {
+    display: flex;
+    min-height: calc(100vh - 64px);
+    align-items: flex-start;
+}
+
+/* Actions Column (Left, ~20%) */
+.product-actions-column {
+    flex: 1;
+    min-width: 220px;
+    padding: 64px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.actions-label {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 12px;
+}
+
+/* Size/Color Toggles */
+.size-toggles-row,
+.color-options-row {
+    display: flex;
+    gap: 20px;
+}
+
+.size-toggle-btn,
+.color-option-btn {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 400;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding-bottom: 2px;
+    transition: color 0.2s ease, font-weight 0.2s ease;
+}
+
+.size-toggle-btn.active,
+.color-option-btn.active {
+    font-weight: 700;
+    color: var(--color-black);
+    border-bottom: 1.5px solid var(--color-black);
+}
+
+.size-toggle-btn:not(.active),
+.color-option-btn:not(.active) {
+    color: var(--color-gray-muted);
+}
+
+/* Quantity Stepper Box */
+.qty-stepper-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-black);
+    width: max-content;
+    height: 36px;
+}
+
+.qty-btn {
+    width: 36px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 300;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: background-color 0.2s ease;
+}
+
+.qty-btn:hover {
+    background-color: var(--color-bg-light);
+}
+
+.qty-stepper-box input {
+    width: 48px;
+    height: 100%;
+    border: none;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 700;
+    background: none;
+    outline: none;
+}
+
+/* Buttons */
+.action-buttons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.btn-add-to-cart {
+    width: 100%;
+    background-color: var(--color-white);
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+    padding: 16px 0;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-add-to-cart:hover {
+    background-color: var(--color-bg-light);
+}
+
+.btn-buy-now {
+    width: 100%;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border: none;
+    padding: 16px 0;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-buy-now:hover {
+    background-color: #333333;
+}
+
+/* Photo & Info Column (Middle, ~40%) */
+.product-photo-info-column {
+    flex: 2;
+    padding: 64px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.product-image-wrapper {
+    width: 100%;
+    max-width: 340px;
+    border: 1px solid var(--color-black);
+    background-color: #E0E0E0;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.detail-product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.detail-product-title {
+    font-family: var(--font-sans);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.detail-product-price {
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    color: var(--color-gray-muted);
+}
+
+/* Accordions */
+.accordions-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 18px 0;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    cursor: pointer;
+    background: none;
+    border: none;
+    text-align: left;
+}
+
+.chevron-icon {
+    stroke: var(--color-black);
+    stroke-width: 1.5;
+    fill: none;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chevron-icon.active {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.accordion-content p {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--color-gray-muted);
+    line-height: 1.6;
+    padding-bottom: 18px;
+}
+
+.accordion-divider {
+    border: none;
+    border-top: 1px solid var(--color-black);
+}
+
+/* Dark Detail Panel Column (Right, ~40%) */
+.product-detail-panel {
+    flex: 2;
+    background-color: var(--color-black);
+    color: var(--color-white);
+    padding: 64px 48px;
+    align-self: stretch;
+    min-height: calc(100vh - 64px);
+}
+
+.panel-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+}
+
+.panel-section-title {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #333333;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.panel-paragraph {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: #CCCCCC;
+    line-height: 1.65;
+}
+
+.panel-subtitle {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    color: #888888;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.panel-subtitle-small {
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    color: #888888;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.panel-paragraph-small {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: #CCCCCC;
+    line-height: 1.6;
+}
+
+/* Sizing Table */
+.measurements-table-wrapper {
+    margin-top: 8px;
+}
+
+.measurements-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+}
+
+.measurements-table th,
+.measurements-table td {
+    padding: 10px 12px;
+    text-align: left;
+}
+
+.measurements-table th:not(:first-child),
+.measurements-table td:not(:first-child) {
+    text-align: right;
+}
+
+.measurements-table th {
+    font-weight: 700;
+    text-transform: uppercase;
+    border-bottom: 1px solid #333333;
+}
+
+.measurements-table td {
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.measurements-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Highlight states for active size column */
+.measurements-table th.col-sm,
+.measurements-table td.col-sm,
+.measurements-table th.col-lxl,
+.measurements-table td.col-lxl {
+    transition: color 0.2s ease, font-weight 0.2s ease;
+}
+
+.measurements-table th.col-sm.active,
+.measurements-table td.col-sm.active,
+.measurements-table th.col-lxl.active,
+.measurements-table td.col-lxl.active {
+    color: var(--color-white);
+    font-weight: 700;
+}
+
+.measurements-table th:not(.active),
+.measurements-table td:not(.active) {
+    color: #555555;
+}

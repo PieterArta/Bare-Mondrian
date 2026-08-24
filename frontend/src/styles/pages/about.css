@@ -91,3 +91,237 @@
   position: relative;
   z-index: 1;
 }
+
+/* ==========================================================================
+   Mobile Responsive — max-width: 768px
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+
+  /* ── Mobile Navbar ── */
+  .navbar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 56px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--color-white) !important;
+    border-bottom: 1px solid var(--color-border) !important;
+    z-index: 100;
+  }
+
+  .navbar::before {
+    display: none !important;
+  }
+
+  .nav-links {
+    display: none !important;
+  }
+
+  .mobile-hamburger-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--color-black);
+    cursor: pointer;
+    padding: 4px;
+    margin-right: 8px;
+  }
+
+  .nav-brand {
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    margin-right: auto;
+  }
+
+  .nav-icons {
+    display: flex !important;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .icon-btn svg {
+    width: 19px;
+    height: 19px;
+    stroke: var(--color-black);
+  }
+
+  /* ── Mobile Drawer ── */
+  .mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-nav-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-nav-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    max-width: 80vw;
+    height: 100vh;
+    background-color: var(--color-white);
+    z-index: 999;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-nav-drawer.active {
+    transform: translateX(0);
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .mobile-nav-title {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .mobile-nav-close {
+    font-size: 1.5rem;
+    font-weight: 300;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-black);
+  }
+
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    gap: 20px;
+  }
+
+  .mobile-nav-link {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .mobile-nav-link.active {
+    border-left: 2px solid var(--color-black);
+    padding-left: 8px;
+  }
+
+  /* ── About Main ── */
+  .about-main {
+    padding: 0 16px;
+    margin-top: 56px;
+  }
+
+  .about-section {
+    padding: 32px 0 48px 0;
+    min-height: auto;
+    align-items: flex-start;
+  }
+
+  /* ── Grid → Stack vertically ── */
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  /* ── Text Column ── */
+  .about-text-column {
+    gap: 18px;
+    order: 1;
+  }
+
+  .about-p {
+    font-size: 0.82rem;
+    line-height: 1.75;
+  }
+
+  /* ── Image Column ── */
+  .about-image-column {
+    order: 2;
+  }
+
+  .about-image-wrapper {
+    aspect-ratio: 4 / 3;
+  }
+
+  /* ── Footer Mobile ── */
+  .footer {
+    padding: 36px 16px 28px 16px;
+    text-align: center;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .footer-left {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+
+  .footer-copyright {
+    font-size: 0.6rem;
+  }
+
+  .footer-right {
+    align-items: center;
+  }
+
+  .footer-nav--row {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px !important;
+  }
+
+  .footer-link {
+    font-size: 0.62rem;
+  }
+}
+
+/* Hide mobile-only elements on desktop */
+@media screen and (min-width: 769px) {
+  .mobile-hamburger-btn,
+  .mobile-nav-overlay,
+  .mobile-nav-drawer {
+    display: none !important;
+  }
+}
