@@ -52,7 +52,7 @@
             size: 'L',
             quantity: 1,
             price: 150000,
-            image: '/pages/assets/images/products/produk1.jpg'
+            image: 'assets/images/products/produk1.jpg'
         },
         {
             id: 'item-2',
@@ -60,7 +60,7 @@
             size: 'OS',
             quantity: 1,
             price: 200000,
-            image: '/pages/assets/images/products/produk2.jpg'
+            image: 'assets/images/products/produk2.jpg'
         }
     ];
 
@@ -355,7 +355,7 @@
                     '<strong>pending verification</strong> by our team. ' +
                     'We will notify you once your payment has been confirmed.' +
                 '</p>' +
-                '<a href="/pages/index.html" class="success-back-btn">RETURN TO HOME</a>' +
+                '<a href="index.html" class="success-back-btn">RETURN TO HOME</a>' +
             '</div>';
     }
 

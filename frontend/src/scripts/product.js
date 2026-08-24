@@ -108,7 +108,7 @@
             color: colorBtn ? colorBtn.getAttribute('data-color') : 'ASH GREY',
             quantity: qtyVal,
             price: 549000,
-            image: '/pages/assets/images/products/produk3.jpg'
+            image: 'assets/images/products/produk3.jpg'
         };
     }
 
@@ -168,7 +168,7 @@
                 window.openCart();
             } else {
                 // Redirect back to shop with cart trigger query param
-                window.location.href = '/pages/shop.html?openCart=true';
+                window.location.href = 'shop.html?openCart=true';
             }
         });
     }
@@ -180,7 +180,7 @@
             var product = getSelectedProductOptions();
             addProductToCartState(product);
             // Redirect directly to checkout
-            window.location.href = '/pages/checkout.html';
+            window.location.href = 'checkout.html';
         });
     }
 

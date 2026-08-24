@@ -9,7 +9,7 @@ let defaultCartItems = [
         size: 'L',
         quantity: 1,
         price: 180000,
-        image: '/pages/assets/images/products/produk1.jpg'
+        image: 'assets/images/products/produk1.jpg'
     },
     {
         id: 'item-2',
@@ -17,7 +17,7 @@ let defaultCartItems = [
         size: '43',
         quantity: 1,
         price: 180000,
-        image: '/pages/assets/images/products/produk2.jpg'
+        image: 'assets/images/products/produk2.jpg'
     }
 ];
 
@@ -213,7 +213,7 @@ if (cartOverlay) {
 if (checkoutBtn) {
     checkoutBtn.addEventListener('click', function () {
         closeCart();
-        window.location.href = '/pages/checkout.html';
+        window.location.href = 'checkout.html';
     });
 }
 

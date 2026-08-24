@@ -9,7 +9,7 @@
             size: 'L',
             quantity: 1,
             price: 180000,
-            image: '/pages/assets/images/products/produk1.jpg'
+            image: 'assets/images/products/produk1.jpg'
         },
         {
             id: 'item-2',
@@ -17,7 +17,7 @@
             size: '43',
             quantity: 1,
             price: 180000,
-            image: '/pages/assets/images/products/produk2.jpg'
+            image: 'assets/images/products/produk2.jpg'
         }
     ];
 
@@ -69,9 +69,9 @@
             // Map to descriptive mockup filenames if not actual paths
             var descriptivePath = item.image;
             if (item.name.indexOf('HOODIE') !== -1) {
-                descriptivePath = '/assets/images/products/structural-hoodie-blk.jpg';
+                descriptivePath = 'assets/images/products/structural-hoodie-blk.jpg';
             } else if (item.name.indexOf('SNEAKER') !== -1) {
-                descriptivePath = '/assets/images/products/brutalist-sneaker-wht.jpg';
+                descriptivePath = 'assets/images/products/brutalist-sneaker-wht.jpg';
             }
 
             itemRow.innerHTML =
@@ -145,7 +145,7 @@
                             '<strong>' + fullName + '</strong>. Your order totals <strong>' + formatPrice(getSubtotal()) + '</strong> ' +
                             'and is currently being prepared for dispatch.' +
                         '</p>' +
-                        '<a href="/pages/index.html" class="success-back-btn">RETURN TO HOME</a>' +
+                        '<a href="index.html" class="success-back-btn">RETURN TO HOME</a>' +
                     '</div>';
             }
         });

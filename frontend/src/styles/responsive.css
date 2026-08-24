@@ -1,5 +1,28 @@
 /* Mobile Responsive Styles — max-width: 768px */
 
+/* ==========================================================================
+   Default: Hide all mobile-only elements on desktop (no media query needed)
+   These are overridden to visible inside @media (max-width: 768px)
+   ========================================================================== */
+.mobile-hamburger-btn,
+.mobile-nav-overlay,
+.mobile-nav-drawer,
+.mobile-nav-header,
+.mobile-nav-title,
+.mobile-nav-close,
+.mobile-nav-links,
+.mobile-nav-link,
+.mobile-hero-badge,
+.mobile-shop-cta-section,
+.mobile-section-divider,
+.mobile-footer-tagline,
+.mobile-link-divider,
+.mobile-social-buttons,
+.mobile-footer-divider,
+.mobile-cta-badge {
+  display: none !important;
+}
+
 @media screen and (max-width: 768px) {
   /* ==========================================================================
      Global / Hide Desktop Elements
@@ -404,13 +427,19 @@
   .mobile-hamburger-btn,
   .mobile-nav-overlay,
   .mobile-nav-drawer,
+  .mobile-nav-header,
+  .mobile-nav-title,
+  .mobile-nav-close,
+  .mobile-nav-links,
+  .mobile-nav-link,
   .mobile-hero-badge,
   .mobile-shop-cta-section,
   .mobile-section-divider,
   .mobile-footer-tagline,
   .mobile-link-divider,
   .mobile-social-buttons,
-  .mobile-footer-divider {
+  .mobile-footer-divider,
+  .mobile-cta-badge {
     display: none !important;
   }
 }
