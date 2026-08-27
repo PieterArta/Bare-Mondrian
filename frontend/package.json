@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "serve src"
+    "dev": "serve src -l 3000 --no-port-switching"
   },
   "devDependencies": {
     "serve": "^14.2.6"

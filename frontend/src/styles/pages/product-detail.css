@@ -31,15 +31,65 @@
     margin-bottom: 12px;
 }
 
-/* Size/Color Toggles */
-.size-toggles-row,
-.color-options-row {
+/* Color Swatches */
+.color-swatches-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.color-swatch-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.color-swatch-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    cursor: pointer;
+    padding: 0;
+    transition: outline-color 0.2s ease, border-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.color-swatch-btn:hover {
+    outline-color: rgba(0, 0, 0, 0.3);
+}
+
+.color-swatch-btn.active {
+    outline: 2.5px solid var(--color-black);
+    outline-offset: 3px;
+}
+
+.color-swatch-label {
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-gray-muted);
+    transition: color 0.2s ease, font-weight 0.2s ease;
+    white-space: nowrap;
+}
+
+.color-swatch-label.active {
+    color: var(--color-black);
+    font-weight: 700;
+}
+
+/* Desktop Size Toggles */
+.size-toggles-row {
     display: flex;
     gap: 20px;
 }
 
-.size-toggle-btn,
-.color-option-btn {
+.size-toggle-btn {
     font-family: var(--font-sans);
     font-size: 0.8rem;
     font-weight: 400;
@@ -50,15 +100,13 @@
     transition: color 0.2s ease, font-weight 0.2s ease;
 }
 
-.size-toggle-btn.active,
-.color-option-btn.active {
+.size-toggle-btn.active {
     font-weight: 700;
     color: var(--color-black);
     border-bottom: 1.5px solid var(--color-black);
 }
 
-.size-toggle-btn:not(.active),
-.color-option-btn:not(.active) {
+.size-toggle-btn:not(.active) {
     color: var(--color-gray-muted);
 }
 
@@ -365,4 +413,122 @@
 .measurements-table th:not(.active),
 .measurements-table td:not(.active) {
     color: #555555;
+}
+
+/* ==========================================================================
+   Mobile Layout — Product Detail Page
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+
+    /* Single-column stacked layout */
+    .product-detail-container {
+        flex-direction: column;
+        min-height: auto;
+        padding-top: 56px; /* account for fixed navbar */
+    }
+
+    /* Hide desktop dark panel on mobile */
+    .product-detail-panel {
+        display: none;
+    }
+
+    /* Photo + info column: full-width, adjusted padding */
+    .product-photo-info-column {
+        flex: none;
+        width: 100%;
+        padding: 16px 20px 0 20px;
+        gap: 24px;
+        order: 1;
+    }
+
+    /* Product image: smaller on mobile */
+    .product-image-wrapper {
+        max-width: 100%;
+    }
+
+    /* Accordions: full-width */
+    .accordions-container {
+        width: 100%;
+    }
+
+    /* Desktop color section hidden on mobile — mobile-color-section in actions column shows instead */
+    .desktop-color-section {
+        display: none;
+    }
+
+    /* Mobile color section visible on mobile */
+    .mobile-color-section {
+        display: block;
+    }
+
+    /* Actions column: full-width below content */
+    .product-actions-column {
+        flex: none;
+        width: 100%;
+        padding: 0 20px 32px 20px;
+        gap: 24px;
+        order: 2;
+    }
+
+    /* Size toggle buttons: full-width blocks */
+    .size-toggles-row {
+        display: flex;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .size-toggle-btn {
+        flex: 1;
+        padding: 12px 0;
+        border: 1px solid var(--color-black);
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-align: center;
+        background-color: var(--color-white);
+        color: var(--color-black);
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .size-toggle-btn.active {
+        background-color: var(--color-black);
+        color: var(--color-white);
+        border-bottom: none;
+        font-weight: 700;
+    }
+
+    .size-toggle-btn:not(.active) {
+        color: var(--color-black);
+    }
+
+    /* Quantity stepper: full-width on mobile */
+    .qty-stepper-box {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .qty-stepper-box input {
+        flex: 1;
+    }
+
+    /* Action buttons: full width */
+    .action-buttons-group {
+        width: 100%;
+    }
+
+    /* Defensive: hide any stray placeholder/dev notes next to SIZE label */
+    .size-selection-section > *:not(.actions-label):not(.size-toggles-row) {
+        display: none !important;
+    }
+}
+
+/* Desktop: hide mobile-only color section */
+@media screen and (min-width: 769px) {
+    .mobile-color-section {
+        display: none;
+    }
+    .desktop-color-section {
+        display: block;
+    }
 }

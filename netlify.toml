@@ -1,0 +1,90 @@
+# netlify.toml — BARE MONDRIAN
+# Publish dir is `frontend/src` (set this in Netlify UI or via this file)
+
+[build]
+  publish = "frontend/src"
+
+# ─── Pretty/clean URL redirects ─────────────────────────────────────────────
+# These let visitors use /shop, /about, /cart, etc. without the .html extension
+# or the /pages/ prefix, while still serving the actual files from /pages/*.html.
+
+[[redirects]]
+  from = "/"
+  to   = "/pages/index.html"
+  status = 200   # 200 = rewrite (URL stays as "/")
+
+[[redirects]]
+  from = "/shop"
+  to   = "/pages/shop.html"
+  status = 200
+
+[[redirects]]
+  from = "/about"
+  to   = "/pages/about.html"
+  status = 200
+
+[[redirects]]
+  from = "/cart"
+  to   = "/pages/cart.html"
+  status = 200
+
+[[redirects]]
+  from = "/checkout"
+  to   = "/pages/checkout.html"
+  status = 200
+
+[[redirects]]
+  from = "/payment"
+  to   = "/pages/payment.html"
+  status = 200
+
+[[redirects]]
+  from = "/product-detail"
+  to   = "/pages/product-detail.html"
+  status = 200
+
+[[redirects]]
+  from = "/login"
+  to   = "/pages/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/register"
+  to   = "/pages/register.html"
+  status = 200
+
+# Admin routes
+[[redirects]]
+  from = "/admin"
+  to   = "/admin/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/dashboard"
+  to   = "/admin/dashboard.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/orders"
+  to   = "/admin/orders.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/products"
+  to   = "/admin/products.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/add-product"
+  to   = "/admin/add-product.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/homepage-settings"
+  to   = "/admin/homepage-settings.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/login"
+  to   = "/admin/login.html"
+  status = 200

@@ -350,6 +350,25 @@
     margin: 80px 0 40px 0;
 }
 
+.checkout-footer-copy {
+    margin: 0;
+}
+
+/* Desktop: hide footer nav links (mobile-only) */
+.checkout-footer-links {
+    display: none;
+}
+
+.checkout-footer-link,
+.checkout-footer-sep {
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    color: var(--color-gray-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
 /* Success State View styling */
 .success-container {
     max-width: 600px;

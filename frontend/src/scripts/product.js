@@ -35,13 +35,40 @@
         });
     });
 
-    // 3. Color Selector (Product Detail)
-    var colorBtns = document.querySelectorAll('.color-option-btn');
-    colorBtns.forEach(function (btn) {
+    // 3. Color Selector (Product Detail) — handles circular swatches in both mobile + desktop
+    var swatchBtns = document.querySelectorAll('.color-swatch-btn');
+    var swatchLabels = document.querySelectorAll('.color-swatch-label');
+
+    swatchBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
-            colorBtns.forEach(function (b) { b.classList.remove('active'); });
-            this.classList.add('active');
+            var selectedColor = this.getAttribute('data-color');
+            // Sync all swatch buttons with the same color across both copies
+            swatchBtns.forEach(function (b) { b.classList.remove('active'); });
+            document.querySelectorAll('.color-swatch-btn[data-color="' + selectedColor + '"]').forEach(function (b) {
+                b.classList.add('active');
+            });
+            // Update all labels to match active state
+            document.querySelectorAll('.color-swatch-item').forEach(function (item) {
+                var itemBtn = item.querySelector('.color-swatch-btn');
+                var itemLabel = item.querySelector('.color-swatch-label');
+                if (itemBtn && itemLabel) {
+                    if (itemBtn.classList.contains('active')) {
+                        itemLabel.classList.add('active');
+                    } else {
+                        itemLabel.classList.remove('active');
+                    }
+                }
+            });
         });
+    });
+
+    // Initialize label active state on load
+    document.querySelectorAll('.color-swatch-item').forEach(function (item) {
+        var itemBtn = item.querySelector('.color-swatch-btn');
+        var itemLabel = item.querySelector('.color-swatch-label');
+        if (itemBtn && itemLabel && itemBtn.classList.contains('active')) {
+            itemLabel.classList.add('active');
+        }
     });
 
     // 4. Quantity Stepper (Product Detail)
@@ -98,7 +125,7 @@
     // Helper: Retrieve active size/color/quantity selections
     function getSelectedProductOptions() {
         var sizeBtn = document.querySelector('.size-toggle-btn.active');
-        var colorBtn = document.querySelector('.color-option-btn.active');
+        var colorBtn = document.querySelector('.color-swatch-btn.active');
         var qtyVal = qtyInput ? parseInt(qtyInput.value) : 1;
 
         return {

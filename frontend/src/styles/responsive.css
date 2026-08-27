@@ -7,11 +7,6 @@
 .mobile-hamburger-btn,
 .mobile-nav-overlay,
 .mobile-nav-drawer,
-.mobile-nav-header,
-.mobile-nav-title,
-.mobile-nav-close,
-.mobile-nav-links,
-.mobile-nav-link,
 .mobile-hero-badge,
 .mobile-shop-cta-section,
 .mobile-section-divider,
@@ -20,7 +15,7 @@
 .mobile-social-buttons,
 .mobile-footer-divider,
 .mobile-cta-badge {
-  display: none !important;
+  display: none;
 }
 
 @media screen and (max-width: 768px) {
@@ -33,14 +28,19 @@
 
   /* Desktop elements hidden on mobile Home page */
   body.home-page .hero-wordmark,
-  body.home-page .products-section,
-  body.home-page .nav-links {
+  body.home-page .products-section {
+    display: none !important;
+  }
+
+  /* Desktop nav links hidden on mobile globally */
+  .nav-links {
     display: none !important;
   }
 
   /* ==========================================================================
      1. Mobile Navbar
      ========================================================================== */
+  .navbar,
   body.home-page .navbar {
     position: fixed !important;
     top: 0;
@@ -51,12 +51,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: var(--color-white) !important;
-    border-bottom: 1px solid var(--color-border) !important;
     z-index: 100;
   }
 
-  body.home-page .navbar::before {
+  .navbar::before {
     display: none !important;
   }
 
@@ -72,7 +70,7 @@
     margin-right: 8px;
   }
 
-  body.home-page .nav-brand {
+  .nav-brand {
     font-family: var(--font-sans);
     font-weight: 700;
     font-size: 0.95rem;
@@ -82,13 +80,13 @@
     margin-right: auto;
   }
 
-  body.home-page .nav-icons {
+  .nav-icons {
     display: flex !important;
     align-items: center;
     gap: 14px;
   }
 
-  body.home-page .icon-btn svg {
+  .icon-btn svg {
     width: 19px;
     height: 19px;
     stroke: var(--color-black);
@@ -96,6 +94,7 @@
 
   /* Mobile Drawer Menu */
   .mobile-nav-overlay {
+    display: block;
     position: fixed;
     top: 0;
     left: 0;
@@ -180,13 +179,47 @@
     padding-left: 8px;
   }
 
+  /* Mobile Home Page Navbar - Transparent at top, solid on scroll */
+  body.home-page .navbar {
+    background-color: transparent !important;
+    border-bottom: 1px solid transparent !important;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+
+  body.home-page .navbar .mobile-hamburger-btn,
+  body.home-page .navbar .nav-brand,
+  body.home-page .navbar .icon-btn {
+    color: #ffffff !important;
+    transition: color 0.3s ease;
+  }
+
+  body.home-page .navbar .icon-btn svg {
+    stroke: #ffffff !important;
+    transition: stroke 0.3s ease;
+  }
+
+  body.home-page .navbar.scrolled {
+    background-color: var(--color-white) !important;
+    border-bottom: 1px solid var(--color-border) !important;
+  }
+
+  body.home-page .navbar.scrolled .mobile-hamburger-btn,
+  body.home-page .navbar.scrolled .nav-brand,
+  body.home-page .navbar.scrolled .icon-btn {
+    color: var(--color-black) !important;
+  }
+
+  body.home-page .navbar.scrolled .icon-btn svg {
+    stroke: var(--color-black) !important;
+  }
+
   /* ==========================================================================
      2. Hero Section
      ========================================================================== */
   body.home-page .hero-section {
     height: auto;
-    min-height: 480px;
-    margin-top: 56px;
+    min-height: auto;
+    margin-top: 0;
     border-bottom: none;
     position: relative;
   }
@@ -201,8 +234,22 @@
   body.home-page .hero-image-wrapper {
     position: relative;
     width: 100%;
-    height: 480px;
+    aspect-ratio: 16 / 9;
+    height: auto;
     display: block;
+    overflow: hidden;
+  }
+
+  body.home-page .hero-image-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+    pointer-events: none;
+    z-index: 2;
   }
 
   body.home-page .hero-image {
@@ -216,9 +263,9 @@
   .mobile-hero-badge {
     display: flex !important;
     position: absolute;
-    top: 22%;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     background-color: var(--color-white);
     border: 1px solid var(--color-black);
     color: var(--color-black);
@@ -442,4 +489,283 @@
   .mobile-cta-badge {
     display: none !important;
   }
+}
+
+/* ==========================================================================
+   Mobile Checkout Page — max-width: 768px
+   All rules scoped to .checkout-page to avoid affecting other pages.
+   Desktop styles in checkout.css remain completely untouched.
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+
+  /* ---- Top Bar ---- */
+  .checkout-page .checkout-header {
+    height: 52px;
+    padding: 0 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--color-white);
+  }
+
+  /* "← BACK" left-aligned, shorter label on mobile */
+  .checkout-page .back-to-cart-link {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  /* Logo centered */
+  .checkout-page .checkout-header-center {
+    flex: 2;
+  }
+
+  .checkout-page .checkout-header-left,
+  .checkout-page .checkout-header-right {
+    flex: 1;
+  }
+
+  /* Divider line below header */
+  .checkout-page .checkout-top-line {
+    margin: 0;
+  }
+
+  /* ---- Main Container: single-column stacked ---- */
+  .checkout-page .checkout-container {
+    flex-direction: column;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+  }
+
+  /* ---- Shipping Information Column ---- */
+  .checkout-page .checkout-form-column {
+    flex: none;
+    width: 100%;
+    padding: 28px 20px 36px 20px;
+    order: 1;
+  }
+
+  /* Title: large, wraps cleanly on narrow screens */
+  .checkout-page .section-title {
+    font-size: 2rem;
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+    word-break: break-word;
+  }
+
+  .checkout-page .section-divider {
+    margin-bottom: 28px;
+  }
+
+  /* Form: single column, comfortable gaps */
+  .checkout-page .shipping-form {
+    gap: 24px;
+  }
+
+  /* Two-column form rows → single column on mobile */
+  .checkout-page .form-row {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .checkout-page .col-half {
+    flex: none;
+    width: 100%;
+  }
+
+  /* Input/textarea/select: wider tap target */
+  .checkout-page .form-group input,
+  .checkout-page .form-group textarea,
+  .checkout-page .form-group select {
+    padding: 10px 0;
+    font-size: 0.9rem;
+  }
+
+  /* Textarea: taller for address */
+  .checkout-page .form-group textarea {
+    min-height: 80px;
+    resize: none;
+  }
+
+  /* Labels: slightly larger for readability */
+  .checkout-page .form-group label {
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+  }
+
+  /* Hide Indonesian translation labels on mobile for cleaner look */
+  .checkout-page .form-group label .translation {
+    display: none;
+  }
+
+  /* ---- Order Summary Column ---- */
+  .checkout-page .checkout-summary-column {
+    flex: none;
+    width: 100%;
+    position: static; /* remove desktop sticky */
+    order: 2;
+    border-top: 1px solid var(--color-black);
+  }
+
+  /* Remove border around card — let the section border do it */
+  .checkout-page .order-summary-card {
+    border: none;
+  }
+
+  /* "ORDER SUMMARY" header */
+  .checkout-page .order-summary-header {
+    padding: 14px 20px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    background-color: var(--color-white);
+    color: var(--color-black);
+    border-bottom: 1px solid var(--color-border-light);
+  }
+
+  .checkout-page .order-summary-content {
+    padding: 20px 20px 0 20px;
+  }
+
+  /* Items list: no max-height cap, full visible on mobile */
+  .checkout-page .checkout-items-list {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+    gap: 0;
+  }
+
+  /* Each item row: thumbnail left, info + price stacked right */
+  .checkout-page .checkout-item-row {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 14px;
+    row-gap: 4px;
+    padding: 16px 0;
+    align-items: start;
+  }
+
+  /* Thumbnail: square placeholder box */
+  .checkout-page .checkout-item-img-wrapper {
+    width: 72px;
+    height: 72px;
+    grid-row: 1 / 3;
+    grid-column: 1;
+    border: 1px solid var(--color-border-light);
+    background-color: #E8E8E8;
+  }
+
+  /* Item info block */
+  .checkout-page .checkout-item-info {
+    grid-row: 1;
+    grid-column: 2;
+    align-self: start;
+  }
+
+  .checkout-page .checkout-item-name {
+    font-size: 0.8rem;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+
+  .checkout-page .checkout-item-detail,
+  .checkout-page .checkout-item-qty {
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+  }
+
+  /* Price: right-aligned, sits below the info block */
+  .checkout-page .checkout-item-price {
+    grid-row: 2;
+    grid-column: 2;
+    margin-left: 0;
+    font-size: 0.82rem;
+    align-self: end;
+    text-align: right;
+  }
+
+  /* Thin divider between items */
+  .checkout-page .checkout-items-divider {
+    margin: 0;
+    border-top: 1px solid var(--color-border-light);
+  }
+
+  /* Totals section: no inner border/bg — flat style */
+  .checkout-page .checkout-totals-section {
+    background-color: transparent;
+    border: none;
+    border-top: 1px solid var(--color-border-light);
+    padding: 20px 0;
+    margin-top: 8px;
+  }
+
+  .checkout-page .totals-row {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+
+  .checkout-page .totals-row.total-row {
+    font-size: 1.05rem;
+    margin-top: 8px;
+    margin-bottom: 0;
+  }
+
+  /* ---- Confirm Order Button ---- */
+  .checkout-page .confirm-order-btn {
+    width: calc(100% - 40px);
+    margin: 20px 20px 28px 20px;
+    padding: 18px 0;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* ---- Footer ---- */
+  .checkout-page .checkout-footer {
+    margin: 0;
+    padding: 20px 20px 32px 20px;
+    border-top: 1px solid var(--color-border-light);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .checkout-page .checkout-footer-copy {
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    color: var(--color-gray-muted);
+    text-transform: uppercase;
+  }
+
+  /* Show footer nav links on mobile */
+  .checkout-page .checkout-footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .checkout-page .checkout-footer-link {
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    color: var(--color-gray-muted);
+    text-transform: uppercase;
+  }
+
+  .checkout-page .checkout-footer-sep {
+    font-size: 0.6rem;
+    color: var(--color-gray-muted);
+  }
+
+  /* ---- Success state: full-width on mobile ---- */
+  .checkout-page .success-container {
+    margin: 40px 20px;
+    padding: 32px 24px;
+    max-width: 100%;
+  }
+
 }
