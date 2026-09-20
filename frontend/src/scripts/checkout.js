@@ -296,12 +296,11 @@
             // Extract & sanitize form inputs
             var fullName = document.getElementById('full-name') ? document.getElementById('full-name').value.trim() : '';
             var phoneNumber = document.getElementById('phone-number') ? document.getElementById('phone-number').value.trim() : '';
-            var district = document.getElementById('district') ? document.getElementById('district').value.trim() : '';
             var postalCode = document.getElementById('postal-code') ? document.getElementById('postal-code').value.trim() : '';
             var completeAddress = document.getElementById('complete-address') ? document.getElementById('complete-address').value.trim() : '';
 
             // Validate all required fields
-            if (!fullName || !phoneNumber || !currentProvinceId || !currentCityId || !district || !postalCode || !completeAddress) {
+            if (!fullName || !phoneNumber || !currentProvinceId || !currentCityId || !postalCode || !completeAddress) {
                 showError('PLEASE FILL OUT ALL REQUIRED SHIPPING FIELDS.');
                 return;
             }
@@ -327,7 +326,6 @@
                     city_id: currentCityId,
                     courier: currentCourier || 'jne',
                     shipping_cost: currentShippingCost || 0,
-                    district: district,
                     postal_code: postalCode,
                     address: completeAddress
                 },

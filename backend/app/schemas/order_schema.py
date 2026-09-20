@@ -33,7 +33,7 @@ class ShippingInfo(BaseModel):
     recipient_phone: str = Field(..., max_length=50, description="Recipient's phone number")
     province: str = Field(..., max_length=255, description="Province")
     city: str = Field(..., max_length=255, description="City / Kabupaten")
-    district: str = Field(..., max_length=255, description="District / Kecamatan")
+    district: Optional[str] = Field(None, max_length=255, description="District / Kecamatan")
     postal_code: str = Field(..., max_length=20, description="Postal / ZIP code")
     address: str = Field(..., description="Full street address")
     province_id: Optional[str] = Field(None, description="RajaOngkir Province ID")
@@ -65,7 +65,7 @@ class OrderResponse(BaseModel):
     recipient_phone: str
     province: str
     city: str
-    district: str
+    district: Optional[str] = None
     postal_code: str
     address: str
     province_id: Optional[str]

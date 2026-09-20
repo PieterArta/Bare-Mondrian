@@ -30,7 +30,7 @@ class Order(Base):
     recipient_phone = Column(String(50),  nullable=False)
     province        = Column(String(255), nullable=False)
     city            = Column(String(255), nullable=False)
-    district        = Column(String(255), nullable=False)
+    district        = Column(String(255), nullable=True)
     postal_code     = Column(String(20),  nullable=False)
     address         = Column(Text,        nullable=False)
 
