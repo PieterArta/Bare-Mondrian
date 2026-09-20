@@ -33,26 +33,20 @@ def require_admin(
 ) -> Dict[str, Any]:
     """
     Dependency that enforces admin permissions:
-    1. Checks if the token's role claim is "admin".
-    2. Checks if the token's email is present in the ADMIN_EMAILS whitelist from config/env.
-    Raises a 403 Forbidden error if either check fails.
+    1. Checks if the token's role claim is "admin", OR
+    2. Checks if the token's email is in the ADMIN_EMAILS whitelist.
     """
     role = payload.get("role")
     email = (payload.get("email") or payload.get("sub") or "").strip().lower()
     
-    # Check 1: Role check
-    if role != "admin":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access forbidden: Admin role required."
-        )
-        
-    # Check 2: Email whitelist check
     allowed_admin_emails = settings.admin_emails_list
-    if allowed_admin_emails and email not in allowed_admin_emails:
+    is_whitelisted = bool(allowed_admin_emails and email in allowed_admin_emails)
+    is_admin_role = (role == "admin")
+
+    if not (is_admin_role or is_whitelisted):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access forbidden: Email is not whitelisted as administrator."
+            detail="Access forbidden: Admin permissions required."
         )
         
     return payload

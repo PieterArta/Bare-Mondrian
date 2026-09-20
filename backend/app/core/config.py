@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     ORIGIN_CITY_ID: str = "152"  # Default: Jakarta Selatan
     
     # Google OAuth 2.0
-    GOOGLE_CLIENT_ID: str = "GOOGLE_CLIENT_ID_PLACEHOLDER"
+    GOOGLE_CLIENT_ID: str = "334624921209-ml7gtbe86hfar69dim9b5qjqrq82736u.apps.googleusercontent.com"
     
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), ".env"),

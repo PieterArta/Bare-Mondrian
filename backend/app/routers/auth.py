@@ -110,17 +110,24 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
     summary="Authenticate via Google OAuth 2.0 ID Token",
 )
 def google_login(payload: GoogleAuthPayload, db: Session = Depends(get_db)):
+    token_str = payload.token
+    if not token_str:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Missing Google credential or id_token.",
+        )
+
     # Verify Google ID token against Google Client ID
     try:
         id_info = id_token.verify_oauth2_token(
-            token=payload.id_token,
-            request=requests.Request(),
+            token_str,
+            requests.Request(),
             audience=settings.GOOGLE_CLIENT_ID if settings.GOOGLE_CLIENT_ID != "GOOGLE_CLIENT_ID_PLACEHOLDER" else None,
         )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired Google token.",
+            detail=f"Invalid or expired Google token: {str(e)}",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

@@ -103,6 +103,11 @@
     // ─── Init ─────────────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function () {
         var orderId = getQueryParam('id');
+        if (!orderId) {
+            try {
+                orderId = sessionStorage.getItem('lastCompletedOrderId') || sessionStorage.getItem('currentOrderId');
+            } catch (e) {}
+        }
 
         if (!orderId) {
             showError('No order ID was provided. Please return to the homepage.');

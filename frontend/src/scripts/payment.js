@@ -316,8 +316,11 @@
                         return;
                     }
 
-                    // Success: clear session order ID and redirect
-                    try { sessionStorage.removeItem('currentOrderId'); } catch (e) {}
+                    // Success: set lastCompletedOrderId in sessionStorage and redirect
+                    try {
+                        sessionStorage.setItem('lastCompletedOrderId', orderId);
+                        sessionStorage.removeItem('currentOrderId');
+                    } catch (e) {}
                     window.location.href = 'order-confirmation.html?id=' + orderId;
                 })
                 .catch(function (err) {
@@ -336,7 +339,7 @@
 
         if (!orderId) {
             // No order ID — redirect back to checkout
-            window.location.href = 'checkout.html';
+            window.location.href = '/pages/checkout.html';
             return;
         }
 

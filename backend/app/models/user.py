@@ -10,7 +10,7 @@ class User(Base):
     full_name = Column(String(255), nullable=True)
     email = Column(String(255), unique=True, index=True, nullable=False)
     phone = Column(String(50), nullable=True)
-    hashed_password = Column(String(255), nullable=False)
+    hashed_password = Column(String(255), nullable=True)
     role = Column(String(50), default="user", nullable=False)  # "user" | "admin"
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 

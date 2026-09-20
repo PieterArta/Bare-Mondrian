@@ -723,7 +723,7 @@ const API_BASE_URL = 'http://localhost:8000';
                 window.openCart();
             } else {
                 console.log('[Product Detail] Navigating to shop.html?openCart=true');
-                window.location.href = 'shop.html?openCart=true';
+                window.location.href = '/pages/shop.html?openCart=true';
             }
         });
     }
@@ -734,7 +734,7 @@ const API_BASE_URL = 'http://localhost:8000';
             console.log('[Product Detail] "BUY NOW" button clicked');
             var product = getSelectedProductOptions();
             addProductToCartState(product);
-            window.location.href = 'checkout.html';
+            window.location.href = '/pages/checkout.html';
         });
     }
 

@@ -26,7 +26,12 @@ class UserLogin(BaseModel):
 # Google OAuth Login
 # ---------------------------------------------------------------------------
 class GoogleAuthPayload(BaseModel):
-    id_token: str = Field(..., description="Google OAuth 2.0 ID Token credential")
+    credential: Optional[str] = Field(None, description="Google OAuth 2.0 ID Token credential")
+    id_token: Optional[str] = Field(None, description="Google OAuth 2.0 ID Token credential (alias)")
+
+    @property
+    def token(self) -> str:
+        return self.credential or self.id_token or ""
 
 
 # ---------------------------------------------------------------------------

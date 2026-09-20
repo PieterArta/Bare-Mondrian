@@ -350,6 +350,9 @@ function loadDashboardData() {
     }).then(function (res) {
         if (!res.ok) throw new Error('Failed to fetch orders (status ' + res.status + ')');
         return res.json();
+    }).catch(function (err) {
+        console.error('[Dashboard] Orders fetch error:', err);
+        return [];
     });
 
     var productsPromise = fetch(API_BASE_URL + '/api/products/', {
@@ -358,6 +361,9 @@ function loadDashboardData() {
     }).then(function (res) {
         if (!res.ok) throw new Error('Failed to fetch products (status ' + res.status + ')');
         return res.json();
+    }).catch(function (err) {
+        console.error('[Dashboard] Products fetch error:', err);
+        return [];
     });
 
     Promise.all([ordersPromise, productsPromise])
@@ -372,7 +378,7 @@ function loadDashboardData() {
             renderRecentActivity(orders);
         })
         .catch(function (err) {
-            console.error('[Dashboard] Data load error:', err);
+            console.error('[Dashboard] Unexpected render error:', err);
         });
 }
 

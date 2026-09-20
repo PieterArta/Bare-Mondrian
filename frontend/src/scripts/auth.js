@@ -12,8 +12,7 @@
   /* ─────────────────────────────────────────────
      Google OAuth Configuration
   ───────────────────────────────────────────── */
-  // Paste your real Google Client ID from Google Cloud Console below:
-  var GOOGLE_CLIENT_ID = 'CLIENT_ID_PLACEHOLDER';
+  var GOOGLE_CLIENT_ID = '334624921209-ml7gtbe86hfar69dim9b5qjqrq82736u.apps.googleusercontent.com';
 
   /** Handle ID token credential response returned from Google Sign-In */
   function handleGoogleCredentialResponse(response) {
@@ -26,7 +25,10 @@
     fetch(API_BASE_URL + '/api/auth/google', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id_token: response.credential })
+      body: JSON.stringify({
+        credential: response.credential,
+        id_token: response.credential
+      })
     })
       .then(function (res) {
         if (!res.ok) {
@@ -67,18 +69,12 @@
     var googleBtn = document.getElementById(buttonId);
     if (!googleBtn) return;
 
-    googleBtn.addEventListener('click', function (e) {
-      e.preventDefault();
-      var formError = document.getElementById(formErrorId);
-      if (formError) clearFormError(formError);
+    googleBtn.style.position = 'relative';
+    googleBtn.style.overflow = 'hidden';
 
-      if (GOOGLE_CLIENT_ID === 'CLIENT_ID_PLACEHOLDER') {
-        console.warn('[Auth] GOOGLE_CLIENT_ID is set to placeholder. Replace it with your Google Client ID in auth.js.');
-      }
-
+    var initGSI = function () {
       if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
-        if (formError) showFormError(formError, 'Google Sign-In library is loading or blocked. Please refresh and try again.');
-        return;
+        return false;
       }
 
       try {
@@ -88,15 +84,59 @@
           auto_select: false
         });
 
-        google.accounts.id.prompt(function (notification) {
-          if (notification.isNotDisplayed()) {
-            var reason = notification.getNotDisplayedReason();
-            console.warn('[Auth] Google prompt not displayed reason:', reason);
-          }
-        });
+        var overlayId = 'gsi-overlay-' + buttonId;
+        var overlayEl = document.getElementById(overlayId);
+        if (!overlayEl) {
+          overlayEl = document.createElement('div');
+          overlayEl.id = overlayId;
+          overlayEl.style.position = 'absolute';
+          overlayEl.style.top = '0';
+          overlayEl.style.left = '0';
+          overlayEl.style.width = '100%';
+          overlayEl.style.height = '100%';
+          overlayEl.style.opacity = '0.001';
+          overlayEl.style.zIndex = '10';
+          overlayEl.style.cursor = 'pointer';
+          googleBtn.appendChild(overlayEl);
+
+          google.accounts.id.renderButton(overlayEl, {
+            type: 'standard',
+            theme: 'outline',
+            size: 'large',
+            width: googleBtn.offsetWidth || 300
+          });
+        }
+
+        return true;
       } catch (err) {
-        console.error('[Auth] Error initiating Google Sign-In:', err);
-        if (formError) showFormError(formError, 'Could not start Google Sign-In. Please check Client ID configuration.');
+        console.error('[Auth] GSI initialization error:', err);
+        return false;
+      }
+    };
+
+    if (!initGSI()) {
+      var attempts = 0;
+      var interval = setInterval(function () {
+        attempts++;
+        if (initGSI() || attempts > 20) {
+          clearInterval(interval);
+        }
+      }, 200);
+    }
+
+    googleBtn.addEventListener('click', function (e) {
+      var formError = document.getElementById(formErrorId);
+      if (formError) clearFormError(formError);
+
+      if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+        google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleCredentialResponse,
+          auto_select: false
+        });
+        google.accounts.id.prompt();
+      } else {
+        if (formError) showFormError(formError, 'Google Sign-In library is loading. Please try again in a moment.');
       }
     });
   }
