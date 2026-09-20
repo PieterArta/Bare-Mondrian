@@ -46,6 +46,22 @@
   gap: 20px;
 }
 
+/* ── Form-level Error Banner ── */
+.auth-form-error {
+  display: none;
+  padding: 10px 14px;
+  background-color: #fdf2f2;
+  border: 1px solid #f8b4b4;
+  color: #9b1c1c;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
+.auth-form-error.active {
+  display: block;
+}
+
 /* ── Field Group ── */
 .auth-field {
   display: flex;
@@ -253,4 +269,176 @@
   flex-direction: column;
   gap: 16px;
   margin-top: 8px;
+}
+
+/* =====================================================
+   MOBILE RESPONSIVE OVERRIDES (max-width: 768px)
+   ===================================================== */
+@media screen and (max-width: 768px) {
+  /* ── Mobile Navbar ── */
+  .auth-page .navbar {
+    background-color: var(--color-bg-light) !important;
+    border-bottom: 1px solid var(--color-border-light) !important;
+  }
+
+  /* ── Main Layout Padding ── */
+  .auth-main {
+    margin-top: 56px;
+    padding: 36px 16px 48px;
+    align-items: flex-start;
+  }
+
+  /* ── Full Width Form Card ── */
+  .auth-card {
+    max-width: 100%;
+    width: 100%;
+    padding: 32px 20px 28px;
+    box-sizing: border-box;
+  }
+
+  /* ── Title ── */
+  .auth-title {
+    font-size: 1.35rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 28px;
+  }
+
+  /* ── Form Fields & Touch Targets ── */
+  .auth-form {
+    gap: 18px;
+  }
+
+  .auth-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+  }
+
+  .auth-input {
+    height: 48px;
+    font-size: 0.88rem;
+    padding: 0 14px;
+    border-radius: 0;
+  }
+
+  .auth-input::placeholder {
+    font-size: 0.82rem;
+  }
+
+  /* ── Password Toggle Button Touch Area ── */
+  .auth-toggle-btn {
+    right: 4px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+  }
+
+  .auth-toggle-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* ── Forgot Password Link ── */
+  .auth-forgot {
+    font-size: 0.72rem;
+    margin-top: -6px;
+    padding: 4px 0;
+  }
+
+  /* ── Actions & Buttons ── */
+  .auth-actions {
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  .auth-submit-btn {
+    height: 48px;
+    min-height: 44px;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    border-radius: 0;
+  }
+
+  .auth-google-btn {
+    height: 48px;
+    min-height: 44px;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    border-radius: 0;
+  }
+
+  .auth-divider {
+    margin: 2px 0;
+  }
+
+  .auth-divider-text {
+    font-size: 0.65rem;
+  }
+
+  .auth-switch {
+    font-size: 0.75rem;
+    margin-top: 2px;
+  }
+
+  /* ── Mobile Footer ── */
+  .auth-page .footer {
+    padding: 36px 20px 32px;
+    background-color: var(--color-bg-light);
+    border-top: 1px solid var(--color-border-light);
+    text-align: center;
+  }
+
+  .auth-page .footer-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .auth-page .footer-left {
+    max-width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .auth-page .footer-logo {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .auth-page .footer-tagline {
+    font-size: 0.75rem;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .auth-page .footer-copyright {
+    font-size: 0.65rem;
+    text-align: center;
+  }
+
+  .auth-page .footer-right {
+    width: 100%;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .auth-page .footer-nav--row {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 16px !important;
+  }
+
+  .auth-page .footer-link {
+    font-size: 0.68rem;
+  }
+
+  .auth-page .footer-socials {
+    justify-content: center;
+    gap: 12px;
+  }
 }

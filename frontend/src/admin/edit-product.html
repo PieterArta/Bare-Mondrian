@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product — BARE MONDRIAN Admin</title>
+    <meta name="description" content="BARE MONDRIAN Admin — edit existing product details.">
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/pages/admin.css">
+</head>
+
+<body class="admin-page">
+<div class="admin-layout">
+
+    <!-- Sidebar overlay (mobile drawer) -->
+    <div class="admin-sidebar-overlay" id="admin-sidebar-overlay"></div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+        <div class="sidebar-top">
+            <a href="dashboard.html" class="sidebar-brand" id="sidebar-brand">
+                <span class="sidebar-brand-main">BARE</span>
+                <span class="sidebar-brand-sub">MONDRIAN</span>
+            </a>
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <a href="dashboard.html" class="sidebar-nav-item" id="nav-dashboard">
+                    <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                    DASHBOARD
+                </a>
+                <a href="orders.html" class="sidebar-nav-item" id="nav-orders">
+                    <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    ORDERS
+                </a>
+                <a href="products.html" class="sidebar-nav-item active" id="nav-products">
+                    <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                    PRODUCTS
+                </a>
+                <a href="homepage-settings.html" class="sidebar-nav-item" id="nav-homepage">
+                    <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    HOMEPAGE
+                </a>
+            </nav>
+        </div>
+        <div class="sidebar-bottom">
+            <a href="login.html" class="sidebar-logout" id="btn-logout">
+                <svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                LOGOUT
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <div class="admin-main">
+
+        <!-- TOP BAR -->
+        <header class="admin-topbar" id="admin-topbar">
+            <button class="admin-hamburger-btn" id="admin-hamburger-btn" aria-label="Open Navigation Menu">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="4" y1="6" x2="20" y2="6" />
+                    <line x1="4" y1="12" x2="20" y2="12" />
+                    <line x1="4" y1="18" x2="20" y2="18" />
+                </svg>
+            </button>
+            <a href="dashboard.html" class="topbar-brand">BARE MONDRIAN<span class="topbar-brand-admin-text"> ADMIN</span></a>
+            <div class="topbar-actions">
+                <button class="topbar-icon-btn" id="btn-topbar-notifications" aria-label="Notifications">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                </button>
+                <button class="topbar-icon-btn" id="btn-topbar-account" aria-label="Account">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <main class="admin-content" id="edit-product-content">
+
+            <!-- Page Header -->
+            <div class="ap-header" id="ap-header">
+                <h1 class="ap-title" id="ap-title">EDIT PRODUCT</h1>
+                <div class="ap-header-actions">
+                    <button class="btn-hs-danger" id="btn-delete-top" type="button">DELETE PRODUCT</button>
+                    <button class="btn-hs-outline" id="btn-cancel-top" type="button">CANCEL</button>
+                    <button class="btn-hs-primary" id="btn-save-top" type="button">SAVE CHANGES</button>
+                </div>
+            </div>
+            <hr class="ap-divider">
+
+            <form id="edit-product-form" novalidate>
+
+                <!-- ===== SECTION: PHOTOS + BASIC DETAILS ===== -->
+                <div class="ap-two-col-section" id="ap-photos-details">
+
+                    <!-- LEFT: Product Photos -->
+                    <div class="ap-photos-col" id="ap-photos-col">
+                        <span class="ap-col-label">PRODUCT PHOTOS</span>
+
+                        <!-- Dropzone -->
+                        <div class="ap-dropzone" id="ap-dropzone" role="button" tabindex="0" aria-label="Drag photos here or click to upload">
+                            <input type="file" id="ap-file-input" class="ap-file-input" accept=".jpg,.jpeg,.png,.webp" multiple aria-label="Select product photos">
+                            <svg class="ap-dropzone-icon" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="16 16 12 12 8 16"/>
+                                <line x1="12" y1="12" x2="12" y2="21"/>
+                                <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+                            </svg>
+                            <p class="ap-dropzone-heading">DRAG PHOTOS HERE OR CLICK TO UPLOAD</p>
+                            <p class="ap-dropzone-subtext">JPEG, PNG, WEBP up to 5MB</p>
+                        </div>
+
+                        <!-- Photo slot thumbnails -->
+                        <div class="ap-photo-slots" id="ap-photo-slots">
+                            <!-- Slot 0 — main photo -->
+                            <div class="ap-photo-slot" id="ap-slot-0" data-slot="0">
+                                <img src="" alt="" class="ap-slot-img" id="ap-slot-img-0" style="display:none;">
+                                <div class="ap-slot-placeholder" id="ap-slot-ph-0">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                                </div>
+                                <div class="ap-main-photo-label" id="ap-main-label-0" style="display:none;">MAIN PHOTO</div>
+                                <button class="ap-slot-remove" id="ap-slot-rm-0" data-slot="0" type="button" aria-label="Remove photo" style="display:none;">&times;</button>
+                            </div>
+                            <!-- Slot 1 -->
+                            <div class="ap-photo-slot" id="ap-slot-1" data-slot="1">
+                                <img src="" alt="" class="ap-slot-img" id="ap-slot-img-1" style="display:none;">
+                                <div class="ap-slot-placeholder" id="ap-slot-ph-1">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                                </div>
+                                <button class="ap-slot-remove" id="ap-slot-rm-1" data-slot="1" type="button" aria-label="Remove photo" style="display:none;">&times;</button>
+                            </div>
+                            <!-- Slot 2 -->
+                            <div class="ap-photo-slot" id="ap-slot-2" data-slot="2">
+                                <img src="" alt="" class="ap-slot-img" id="ap-slot-img-2" style="display:none;">
+                                <div class="ap-slot-placeholder" id="ap-slot-ph-2">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                                </div>
+                                <button class="ap-slot-remove" id="ap-slot-rm-2" data-slot="2" type="button" aria-label="Remove photo" style="display:none;">&times;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Basic Details -->
+                    <div class="ap-details-col" id="ap-details-col">
+                        <span class="ap-col-label">BASIC DETAILS</span>
+
+                        <!-- Product Name -->
+                        <div class="ap-field-group" id="ap-fg-name">
+                            <label class="ap-field-label" for="ap-input-name">PRODUCT NAME</label>
+                            <input type="text" id="ap-input-name" class="ap-input" placeholder="e.g. OVERSIZED TECHNICAL PARKA" autocomplete="off" value="">
+                            <span class="ap-field-error" id="ap-err-name"></span>
+                        </div>
+
+                        <!-- Category + Price row -->
+                        <div class="ap-two-fields-row">
+                            <div class="ap-field-group" id="ap-fg-category">
+                                <label class="ap-field-label" for="ap-select-category">CATEGORY</label>
+                                <select id="ap-select-category" class="ap-select">
+                                    <option value="">Select Category</option>
+                                    <option value="OUTER">OUTER</option>
+                                    <option value="CELANA">CELANA</option>
+                                    <option value="ATASAN">ATASAN</option>
+                                    <option value="FOOTWEAR">FOOTWEAR</option>
+                                    <option value="AKSESORIS">AKSESORIS</option>
+                                </select>
+                                <span class="ap-field-error" id="ap-err-category"></span>
+                            </div>
+                            <div class="ap-field-group" id="ap-fg-price">
+                                <label class="ap-field-label" for="ap-input-price">PRICE (RP)</label>
+                                <div class="ap-input-prefix-wrap">
+                                    <span class="ap-input-prefix">Rp</span>
+                                    <input type="number" id="ap-input-price" class="ap-input ap-input--prefixed" placeholder="0" min="0" value="">
+                                </div>
+                                <span class="ap-field-error" id="ap-err-price"></span>
+                            </div>
+                        </div>
+
+                        <!-- Stock Qty + Stock Status row -->
+                        <div class="ap-two-fields-row">
+                            <div class="ap-field-group" id="ap-fg-stock-qty">
+                                <label class="ap-field-label" for="ap-input-stock">STOCK QUANTITY</label>
+                                <input type="number" id="ap-input-stock" class="ap-input" value="0" min="0">
+                            </div>
+                            <div class="ap-field-group" id="ap-fg-stock-status">
+                                <label class="ap-field-label">STOCK STATUS</label>
+                                <div class="ap-stock-toggle" id="ap-stock-toggle" role="group" aria-label="Stock status">
+                                    <button type="button" class="ap-stock-btn ap-stock-btn--active" id="btn-in-stock" data-status="IN STOCK">IN STOCK</button>
+                                    <button type="button" class="ap-stock-btn" id="btn-pre-order" data-status="PRE-ORDER">PRE-ORDER</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Color Options -->
+                        <div class="ap-field-group" id="ap-fg-colors">
+                            <label class="ap-field-label">COLOR OPTIONS</label>
+                            <div class="ap-color-tags-row" id="ap-color-tags-row">
+                                <!-- Tags rendered by JS -->
+                                <button type="button" class="ap-add-color-btn" id="ap-add-color-btn">+ ADD COLOR</button>
+                                <input type="text" id="ap-color-input" class="ap-color-input" placeholder="e.g. BLACK" style="display:none;" maxlength="30">
+                            </div>
+                        </div>
+
+                        <!-- Size Options -->
+                        <div class="ap-field-group" id="ap-fg-sizes">
+                            <label class="ap-field-label">SIZE OPTIONS</label>
+                            <div class="ap-size-options" id="ap-size-options">
+                                <label class="ap-size-option" for="size-sm">
+                                    <input type="checkbox" id="size-sm" class="ap-size-checkbox" value="S/M">
+                                    <span class="ap-size-label">S/M</span>
+                                </label>
+                                <label class="ap-size-option" for="size-lxl">
+                                    <input type="checkbox" id="size-lxl" class="ap-size-checkbox" value="L/XL">
+                                    <span class="ap-size-label">L/XL</span>
+                                </label>
+                                <label class="ap-size-option" for="size-one">
+                                    <input type="checkbox" id="size-one" class="ap-size-checkbox" value="ONE SIZE">
+                                    <span class="ap-size-label">ONE SIZE</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="ap-section-divider">
+
+                <!-- ===== SECTION: DESCRIPTION ===== -->
+                <div class="ap-section" id="ap-section-description">
+                    <h2 class="ap-section-title" id="ap-desc-title">DESCRIPTION</h2>
+                    <textarea id="ap-textarea-description" class="ap-textarea" rows="5" placeholder="Enter detailed product description..."></textarea>
+                </div>
+
+                <hr class="ap-section-divider">
+
+                <!-- ===== SECTION: FIT & SIZING ===== -->
+                <div class="ap-section" id="ap-section-sizing">
+                    <h2 class="ap-section-title" id="ap-sizing-title">FIT &amp; SIZING (CM)</h2>
+                    <div class="ap-sizing-table-wrapper">
+                        <table class="ap-sizing-table" id="ap-sizing-table">
+                            <thead>
+                                <tr class="ap-sizing-thead-row">
+                                    <th class="ap-sizing-th ap-sizing-th--label">MEASUREMENT</th>
+                                    <th class="ap-sizing-th">S/M</th>
+                                    <th class="ap-sizing-th">L/XL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="ap-sizing-tr">
+                                    <td class="ap-sizing-td ap-sizing-td--label">BUST</td>
+                                    <td class="ap-sizing-td"><input type="number" class="ap-sizing-input" data-measure="bust" data-size="sm" value="0" min="0" aria-label="Bust S/M"></td>
+                                    <td class="ap-sizing-td"><input type="number" class="ap-sizing-input" data-measure="bust" data-size="lxl" value="0" min="0" aria-label="Bust L/XL"></td>
+                                </tr>
+                                <tr class="ap-sizing-tr">
+                                    <td class="ap-sizing-td ap-sizing-td--label">SHOULDER WIDTH</td>
+                                    <td class="ap-sizing-td"><input type="number" class="ap-sizing-input" data-measure="shoulder" data-size="sm" value="0" min="0" aria-label="Shoulder Width S/M"></td>
+                                    <td class="ap-sizing-td"><input type="number" class="ap-sizing-input" data-measure="shoulder" data-size="lxl" value="0" min="0" aria-label="Shoulder Width L/XL"></td>
+                                </tr>
+                                <tr class="ap-sizing-tr">
+                                    <td class="ap-sizing-td ap-sizing-td--label">ARMHOLE</td>
+                                    <td class="ap-sizing-td"><input type="number" class="ap-sizing-input" data-measure="armhole" data-size="sm" value="0" min="0" aria-label="Armhole S/M"></td>
+                                    <td class="ap-sizing-td"><input type="number" class="ap-sizing-input" data-measure="armhole" data-size="lxl" value="0" min="0" aria-label="Armhole L/XL"></td>
+                                </tr>
+                                <tr class="ap-sizing-tr">
+                                    <td class="ap-sizing-td ap-sizing-td--label">LENGTH</td>
+                                    <td class="ap-sizing-td"><input type="number" class="ap-sizing-input" data-measure="length" data-size="sm" value="0" min="0" aria-label="Length S/M"></td>
+                                    <td class="ap-sizing-td"><input type="number" class="ap-sizing-input" data-measure="length" data-size="lxl" value="0" min="0" aria-label="Length L/XL"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr class="ap-section-divider">
+
+                <!-- ===== SECTION: MATERIAL & CARE ===== -->
+                <div class="ap-section" id="ap-section-material">
+                    <h2 class="ap-section-title" id="ap-material-title">MATERIAL &amp; CARE</h2>
+                    <div class="ap-field-group" style="margin-bottom: 20px;">
+                        <label class="ap-field-label" for="ap-textarea-composition">COMPOSITION</label>
+                        <textarea id="ap-textarea-composition" class="ap-textarea" rows="3" placeholder="e.g. Polyester, Wool Blend (Semi-Wool)"></textarea>
+                    </div>
+                    <div class="ap-field-group">
+                        <label class="ap-field-label" for="ap-textarea-care">CARE INSTRUCTIONS</label>
+                        <textarea id="ap-textarea-care" class="ap-textarea" rows="3" placeholder="e.g. Dry clean recommended. Machine washable on a gentle cold cycle..."></textarea>
+                    </div>
+                </div>
+
+                <hr class="ap-section-divider">
+
+                <!-- ===== SECTION: SHIPPING INFO ===== -->
+                <div class="ap-section" id="ap-section-shipping">
+                    <h2 class="ap-section-title" id="ap-shipping-title">SHIPPING INFO</h2>
+                    <textarea id="ap-textarea-shipping" class="ap-textarea" rows="3" placeholder="Weight, dimensions, or specific shipping rules..."></textarea>
+                </div>
+
+                <hr class="ap-section-divider">
+
+                <!-- ===== FOOTER ACTIONS ===== -->
+                <div class="ap-form-footer" id="ap-form-footer">
+                    <button class="btn-hs-danger" id="btn-delete-bottom" type="button">DELETE PRODUCT</button>
+                    <button class="btn-hs-outline" id="btn-cancel-bottom" type="button">CANCEL</button>
+                    <button class="btn-hs-primary" id="btn-save-bottom" type="button">SAVE CHANGES</button>
+                </div>
+
+            </form>
+        </main>
+    </div>
+</div>
+
+<script src="../scripts/auth.js"></script>
+<script src="../scripts/admin/edit-product-form.js"></script>
+</body>
+</html>

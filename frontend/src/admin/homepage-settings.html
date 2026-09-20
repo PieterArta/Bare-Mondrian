@@ -15,6 +15,9 @@
 
     <div class="admin-layout">
 
+        <!-- Sidebar overlay (mobile drawer) -->
+        <div class="admin-sidebar-overlay" id="admin-sidebar-overlay"></div>
+
         <!-- ===== SIDEBAR ===== -->
         <aside class="admin-sidebar" id="admin-sidebar">
             <div class="sidebar-top">
@@ -75,7 +78,14 @@
 
             <!-- TOP BAR -->
             <header class="admin-topbar" id="admin-topbar">
-                <span class="topbar-brand" id="topbar-brand">BARE MONDRIAN ADMIN</span>
+                <button class="admin-hamburger-btn" id="admin-hamburger-btn" aria-label="Open Navigation Menu">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="4" y1="6" x2="20" y2="6" />
+                        <line x1="4" y1="12" x2="20" y2="12" />
+                        <line x1="4" y1="18" x2="20" y2="18" />
+                    </svg>
+                </button>
+                <a href="dashboard.html" class="topbar-brand" id="topbar-brand">BARE MONDRIAN<span class="topbar-brand-admin-text"> ADMIN</span></a>
                 <div class="topbar-actions">
                     <button class="topbar-icon-btn" id="btn-topbar-notifications" aria-label="Notifications">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -231,6 +241,7 @@
         </div>
     </div>
 
+    <script src="../scripts/auth.js"></script>
     <script src="../scripts/admin/homepage-settings.js"></script>
 
 </body>

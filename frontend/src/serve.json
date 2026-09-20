@@ -1,5 +1,4 @@
 {
-  "cleanUrls": true,
   "rewrites": [
     { "source": "/shop",                   "destination": "/pages/shop.html" },
     { "source": "/about",                  "destination": "/pages/about.html" },
@@ -14,6 +13,7 @@
     { "source": "/admin/orders",           "destination": "/admin/orders.html" },
     { "source": "/admin/products",         "destination": "/admin/products.html" },
     { "source": "/admin/add-product",      "destination": "/admin/add-product.html" },
+    { "source": "/admin/edit-product",     "destination": "/admin/edit-product.html" },
     { "source": "/admin/homepage-settings","destination": "/admin/homepage-settings.html" },
     { "source": "/admin/login",            "destination": "/admin/login.html" }
   ]

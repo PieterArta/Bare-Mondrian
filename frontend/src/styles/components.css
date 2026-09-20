@@ -21,6 +21,7 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--color-black);
+  text-decoration: none;
 }
 
 .nav-links {
@@ -216,6 +217,38 @@
 
 .cart-drawer.active {
   transform: translateX(0);
+}
+
+@media screen and (max-width: 768px) {
+  .cart-drawer {
+    max-width: 100%;
+  }
+
+  .cart-header {
+    padding: 16px;
+  }
+
+  .cart-items-container {
+    padding: 16px;
+  }
+
+  .cart-item-card {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .cart-item-image-wrapper {
+    width: 70px;
+    height: 70px;
+  }
+
+  .cart-item-name {
+    font-size: 0.8rem;
+  }
+
+  .stepper-btn {
+    width: 32px; /* Increased touch target */
+  }
 }
 
 /* Header */
@@ -480,5 +513,81 @@
 .cart-empty-shop-btn:hover {
   background-color: var(--color-black);
   color: var(--color-white);
+}
+
+/* ── Account Dropdown Menu ── */
+.nav-icons {
+  position: relative;
+}
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 220px;
+  background-color: var(--color-white, #ffffff);
+  border: 1px solid var(--color-black, #000000);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  padding: 16px;
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.account-dropdown.active {
+  display: flex;
+}
+
+.account-dropdown-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.account-dropdown-label {
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gray-muted, #888888);
+}
+
+.account-dropdown-user {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--color-black, #000000);
+  word-break: break-all;
+}
+
+.account-dropdown-divider {
+  border: none;
+  border-top: 1px solid var(--color-border-light, #e0e0e0);
+  margin: 0;
+}
+
+.account-dropdown-logout {
+  display: block;
+  width: 100%;
+  padding: 10px 0;
+  background-color: var(--color-black, #000000);
+  color: var(--color-white, #ffffff);
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.account-dropdown-logout:hover {
+  background-color: #333333;
 }
 

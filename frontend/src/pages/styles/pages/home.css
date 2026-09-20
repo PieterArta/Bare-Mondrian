@@ -1,13 +1,15 @@
 /* Homepage Specific Styles */
 
-/* Header Floating Over Hero Setup */
+/* ── Navbar: transparent over hero, solid on scroll ── */
 body.home-page .navbar {
   position: fixed !important;
   width: 100%;
   background-color: transparent !important;
   border-bottom: 1px solid transparent !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Sliding solid background via ::before */
 body.home-page .navbar::before {
   content: '';
   position: absolute;
@@ -18,13 +20,67 @@ body.home-page .navbar::before {
   background-color: var(--color-bg-light);
   border-bottom: 1px solid var(--color-border);
   transform: translateY(-100%);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: -1;
 }
 
 body.home-page .navbar.scrolled::before {
   transform: translateY(0);
 }
+
+/* ── Desktop only: black text/icons over hero ── */
+@media screen and (min-width: 769px) {
+  body.home-page .navbar .nav-brand,
+  body.home-page .navbar .nav-link {
+    color: var(--color-black);
+    transition: color 0.3s ease;
+  }
+
+  body.home-page .navbar .nav-link:hover {
+    color: var(--color-black);
+    opacity: 0.7;
+  }
+
+  body.home-page .navbar .nav-link.active {
+    color: var(--color-black);
+    border-bottom-color: var(--color-black);
+  }
+
+  body.home-page .navbar .icon-btn {
+    color: var(--color-black);
+    transition: color 0.3s ease;
+  }
+
+  body.home-page .navbar .icon-btn svg {
+    stroke: var(--color-black);
+    transition: stroke 0.3s ease;
+  }
+
+  /* Scrolled: restore black */
+  body.home-page .navbar.scrolled .nav-brand,
+  body.home-page .navbar.scrolled .nav-link {
+    color: var(--color-black);
+  }
+
+  body.home-page .navbar.scrolled .nav-link:hover {
+    color: var(--color-black);
+    opacity: 0.7;
+  }
+
+  body.home-page .navbar.scrolled .nav-link.active {
+    color: var(--color-black);
+    border-bottom-color: var(--color-black);
+  }
+
+  body.home-page .navbar.scrolled .icon-btn {
+    color: var(--color-black);
+  }
+
+  body.home-page .navbar.scrolled .icon-btn svg {
+    stroke: var(--color-black);
+  }
+}
+
 
 /* Hero Section */
 .hero-section {

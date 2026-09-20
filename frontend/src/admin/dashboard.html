@@ -15,6 +15,8 @@
 
     <!-- Admin Layout Wrapper -->
     <div class="admin-layout">
+        <!-- Sidebar overlay -->
+        <div class="admin-sidebar-overlay" id="admin-sidebar-overlay"></div>
 
         <!-- ===== SIDEBAR ===== -->
         <aside class="admin-sidebar" id="admin-sidebar">
@@ -81,7 +83,14 @@
 
             <!-- TOP BAR -->
             <header class="admin-topbar" id="admin-topbar">
-                <span class="topbar-brand" id="topbar-brand">BARE MONDRIAN ADMIN</span>
+                <button class="admin-hamburger-btn" id="admin-hamburger-btn" aria-label="Open Navigation Menu">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="4" y1="6" x2="20" y2="6" />
+                        <line x1="4" y1="12" x2="20" y2="12" />
+                        <line x1="4" y1="18" x2="20" y2="18" />
+                    </svg>
+                </button>
+                <a href="dashboard.html" class="topbar-brand" id="topbar-brand">BARE MONDRIAN<span class="topbar-brand-admin-text"> ADMIN</span></a>
                 <div class="topbar-actions">
                     <button class="topbar-icon-btn" id="btn-topbar-search" aria-label="Search">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -101,6 +110,7 @@
                             <circle cx="12" cy="7" r="4"/>
                         </svg>
                     </button>
+                    <span class="topbar-avatar-placeholder" id="topbar-avatar-placeholder"></span>
                 </div>
             </header>
 
@@ -127,7 +137,7 @@
                         <span class="summary-card-value">12</span>
                     </div>
                     <div class="summary-card summary-card--highlight" id="card-pending-approval">
-                        <span class="summary-card-label">PENDING<br>APPROVAL</span>
+                        <span class="summary-card-label">PENDING <br>APPROVAL</span>
                         <span class="summary-card-value">5</span>
                     </div>
                     <div class="summary-card" id="card-active-products">
@@ -139,7 +149,7 @@
                         <span class="summary-card-value">3</span>
                     </div>
                     <div class="summary-card summary-card--last" id="card-revenue">
-                        <span class="summary-card-label">REVENUE THIS<br>MONTH</span>
+                        <span class="summary-card-label">REVENUE THIS <br>MONTH</span>
                         <span class="summary-card-value summary-card-value--revenue">Rp<br>15.400.000</span>
                     </div>
                 </div>
@@ -165,9 +175,12 @@
                             </div>
                             <div class="approval-info">
                                 <span class="approval-customer-name">ALEX MERCER</span>
-                                <span class="approval-meta">ORD-9014 &bull; 10 mins ago</span>
+                                <span class="approval-meta">Order #8892</span>
                             </div>
-                            <span class="approval-amount">Rp 1.250.000</span>
+                            <div class="approval-status-block">
+                                <span class="approval-amount">Rp 1.250.000</span>
+                                <span class="approval-status-label">AWAITING</span>
+                            </div>
                         </div>
                         <hr class="dashboard-divider">
 
@@ -182,9 +195,12 @@
                             </div>
                             <div class="approval-info">
                                 <span class="approval-customer-name">SARAH CHEN</span>
-                                <span class="approval-meta">ORD-9013 &bull; 45 mins ago</span>
+                                <span class="approval-meta">Order #8891</span>
                             </div>
-                            <span class="approval-amount">Rp 3.400.000</span>
+                            <div class="approval-status-block">
+                                <span class="approval-amount">Rp 3.400.000</span>
+                                <span class="approval-status-label">AWAITING</span>
+                            </div>
                         </div>
                         <hr class="dashboard-divider">
 
@@ -199,9 +215,12 @@
                             </div>
                             <div class="approval-info">
                                 <span class="approval-customer-name">MARCUS WRIGHT</span>
-                                <span class="approval-meta">ORD-9011 &bull; 2 hrs ago</span>
+                                <span class="approval-meta">Order #8889</span>
                             </div>
-                            <span class="approval-amount">Rp 890.000</span>
+                            <div class="approval-status-block">
+                                <span class="approval-amount">Rp 890.000</span>
+                                <span class="approval-status-label">AWAITING</span>
+                            </div>
                         </div>
                     </div>
 
@@ -356,6 +375,7 @@
     </div>
     <!-- end admin-layout -->
 
+    <script src="../scripts/auth.js"></script>
     <script src="../scripts/admin-dashboard.js"></script>
 
 </body>

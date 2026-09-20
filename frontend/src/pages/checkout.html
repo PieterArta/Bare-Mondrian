@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+``<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,10 +17,10 @@
     <!-- Simplified Top Bar -->
     <header class="checkout-header">
         <div class="checkout-header-left">
-            <a href="index.html?openCart=true" class="back-to-cart-link">← BACK TO CART</a>
+            <a href="index.html?openCart=true" class="back-to-cart-link">←BACK TO CART</a>
         </div>
         <div class="checkout-header-center">
-            <div class="nav-brand">BARE MONDRIAN</div>
+            <a href="index.html" class="nav-brand">BARE MONDRIAN</a>
         </div>
         <div class="checkout-header-right"></div>
     </header>
@@ -50,23 +50,14 @@
                         <div class="select-wrapper">
                             <select id="province" name="province" required>
                                 <option value="" disabled selected>Select Province</option>
-                                <option value="DKI Jakarta">DKI Jakarta</option>
-                                <option value="Jawa Barat">Jawa Barat</option>
-                                <option value="Jawa Tengah">Jawa Tengah</option>
-                                <option value="Jawa Timur">Jawa Timur</option>
-                                <option value="Lampung">Lampung</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group col-half">
                         <label for="city">CITY/REGENCY <span class="translation">(KOTA/KABUPATEN)</span></label>
                         <div class="select-wrapper">
-                            <select id="city" name="city" required>
+                            <select id="city" name="city" required disabled>
                                 <option value="" disabled selected>Select City/Regency</option>
-                                <option value="Jakarta Barat">Jakarta Barat</option>
-                                <option value="Jakarta Selatan">Jakarta Selatan</option>
-                                <option value="Bandung">Bandung</option>
-                                <option value="Surabaya">Surabaya</option>
                             </select>
                         </div>
                     </div>
@@ -129,6 +120,7 @@
                 <button type="submit" form="shipping-form" class="confirm-order-btn" id="confirm-order-btn">
                     CONFIRM ORDER <span class="arrow-icon">→</span>
                 </button>
+                <div class="checkout-form-error" id="checkout-form-error" style="display:none; color:#c0392b; font-size:0.75rem; margin-top:12px; text-align:center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;"></div>
             </div>
         </section>
     </main>
@@ -148,6 +140,7 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="../scripts/auth.js"></script>
     <script src="../scripts/cart.js?v=5"></script>
     <script src="../scripts/checkout.js?v=5"></script>
 

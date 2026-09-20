@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORDER CONFIRMED — BARE MONDRIAN</title>
+    <meta name="description" content="Your BARE MONDRIAN order has been received and is pending verification.">
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/components.css">
+    <link rel="stylesheet" href="../styles/pages/checkout.css">
+    <link rel="stylesheet" href="../styles/pages/order-confirmation.css">
+</head>
+
+<body class="order-confirmation-page">
+
+    <!-- Simplified Top Bar -->
+    <header class="checkout-header">
+        <div class="checkout-header-left"></div>
+        <div class="checkout-header-center">
+            <a href="index.html" class="nav-brand">BARE MONDRIAN</a>
+        </div>
+        <div class="checkout-header-right"></div>
+    </header>
+    <hr class="checkout-top-line">
+
+    <!-- Main Content -->
+    <main class="confirmation-main" id="confirmation-main">
+
+        <!-- Loading State (shown while fetching) -->
+        <div class="confirmation-loading" id="confirmation-loading">
+            <div class="confirmation-loading-label">LOADING ORDER…</div>
+        </div>
+
+        <!-- Confirmation Card (hidden until data loads) -->
+        <div class="confirmation-container" id="confirmation-container" style="display:none;">
+
+            <!-- Check mark icon -->
+            <div class="confirmation-check-wrapper">
+                <div class="confirmation-check">✓</div>
+            </div>
+
+            <!-- Heading -->
+            <h1 class="confirmation-title">ORDER RECEIVED</h1>
+
+            <p class="confirmation-subtitle">
+                Your order has been placed and is now pending payment verification.
+                We'll confirm once your proof has been reviewed.
+            </p>
+
+            <!-- Order Details Box -->
+            <div class="confirmation-details-box">
+                <div class="confirmation-detail-row">
+                    <span class="confirmation-detail-label">ORDER ID</span>
+                    <span class="confirmation-detail-value" id="conf-order-id">—</span>
+                </div>
+                <hr class="confirmation-detail-divider">
+                <div class="confirmation-detail-row">
+                    <span class="confirmation-detail-label">TOTAL PAID</span>
+                    <span class="confirmation-detail-value" id="conf-total">—</span>
+                </div>
+                <hr class="confirmation-detail-divider">
+                <div class="confirmation-detail-row">
+                    <span class="confirmation-detail-label">STATUS</span>
+                    <span class="confirmation-status-badge" id="conf-status">PENDING VERIFICATION</span>
+                </div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="confirmation-actions">
+                <a href="index.html" class="confirmation-btn-primary" id="conf-btn-home">RETURN TO HOME</a>
+                <a href="shop.html" class="confirmation-btn-secondary" id="conf-btn-shop">CONTINUE SHOPPING</a>
+            </div>
+
+        </div>
+
+        <!-- Error State (shown if fetch fails) -->
+        <div class="confirmation-error" id="confirmation-error" style="display:none;">
+            <div class="confirmation-error-icon">✕</div>
+            <h2 class="confirmation-error-title">UNABLE TO LOAD ORDER</h2>
+            <p class="confirmation-error-msg" id="confirmation-error-msg">
+                We could not retrieve your order details. Please check your orders or contact support.
+            </p>
+            <a href="index.html" class="confirmation-btn-primary" style="margin-top: 24px;">RETURN TO HOME</a>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="checkout-footer">
+        &copy; 2026 BARE MONDRIAN. ALL RIGHTS RESERVED.
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/order-confirmation.js"></script>
+
+</body>
+
+</html>

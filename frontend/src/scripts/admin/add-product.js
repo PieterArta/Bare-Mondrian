@@ -1,335 +1,461 @@
 /**
  * add-product.js — BARE MONDRIAN Admin
- * Add New Product form: photo upload, color tags, stock toggle,
- * form collection, validation, and save/cancel.
+ * Add New Product form logic: auth guard, photo upload previews,
+ * form collection & validation, API submission (POST /api/products/), loading state,
+ * error handling, and cancel navigation.
  */
-'use strict';
+(function () {
+    'use strict';
 
-/* -------------------------------------------------------
-   PHOTO SLOTS STATE
-   ------------------------------------------------------- */
-var MAX_SLOTS = 3;
-var photoSlots = [null, null, null]; // ObjectURL or null per slot
+    var API_BASE_URL = 'http://localhost:8000';
+    var MAX_SLOTS = 3;
 
-/* -------------------------------------------------------
-   COLOR TAGS STATE
-   ------------------------------------------------------- */
-var colorTags = ['ESPRESSO', 'OBSIDIAN'];
+    // State
+    var photoSlots = [null, null, null]; // ObjectURL or null per slot
+    var colorTags = ['ESPRESSO', 'OBSIDIAN'];
+    var stockStatus = 'IN STOCK';
 
-/* -------------------------------------------------------
-   STOCK STATUS STATE
-   ------------------------------------------------------- */
-var stockStatus = 'IN STOCK';
-
-/* -------------------------------------------------------
-   DOM REFERENCES
-   ------------------------------------------------------- */
-var dropzone        = document.getElementById('ap-dropzone');
-var fileInput       = document.getElementById('ap-file-input');
-var photoSlotsEl    = document.getElementById('ap-photo-slots');
-
-var inputName       = document.getElementById('ap-input-name');
-var selectCategory  = document.getElementById('ap-select-category');
-var inputPrice      = document.getElementById('ap-input-price');
-var inputStockQty   = document.getElementById('ap-input-stock');
-var stockToggle     = document.getElementById('ap-stock-toggle');
-
-var colorTagsRow    = document.getElementById('ap-color-tags-row');
-var addColorBtn     = document.getElementById('ap-add-color-btn');
-var colorInput      = document.getElementById('ap-color-input');
-
-var errName         = document.getElementById('ap-err-name');
-var errCategory     = document.getElementById('ap-err-category');
-var errPrice        = document.getElementById('ap-err-price');
-
-/* -------------------------------------------------------
-   1. PHOTO UPLOAD
-   ------------------------------------------------------- */
-function updateSlotUI(slotIndex) {
-    var src    = photoSlots[slotIndex];
-    var img    = document.getElementById('ap-slot-img-'    + slotIndex);
-    var ph     = document.getElementById('ap-slot-ph-'     + slotIndex);
-    var label  = document.getElementById('ap-main-label-'  + slotIndex);
-    var rmBtn  = document.getElementById('ap-slot-rm-'     + slotIndex);
-
-    if (src) {
-        img.src = src;
-        img.style.display = 'block';
-        ph.style.display  = 'none';
-        if (rmBtn) rmBtn.style.display = 'flex';
-        // Main photo label only on slot 0
-        if (label) label.style.display = (slotIndex === 0) ? 'flex' : 'none';
-    } else {
-        img.src = '';
-        img.style.display = 'none';
-        ph.style.display  = 'flex';
-        if (rmBtn) rmBtn.style.display  = 'none';
-        if (label) label.style.display  = 'none';
+    /* -------------------------------------------------------
+       1. AUTH GUARD
+       ------------------------------------------------------- */
+    function guardAdmin() {
+        if (typeof window.isLoggedIn === 'function' && typeof window.getUserRole === 'function') {
+            if (!window.isLoggedIn() || window.getUserRole() !== 'admin') {
+                window.location.href = '../pages/login.html';
+                return false;
+            }
+            return true;
+        }
+        var token = localStorage.getItem('token');
+        var role   = localStorage.getItem('role');
+        if (!token || role !== 'admin') {
+            window.location.href = '../pages/login.html';
+            return false;
+        }
+        return true;
     }
-}
 
-function addPhotos(files) {
-    Array.from(files).forEach(function (file) {
-        // Find first empty slot
-        var slotIdx = photoSlots.indexOf(null);
-        if (slotIdx === -1) return; // All slots full
+    function getAuthHeaders() {
+        var token = localStorage.getItem('token');
+        var headers = { 'Content-Type': 'application/json' };
+        if (token) {
+            headers['Authorization'] = 'Bearer ' + token;
+        }
+        return headers;
+    }
 
-        // Validate
-        var allowed = ['image/jpeg', 'image/png'];
-        if (!allowed.includes(file.type)) return;
-        if (file.size > 5 * 1024 * 1024) {
-            alert(file.name + ' exceeds 5 MB and was skipped.');
+    /* -------------------------------------------------------
+       2. UI HELPERS & ERROR BANNER
+       ------------------------------------------------------- */
+    function showFormError(message) {
+        var errorEl = document.getElementById('ap-form-error');
+        if (!errorEl) {
+            errorEl = document.createElement('div');
+            errorEl.id = 'ap-form-error';
+            errorEl.style.cssText =
+                'color:#c0392b;background:#fdf0ed;border:1px solid #f5c6cb;padding:12px 16px;margin-bottom:20px;font-size:0.85rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;';
+            var form = document.getElementById('add-product-form');
+            if (form) {
+                form.insertBefore(errorEl, form.firstChild);
+            }
+        }
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+        errorEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function clearFormError() {
+        var errorEl = document.getElementById('ap-form-error');
+        if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.style.display = 'none';
+        }
+    }
+
+    /* -------------------------------------------------------
+       3. PHOTO UPLOAD & PREVIEWS
+       ------------------------------------------------------- */
+    function updateSlotUI(slotIndex) {
+        var src   = photoSlots[slotIndex];
+        var img   = document.getElementById('ap-slot-img-' + slotIndex);
+        var ph    = document.getElementById('ap-slot-ph-' + slotIndex);
+        var label = document.getElementById('ap-main-label-' + slotIndex);
+        var rmBtn = document.getElementById('ap-slot-rm-' + slotIndex);
+
+        if (!img || !ph) return;
+
+        if (src) {
+            img.src = src;
+            img.style.display = 'block';
+            ph.style.display  = 'none';
+            if (rmBtn) rmBtn.style.display = 'flex';
+            if (label) label.style.display = (slotIndex === 0) ? 'flex' : 'none';
+        } else {
+            img.src = '';
+            img.style.display = 'none';
+            ph.style.display  = 'flex';
+            if (rmBtn) rmBtn.style.display  = 'none';
+            if (label) label.style.display  = 'none';
+        }
+    }
+
+    function addPhotos(files) {
+        Array.from(files).forEach(function (file) {
+            var slotIdx = photoSlots.indexOf(null);
+            if (slotIdx === -1) return;
+
+            var allowed = ['image/jpeg', 'image/png', 'image/webp'];
+            if (!allowed.includes(file.type)) return;
+            if (file.size > 5 * 1024 * 1024) {
+                alert(file.name + ' exceeds 5 MB and was skipped.');
+                return;
+            }
+
+            var url = URL.createObjectURL(file);
+            photoSlots[slotIdx] = url;
+            updateSlotUI(slotIdx);
+        });
+    }
+
+    function removePhoto(slotIndex) {
+        if (photoSlots[slotIndex]) {
+            if (typeof photoSlots[slotIndex] === 'string' && photoSlots[slotIndex].indexOf('blob:') === 0) {
+                URL.revokeObjectURL(photoSlots[slotIndex]);
+            }
+            photoSlots[slotIndex] = null;
+        }
+        updateSlotUI(slotIndex);
+    }
+
+    function initPhotoUpload() {
+        var fileInput = document.getElementById('ap-file-input');
+        var dropzone  = document.getElementById('ap-dropzone');
+        if (!fileInput || !dropzone) return;
+
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files && fileInput.files.length) {
+                addPhotos(fileInput.files);
+            }
+            fileInput.value = '';
+        });
+
+        dropzone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dropzone.classList.add('ap-dropzone--over');
+        });
+        dropzone.addEventListener('dragleave', function (e) {
+            if (!dropzone.contains(e.relatedTarget)) {
+                dropzone.classList.remove('ap-dropzone--over');
+            }
+        });
+        dropzone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dropzone.classList.remove('ap-dropzone--over');
+            if (e.dataTransfer.files && e.dataTransfer.files.length) {
+                addPhotos(e.dataTransfer.files);
+            }
+        });
+
+        dropzone.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
+
+        for (var i = 0; i < MAX_SLOTS; i++) {
+            (function (idx) {
+                var rmBtn = document.getElementById('ap-slot-rm-' + idx);
+                if (rmBtn) {
+                    rmBtn.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        removePhoto(idx);
+                    });
+                }
+            })(i);
+        }
+    }
+
+    /* -------------------------------------------------------
+       4. STOCK TOGGLE & COLOR TAGS
+       ------------------------------------------------------- */
+    function initStockToggle() {
+        var stockToggle = document.getElementById('ap-stock-toggle');
+        if (!stockToggle) return;
+        stockToggle.querySelectorAll('.ap-stock-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                stockStatus = btn.getAttribute('data-status');
+                stockToggle.querySelectorAll('.ap-stock-btn').forEach(function (b) {
+                    b.classList.toggle('ap-stock-btn--active', b === btn);
+                });
+            });
+        });
+    }
+
+    function renderColorTags() {
+        var container = document.getElementById('ap-color-tags-row');
+        var addBtn = document.getElementById('ap-add-color-btn');
+        if (!container) return;
+
+        container.querySelectorAll('.ap-color-tag').forEach(function (el) { el.remove(); });
+
+        colorTags.forEach(function (color, index) {
+            var tag = document.createElement('span');
+            tag.className = 'ap-color-tag';
+            tag.innerHTML =
+                color +
+                ' <button type="button" class="ap-color-tag-remove" aria-label="Remove ' + color + '" data-index="' + index + '">&times;</button>';
+            if (addBtn) {
+                container.insertBefore(tag, addBtn);
+            } else {
+                container.appendChild(tag);
+            }
+        });
+
+        container.querySelectorAll('.ap-color-tag-remove').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var idx = parseInt(btn.getAttribute('data-index'), 10);
+                colorTags.splice(idx, 1);
+                renderColorTags();
+            });
+        });
+    }
+
+    function initColorTags() {
+        var addBtn = document.getElementById('ap-add-color-btn');
+        var colorInput = document.getElementById('ap-color-input');
+        if (!addBtn || !colorInput) return;
+
+        renderColorTags();
+
+        addBtn.addEventListener('click', function () {
+            addBtn.style.display = 'none';
+            colorInput.style.display  = 'inline-block';
+            colorInput.value = '';
+            colorInput.focus();
+        });
+
+        function commitColor() {
+            var val = colorInput.value.trim().toUpperCase();
+            if (val && !colorTags.includes(val)) {
+                colorTags.push(val);
+            }
+            colorInput.style.display = 'none';
+            addBtn.style.display = 'inline-flex';
+            renderColorTags();
+        }
+
+        colorInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') { e.preventDefault(); commitColor(); }
+            if (e.key === 'Escape') {
+                colorInput.style.display = 'none';
+                addBtn.style.display = 'inline-flex';
+            }
+        });
+        colorInput.addEventListener('blur', commitColor);
+    }
+
+    /* -------------------------------------------------------
+       5. VALIDATION
+       ------------------------------------------------------- */
+    function clearFieldErrors() {
+        var errName = document.getElementById('ap-err-name');
+        var errCategory = document.getElementById('ap-err-category');
+        var errPrice = document.getElementById('ap-err-price');
+        var inputName = document.getElementById('ap-input-name');
+        var selectCategory = document.getElementById('ap-select-category');
+        var inputPrice = document.getElementById('ap-input-price');
+
+        [errName, errCategory, errPrice].forEach(function (el) { if (el) el.textContent = ''; });
+        [inputName, selectCategory, inputPrice].forEach(function (el) {
+            if (el) el.classList.remove('ap-input--error');
+        });
+    }
+
+    function validateForm() {
+        clearFieldErrors();
+        clearFormError();
+        var valid = true;
+
+        var inputName = document.getElementById('ap-input-name');
+        var errName = document.getElementById('ap-err-name');
+        if (!inputName || !inputName.value.trim()) {
+            if (errName) errName.textContent = 'Product name is required.';
+            if (inputName) inputName.classList.add('ap-input--error');
+            valid = false;
+        }
+
+        var selectCategory = document.getElementById('ap-select-category');
+        var errCategory = document.getElementById('ap-err-category');
+        if (!selectCategory || !selectCategory.value) {
+            if (errCategory) errCategory.textContent = 'Please select a category.';
+            if (selectCategory) selectCategory.classList.add('ap-input--error');
+            valid = false;
+        }
+
+        var inputPrice = document.getElementById('ap-input-price');
+        var errPrice = document.getElementById('ap-err-price');
+        var price = inputPrice ? parseFloat(inputPrice.value) : NaN;
+        if (!inputPrice || !inputPrice.value || isNaN(price) || price <= 0) {
+            if (errPrice) errPrice.textContent = 'Enter a valid price greater than 0.';
+            if (inputPrice) inputPrice.classList.add('ap-input--error');
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    /* -------------------------------------------------------
+       6. COLLECT FORM DATA & SUBMIT TO BACKEND
+       ------------------------------------------------------- */
+    function collectFormData() {
+        var inputName       = document.getElementById('ap-input-name');
+        var selectCategory  = document.getElementById('ap-select-category');
+        var inputPrice      = document.getElementById('ap-input-price');
+        var inputStockQty   = document.getElementById('ap-input-stock');
+        var descTextarea    = document.getElementById('ap-textarea-description');
+        var matTextarea     = document.getElementById('ap-textarea-material');
+        var shipTextarea    = document.getElementById('ap-textarea-shipping');
+
+        // Sizing chart: {"S/M": {bust: X, ...}, "L/XL": {bust: Y, ...}}
+        var sizingChart = {};
+        document.querySelectorAll('.ap-sizing-input').forEach(function (inp) {
+            var measure   = inp.getAttribute('data-measure');
+            var rawSize   = inp.getAttribute('data-size');
+            var sizeGroup = (rawSize === 'sm') ? 'S/M' : (rawSize === 'lxl' ? 'L/XL' : rawSize);
+            var val       = parseFloat(inp.value) || 0;
+
+            if (!sizingChart[sizeGroup]) sizingChart[sizeGroup] = {};
+            sizingChart[sizeGroup][measure] = val;
+        });
+
+        // Selected sizes
+        var sizes = Array.from(document.querySelectorAll('.ap-size-checkbox:checked')).map(function (cb) {
+            return cb.value;
+        });
+
+        // Determine image URL (use slot 0 photo if present, otherwise default placeholder)
+        var imageUrl = photoSlots[0] || '/assets/images/products/structure-02-wht.jpg';
+
+        return {
+            title:         inputName ? inputName.value.trim() : '',
+            category:      selectCategory ? selectCategory.value : '',
+            price:         parseFloat(inputPrice ? inputPrice.value : '0') || 0,
+            stock:         parseInt(inputStockQty ? inputStockQty.value : '0', 10) || 0,
+            colors:        colorTags.slice(),
+            sizes:         sizes,
+            image_url:     imageUrl,
+            description:   descTextarea ? descTextarea.value.trim() : '',
+            material_care: matTextarea ? matTextarea.value.trim() : '',
+            shipping_info: shipTextarea ? shipTextarea.value.trim() : '',
+            sizing_chart:  sizingChart
+        };
+    }
+
+    function setSaveLoading(loading) {
+        var saveBtns = [document.getElementById('btn-save-top'), document.getElementById('btn-save-bottom')];
+        saveBtns.forEach(function (btn) {
+            if (!btn) return;
+            btn.disabled = loading;
+            btn.textContent = loading ? 'SAVING...' : 'SAVE PRODUCT';
+        });
+    }
+
+    function handleSave() {
+        if (!validateForm()) {
+            var firstError = document.querySelector('.ap-input--error');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
             return;
         }
 
-        var url = URL.createObjectURL(file);
-        photoSlots[slotIdx] = url;
-        updateSlotUI(slotIdx);
-    });
-}
+        var payload = collectFormData();
+        setSaveLoading(true);
 
-function removePhoto(slotIndex) {
-    if (photoSlots[slotIndex]) {
-        URL.revokeObjectURL(photoSlots[slotIndex]);
-        photoSlots[slotIndex] = null;
-    }
-    updateSlotUI(slotIndex);
-}
-
-function initPhotoUpload() {
-    // File input change
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files && fileInput.files.length) {
-            addPhotos(fileInput.files);
-        }
-        fileInput.value = ''; // reset so same file can be re-selected
-    });
-
-    // Dropzone drag events
-    dropzone.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        dropzone.classList.add('ap-dropzone--over');
-    });
-    dropzone.addEventListener('dragleave', function (e) {
-        if (!dropzone.contains(e.relatedTarget)) {
-            dropzone.classList.remove('ap-dropzone--over');
-        }
-    });
-    dropzone.addEventListener('drop', function (e) {
-        e.preventDefault();
-        dropzone.classList.remove('ap-dropzone--over');
-        if (e.dataTransfer.files && e.dataTransfer.files.length) {
-            addPhotos(e.dataTransfer.files);
-        }
-    });
-
-    // Keyboard on dropzone
-    dropzone.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
-    });
-
-    // Remove buttons on each slot
-    for (var i = 0; i < MAX_SLOTS; i++) {
-        (function (idx) {
-            var rmBtn = document.getElementById('ap-slot-rm-' + idx);
-            if (rmBtn) {
-                rmBtn.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    removePhoto(idx);
+        fetch(API_BASE_URL + '/api/products/', {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(payload)
+        })
+        .then(function (res) {
+            if (!res.ok) {
+                return res.json().then(function (err) {
+                    throw new Error((err && err.detail) || 'Failed to create product.');
+                }).catch(function () {
+                    throw new Error('Failed to create product (status ' + res.status + ')');
                 });
             }
-        })(i);
+            return res.json();
+        })
+        .then(function (newProduct) {
+            setSaveLoading(false);
+            alert('Product created successfully!');
+            window.location.href = 'products.html';
+        })
+        .catch(function (err) {
+            setSaveLoading(false);
+            showFormError(err.message || 'An error occurred while saving the product.');
+        });
     }
-}
 
-/* -------------------------------------------------------
-   2. STOCK STATUS TOGGLE
-   ------------------------------------------------------- */
-function initStockToggle() {
-    stockToggle.querySelectorAll('.ap-stock-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            stockStatus = btn.getAttribute('data-status');
-            stockToggle.querySelectorAll('.ap-stock-btn').forEach(function (b) {
-                b.classList.toggle('ap-stock-btn--active', b === btn);
+    function handleCancel() {
+        var confirmed = window.confirm('Discard changes and go back to Product Management?');
+        if (confirmed) {
+            window.location.href = 'products.html';
+        }
+    }
+
+    function initActionButtons() {
+        var saveTop      = document.getElementById('btn-save-top');
+        var saveBottom   = document.getElementById('btn-save-bottom');
+        var cancelTop    = document.getElementById('btn-cancel-top');
+        var cancelBottom = document.getElementById('btn-cancel-bottom');
+
+        if (saveTop) saveTop.addEventListener('click', handleSave);
+        if (saveBottom) saveBottom.addEventListener('click', handleSave);
+        if (cancelTop) cancelTop.addEventListener('click', handleCancel);
+        if (cancelBottom) cancelBottom.addEventListener('click', handleCancel);
+    }
+
+    /* -------------------------------------------------------
+       7. MOBILE SIDEBAR TOGGLE
+       ------------------------------------------------------- */
+    function initSidebarToggle() {
+        var hamburgerBtn = document.getElementById('admin-hamburger-btn');
+        var sidebar      = document.getElementById('admin-sidebar');
+        var overlay      = document.getElementById('admin-sidebar-overlay');
+
+        if (hamburgerBtn && sidebar && overlay) {
+            hamburgerBtn.addEventListener('click', function () {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
             });
-        });
-    });
-}
 
-/* -------------------------------------------------------
-   3. COLOR TAGS
-   ------------------------------------------------------- */
-function renderColorTags() {
-    // Remove existing tags (keep the add-btn and input at the end)
-    var existing = colorTagsRow.querySelectorAll('.ap-color-tag');
-    existing.forEach(function (el) { el.remove(); });
-
-    // Insert tags before the add-btn
-    colorTags.forEach(function (color, index) {
-        var tag = document.createElement('span');
-        tag.className = 'ap-color-tag';
-        tag.innerHTML =
-            color +
-            ' <button type="button" class="ap-color-tag-remove" aria-label="Remove ' + color + '" data-index="' + index + '">&times;</button>';
-        colorTagsRow.insertBefore(tag, addColorBtn);
-    });
-
-    // Bind remove buttons
-    colorTagsRow.querySelectorAll('.ap-color-tag-remove').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            var idx = parseInt(btn.getAttribute('data-index'), 10);
-            colorTags.splice(idx, 1);
-            renderColorTags();
-        });
-    });
-}
-
-function initColorTags() {
-    renderColorTags();
-
-    // Show input on "+ ADD COLOR" click
-    addColorBtn.addEventListener('click', function () {
-        addColorBtn.style.display = 'none';
-        colorInput.style.display  = 'inline-block';
-        colorInput.value = '';
-        colorInput.focus();
-    });
-
-    // Confirm on Enter or blur
-    function commitColor() {
-        var val = colorInput.value.trim().toUpperCase();
-        if (val && !colorTags.includes(val)) {
-            colorTags.push(val);
+            overlay.addEventListener('click', function () {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
         }
-        colorInput.style.display = 'none';
-        addColorBtn.style.display = 'inline-flex';
-        renderColorTags();
     }
 
-    colorInput.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') { e.preventDefault(); commitColor(); }
-        if (e.key === 'Escape') {
-            colorInput.style.display = 'none';
-            addColorBtn.style.display = 'inline-flex';
+    /* -------------------------------------------------------
+       8. BOOT
+       ------------------------------------------------------- */
+    document.addEventListener('DOMContentLoaded', function () {
+        if (!guardAdmin()) return;
+
+        initPhotoUpload();
+        initStockToggle();
+        initColorTags();
+        initActionButtons();
+        initSidebarToggle();
+
+        for (var i = 0; i < MAX_SLOTS; i++) {
+            updateSlotUI(i);
         }
     });
-    colorInput.addEventListener('blur', commitColor);
-}
 
-/* -------------------------------------------------------
-   4. VALIDATION
-   ------------------------------------------------------- */
-function clearErrors() {
-    [errName, errCategory, errPrice].forEach(function (el) { el.textContent = ''; });
-    [inputName, selectCategory, inputPrice].forEach(function (el) {
-        el.classList.remove('ap-input--error');
-    });
-}
-
-function validate() {
-    clearErrors();
-    var valid = true;
-
-    if (!inputName.value.trim()) {
-        errName.textContent = 'Product name is required.';
-        inputName.classList.add('ap-input--error');
-        valid = false;
-    }
-    if (!selectCategory.value) {
-        errCategory.textContent = 'Please select a category.';
-        selectCategory.classList.add('ap-input--error');
-        valid = false;
-    }
-    var price = parseFloat(inputPrice.value);
-    if (!inputPrice.value || isNaN(price) || price <= 0) {
-        errPrice.textContent = 'Enter a valid price.';
-        inputPrice.classList.add('ap-input--error');
-        valid = false;
-    }
-
-    return valid;
-}
-
-/* -------------------------------------------------------
-   5. COLLECT FORM DATA
-   ------------------------------------------------------- */
-function collectFormData() {
-    // Sizing table
-    var sizing = {};
-    document.querySelectorAll('.ap-sizing-input').forEach(function (inp) {
-        var measure = inp.getAttribute('data-measure');
-        var size    = inp.getAttribute('data-size');
-        if (!sizing[measure]) sizing[measure] = {};
-        sizing[measure][size] = parseFloat(inp.value) || 0;
-    });
-
-    // Sizes checked
-    var sizes = Array.from(document.querySelectorAll('.ap-size-checkbox:checked')).map(function (cb) {
-        return cb.value;
-    });
-
-    return {
-        name:        inputName.value.trim(),
-        category:    selectCategory.value,
-        price:       parseFloat(inputPrice.value) || 0,
-        stockQty:    parseInt(inputStockQty.value, 10) || 0,
-        stockStatus: stockStatus,
-        colors:      colorTags.slice(),
-        sizes:       sizes,
-        description: document.getElementById('ap-textarea-description').value.trim(),
-        sizing:      sizing,
-        material:    document.getElementById('ap-textarea-material').value.trim(),
-        shipping:    document.getElementById('ap-textarea-shipping').value.trim(),
-        photos:      photoSlots.filter(Boolean)
-    };
-}
-
-/* -------------------------------------------------------
-   6. SAVE / CANCEL
-   ------------------------------------------------------- */
-function handleSave() {
-    if (!validate()) {
-        // Scroll to first error
-        var firstError = document.querySelector('.ap-input--error');
-        if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-    }
-
-    var data = collectFormData();
-
-    // TODO: replace with API call — POST /api/products
-    console.log('[Add Product] Saving product (dummy):', data);
-    alert('Product saved! (dummy — not yet connected to backend)\n\nSee console for collected data.');
-
-    // Navigate back to list
-    window.location.href = 'products.html';
-}
-
-function handleCancel() {
-    var confirmed = window.confirm('Discard changes and go back to Product Management?');
-    if (confirmed) {
-        window.location.href = 'products.html';
-    }
-}
-
-function initActions() {
-    document.getElementById('btn-save-top').addEventListener('click', handleSave);
-    document.getElementById('btn-save-bottom').addEventListener('click', handleSave);
-    document.getElementById('btn-cancel-top').addEventListener('click', handleCancel);
-    document.getElementById('btn-cancel-bottom').addEventListener('click', handleCancel);
-}
-
-/* -------------------------------------------------------
-   BOOT
-   ------------------------------------------------------- */
-document.addEventListener('DOMContentLoaded', function () {
-    initPhotoUpload();
-    initStockToggle();
-    initColorTags();
-    initActions();
-
-    // Initialise all slot UIs (all empty on fresh load)
-    for (var i = 0; i < MAX_SLOTS; i++) {
-        updateSlotUI(i);
-    }
-});
+})();

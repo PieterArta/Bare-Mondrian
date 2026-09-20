@@ -26,7 +26,7 @@
             </svg>
         </button>
 
-        <div class="nav-brand">BARE MONDRIAN</div>
+        <a href="index.html" class="nav-brand">BARE MONDRIAN</a>
 
         <nav class="nav-links">
             <a href="index.html" class="nav-link active" id="nav-home">HOME</a>
@@ -42,17 +42,17 @@
                 </svg>
             </button>
 
-            <button class="icon-btn" id="btn-account" aria-label="Account">
-                <svg viewBox="0 0 24 24" width="20" height="20">
-                    <circle cx="12" cy="7" r="4" />
-                    <path d="M4 21C4 16.5817 7.58172 13 12 13C16.4183 13 20 16.5817 20 21" stroke-linecap="round" />
-                </svg>
-            </button>
-
             <button class="icon-btn" id="btn-cart" aria-label="Shopping Bag" onclick="openCart()">
                 <svg viewBox="0 0 24 24" width="20" height="20">
                     <path d="M6 7L4 20H20L18 7H6Z" stroke-linejoin="round" />
                     <path d="M9 10V6C9 4.34315 10.3431 3 12 3C13.6569 3 15 4.34315 15 6V10" />
+                </svg>
+            </button>
+            
+            <button class="icon-btn" id="btn-account" aria-label="Account">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <circle cx="12" cy="7" r="4" />
+                    <path d="M4 21C4 16.5817 7.58172 13 12 13C16.4183 13 20 16.5817 20 21" stroke-linecap="round" />
                 </svg>
             </button>
         </div>
@@ -91,26 +91,15 @@
     <hr class="mobile-section-divider">
 
     <!-- Product Grid Section -->
-    <section class="products-section" id="products">
-        <div class="products-grid">
-            <a href="shop.html" class="product-card" id="product-card-1" aria-label="Collection 1">
-                <img src="collection_1.png" alt="Foto Produk 1" class="product-card-image">
-                <div class="product-card-overlay">
-                    <span class="product-card-cta">VIEW COLLECTION</span>
-                </div>
-            </a>
-            <a href="shop.html" class="product-card" id="product-card-2" aria-label="Collection 2">
-                <img src="collection_2.png" alt="Foto Produk 2" class="product-card-image">
-                <div class="product-card-overlay">
-                    <span class="product-card-cta">VIEW COLLECTION</span>
-                </div>
-            </a>
-            <a href="shop.html" class="product-card" id="product-card-3" aria-label="Collection 3">
-                <img src="collection_3.png" alt="Foto Produk 3" class="product-card-image">
-                <div class="product-card-overlay">
-                    <span class="product-card-cta">VIEW COLLECTION</span>
-                </div>
-            </a>
+    <section class="products-section" id="featured-products-section">
+        <div class="featured-section-header" id="featured-section-header">
+            <h2 class="featured-section-title">FEATURED</h2>
+        </div>
+        <div class="products-grid" id="featured-products-grid">
+            <!-- Skeleton cards shown while loading -->
+            <div class="product-card product-card--skeleton" aria-hidden="true"></div>
+            <div class="product-card product-card--skeleton" aria-hidden="true"></div>
+            <div class="product-card product-card--skeleton" aria-hidden="true"></div>
         </div>
     </section>
 
@@ -181,6 +170,8 @@
         })();
     </script>
     <script src="../scripts/cart.js?v=5"></script>
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/home.js"></script>
 
 </body>
 

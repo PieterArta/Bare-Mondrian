@@ -189,12 +189,14 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-black);
+    text-decoration: none;
 }
 
 .topbar-actions {
     display: flex;
     align-items: center;
     gap: 16px;
+    position: relative;
 }
 
 .topbar-icon-btn {
@@ -905,10 +907,56 @@
 
 /* Customer cell */
 .orders-td--customer {
+    vertical-align: top;
+}
+
+.orders-customer-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 180px;
+    max-width: 280px;
+}
+
+.orders-customer-name {
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    white-space: nowrap;
+    color: var(--color-black);
+    font-size: 0.78rem;
+}
+
+.orders-wa-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #128C7E;
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+}
+
+.orders-wa-link:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+.orders-customer-address {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    font-size: 0.68rem;
+    color: var(--admin-text-muted);
+    font-weight: 400;
+    line-height: 1.35;
+    word-break: break-word;
+}
+
+.orders-customer-address svg,
+.orders-wa-link svg {
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
 /* Product cell */
@@ -1041,7 +1089,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
+    padding: 7px 14px;
     background-color: var(--color-black);
     color: var(--color-white);
     border: 1px solid var(--color-black);
@@ -1051,7 +1099,7 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: background-color 0.15s ease;
+    transition: all 0.15s ease;
     white-space: nowrap;
 }
 
@@ -1060,23 +1108,61 @@
     border-color: #222;
 }
 
-/* REJECT text link */
+.btn-approve--outline {
+    background-color: var(--color-white);
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+}
+
+.btn-approve--outline:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
+}
+
+.btn-approve--active {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    border-color: var(--color-black);
+}
+
+/* REJECT button */
 .btn-reject {
-    background: none;
-    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 14px;
+    background-color: var(--color-white);
+    color: var(--admin-red);
+    border: 1px solid var(--admin-red);
     font-family: var(--font-sans);
     font-size: 0.68rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--admin-text-muted);
     cursor: pointer;
-    transition: color 0.15s ease;
-    padding: 0;
+    transition: all 0.15s ease;
     white-space: nowrap;
 }
 
 .btn-reject:hover {
+    background-color: var(--admin-red);
+    color: var(--color-white);
+}
+
+.btn-reject--active {
+    background-color: var(--admin-red);
+    color: var(--color-white);
+    border-color: var(--admin-red);
+}
+
+.btn-reject--outline {
+    background-color: var(--color-white);
+    color: var(--admin-text-muted);
+    border: 1px solid var(--admin-border-light);
+}
+
+.btn-reject--outline:hover {
+    border-color: var(--admin-red);
     color: var(--admin-red);
 }
 
@@ -1302,6 +1388,28 @@
 
 .btn-hs-outline:hover {
     background-color: var(--color-black);
+    color: var(--color-white);
+}
+
+.btn-hs-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 22px;
+    background-color: var(--color-white);
+    color: #c0392b;
+    border: 1px solid #c0392b;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-hs-danger:hover {
+    background-color: #c0392b;
     color: var(--color-white);
 }
 
@@ -1891,6 +1999,12 @@
     background-color: var(--admin-text-muted);
     color: var(--color-white);
     border-color: var(--admin-text-muted);
+}
+
+.pm-stock-badge--out {
+    background-color: #c0392b;
+    color: var(--color-white);
+    border-color: #c0392b;
 }
 
 /* Action icon buttons */
@@ -2517,4 +2631,1032 @@
     justify-content: flex-end;
     gap: 12px;
     padding-bottom: 8px;
+}
+
+/* ============================================================
+   MOBILE RESPONSIVE STYLES (breakpoint: max-width 768px)
+   ============================================================ */
+.admin-hamburger-btn {
+    display: none;
+}
+.topbar-avatar-placeholder {
+    display: none;
+}
+.admin-sidebar-overlay {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    /* 1. Mobile top bar layout */
+    .admin-topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 56px;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 300;
+        background-color: var(--color-white);
+        border-bottom: 1px solid var(--admin-border);
+    }
+
+    .admin-hamburger-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-black);
+        cursor: pointer;
+        padding: 4px;
+        margin-right: 12px;
+    }
+
+    .topbar-brand {
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        margin-right: auto;
+    }
+
+    .topbar-brand-admin-text {
+        display: none !important;
+    }
+
+    #btn-topbar-search {
+        display: none !important;
+    }
+
+    .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    #btn-topbar-account {
+        order: 1;
+    }
+
+    #btn-topbar-notifications {
+        order: 2;
+    }
+
+    .topbar-avatar-placeholder {
+        display: block !important;
+        order: 3;
+        width: 24px;
+        height: 24px;
+        border: 1px solid var(--admin-border);
+        background-color: var(--color-white);
+    }
+
+    /* 2. Sidebar to Mobile Drawer & Overlay */
+    .admin-sidebar-overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 350;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .admin-sidebar-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .admin-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        max-width: 80vw;
+        height: 100vh;
+        background-color: var(--color-white);
+        z-index: 400;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        border-right: 1px solid var(--admin-border);
+    }
+
+    .admin-sidebar.active {
+        transform: translateX(0);
+    }
+
+    /* 3. Main layout adjustment */
+    .admin-main {
+        margin-left: 0 !important;
+        padding-top: 56px; /* offset topbar height */
+        min-height: calc(100vh - 56px);
+    }
+
+    .admin-content {
+        padding: 24px 16px 40px 16px;
+        gap: 24px;
+    }
+
+    /* 4. Page Header & Actions */
+    .dashboard-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .dashboard-title {
+        font-size: 2.2rem;
+        font-weight: 900;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+    }
+
+    .dashboard-header-actions {
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 0;
+    }
+
+    .dashboard-header-actions br {
+        display: none;
+    }
+
+    .btn-admin-primary,
+    .btn-admin-outline {
+        width: 100%;
+        padding: 14px 0;
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        justify-content: center;
+        text-align: center;
+        height: auto;
+        min-width: unset;
+    }
+
+    /* 5. Summary cards (2x2 grid + 1 full width) */
+    .summary-cards-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 0;
+        border: 1px solid var(--admin-border);
+    }
+
+    .summary-card {
+        border-right: none;
+        border-bottom: 1px solid var(--admin-border);
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .summary-card:nth-child(odd) {
+        border-right: 1px solid var(--admin-border);
+    }
+
+    #card-revenue {
+        grid-column: span 2;
+        border-right: none !important;
+        border-bottom: none;
+    }
+
+    .summary-card-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+    }
+
+    .summary-card-label br {
+        display: none;
+    }
+
+    .summary-card-value {
+        font-size: 2rem;
+    }
+
+    .summary-card-value--revenue {
+        font-size: 1.6rem;
+    }
+
+    .summary-card-value--revenue br {
+        display: none;
+    }
+
+    /* 6. Sections: Two column section stacks vertically */
+    .dashboard-two-col {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    /* Bordered containers and thin dividers */
+    .dashboard-card {
+        border: 1px solid var(--admin-border);
+        background-color: var(--color-white);
+    }
+
+    .dashboard-card-header {
+        padding: 16px;
+        border-bottom: 1px solid var(--admin-border);
+    }
+
+    .dashboard-card-title {
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+    }
+
+    .dashboard-card-link {
+        font-size: 0.65rem;
+        letter-spacing: 0.08em;
+    }
+
+    /* 7. Pending Approvals rows */
+    .approval-row {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .approval-avatar-wrapper {
+        width: 40px;
+        height: 40px;
+    }
+
+    .approval-customer-name {
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+    }
+
+    .approval-meta {
+        font-size: 0.65rem;
+    }
+
+    .approval-amount {
+        font-size: 0.85rem;
+    }
+
+    .approval-status-label {
+        display: block;
+        font-family: var(--font-sans);
+        font-size: 0.6rem;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--admin-text-muted);
+        margin-top: 2px;
+        text-align: right;
+    }
+
+    .approval-status-block {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .dashboard-divider {
+        margin: 0 16px;
+    }
+
+    /* 8. Low Stock Alerts section */
+    .stock-row {
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .stock-img-wrapper {
+        display: none !important;
+    }
+
+    .stock-info {
+        gap: 2px;
+    }
+
+    .stock-product-name {
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+    }
+
+    .stock-sku {
+        font-size: 0.65rem;
+    }
+
+    /* Transform count + badge into a single inline border box */
+    .stock-status-block {
+        flex-direction: row;
+        align-items: center;
+        border: 1px solid var(--admin-border);
+        padding: 6px 12px;
+        gap: 4px;
+        background-color: var(--color-white);
+    }
+
+    .stock-status-block:has(.stock-badge--critical) {
+        border-color: var(--admin-red);
+        color: var(--admin-red);
+    }
+
+    .stock-status-block:has(.stock-badge--warning) {
+        border-color: var(--admin-border);
+        color: var(--color-black);
+    }
+
+    .stock-count {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+    }
+
+    .stock-count::after {
+        content: " -";
+        white-space: pre;
+    }
+
+    .stock-count--critical {
+        color: var(--admin-red) !important;
+    }
+
+    .stock-badge {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        border: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+        display: inline-flex;
+    }
+
+    .stock-badge--critical {
+        color: var(--admin-red) !important;
+    }
+
+    .stock-badge--warning {
+        color: var(--color-black) !important;
+    }
+
+    /* 9. Recent Activity Section is hidden on mobile */
+    #recent-activity-card {
+        display: none !important;
+    }
+
+    /* ============================================================
+       ORDERS / PAYMENT APPROVAL — MOBILE STYLES
+       ============================================================ */
+
+    /* Page title */
+    .orders-page-title {
+        font-size: 2rem;
+        font-weight: 900;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+    }
+
+    /* Filter tabs: horizontally scrollable single row */
+    .filter-tabs {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 0;
+        padding-bottom: 0;
+        scrollbar-width: none;
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-tab {
+        flex-shrink: 0;
+        padding: 10px 16px;
+        font-size: 0.7rem;
+        border-bottom: 2px solid transparent;
+        white-space: nowrap;
+    }
+
+    .filter-tab--active {
+        border-bottom-color: var(--color-black);
+    }
+
+    /* Hide desktop table header/rows; show mobile cards instead */
+    .orders-table-wrapper {
+        border: none;
+        overflow-x: visible;
+    }
+
+    .orders-table thead {
+        display: none;
+    }
+
+    .orders-table,
+    .orders-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    /* Each <tr> becomes a flex column card */
+    .orders-tr {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--admin-border-light);
+        margin-bottom: 12px;
+        padding: 14px 16px;
+        background-color: var(--color-white);
+    }
+
+    .orders-tr:last-child {
+        margin-bottom: 0;
+    }
+
+    /* All td: block, no padding (we control spacing below) */
+    .orders-td {
+        display: block;
+        padding: 0;
+        font-size: 0.8rem;
+    }
+
+    /* Visual order inside the card:
+       1st line: Order ID · Date
+       2nd: Customer name (bold)
+       3rd: Product name (muted)
+       4th: a flex row with Total + Proof + Status
+       5th: Action buttons (full-width, stacked)
+    */
+
+    /* Row 1: Order ID */
+    .orders-td--id {
+        order: 1;
+        display: inline;
+        font-size: 0.68rem;
+        color: var(--admin-text-muted);
+        font-weight: 400;
+    }
+
+    .orders-td--id::after {
+        content: ' \B7 ';
+        color: var(--admin-text-muted);
+    }
+
+    /* Row 1: Date (inline after Order ID) */
+    .orders-td--date {
+        order: 2;
+        display: inline;
+        font-size: 0.68rem;
+        color: var(--admin-text-muted);
+        font-weight: 400;
+    }
+
+    /* Spacer between row 1 and row 2 */
+    .orders-td--customer {
+        order: 3;
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--color-black);
+        margin-top: 6px;
+    }
+
+    /* Product name */
+    .orders-td--product {
+        order: 4;
+        font-size: 0.78rem;
+        color: var(--admin-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin-top: 2px;
+    }
+
+    /* Total: appears in the mid-section */
+    .orders-td--total {
+        order: 5;
+        font-weight: 700;
+        font-size: 0.88rem;
+        white-space: nowrap;
+        margin-top: 10px;
+    }
+
+    /* Proof thumbnail */
+    .orders-td--proof {
+        order: 6;
+        display: flex;
+        align-items: center;
+        margin-top: 8px;
+    }
+
+    /* Status badge */
+    .orders-td--status {
+        order: 7;
+        white-space: nowrap;
+        margin-top: 8px;
+    }
+
+    /* Proof thumbnail size on mobile */
+    .proof-thumb-wrapper {
+        width: 40px;
+        height: 40px;
+    }
+
+    /* Action buttons at the bottom */
+    .orders-td--actions {
+        order: 8;
+        display: block;
+        margin-top: 12px;
+    }
+
+    .orders-actions-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .btn-approve,
+    .btn-reject {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        min-height: 44px;
+        justify-content: center;
+        text-align: center;
+        display: flex;
+        align-items: center;
+    }
+
+    /* btn-reject: give it a visible border on mobile so it looks like a button */
+    .btn-reject {
+        border: 1px solid var(--admin-border-light);
+        color: var(--color-black);
+        background-color: var(--color-white);
+    }
+
+    /* Orders topbar: hide desktop search box, show mobile icon layout */
+    .admin-topbar--search {
+        gap: 0;
+    }
+
+    .topbar-search-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: auto;
+    }
+
+    /* Hide the text search box on mobile — search icon in topbar remains */
+    #topbar-search-box {
+        display: none !important;
+    }
+
+    /* ============================================================
+       PRODUCT MANAGEMENT — MOBILE STYLES
+       ============================================================ */
+
+    /* Page title */
+    .pm-title {
+        font-size: 2rem;
+        font-weight: 900;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+    }
+
+    /* Header: stack title + add button vertically */
+    .pm-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    /* Add New Product button: full width */
+    .pm-add-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px;
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        min-height: 44px;
+    }
+
+    /* Hide desktop table structure */
+    .pm-table-wrapper {
+        border: none;
+        overflow-x: visible;
+    }
+
+    .pm-table thead {
+        display: none;
+    }
+
+    .pm-table,
+    .pm-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    /* Each product row becomes a card with CSS Grid:
+       [image] [info stack] [actions]   */
+    .pm-tr {
+        display: grid;
+        grid-template-columns: 64px 1fr auto;
+        grid-template-rows: auto auto auto auto;
+        column-gap: 12px;
+        row-gap: 0;
+        align-items: start;
+        border: 1px solid var(--admin-border-light);
+        margin-bottom: 12px;
+        padding: 12px;
+        background-color: var(--color-white);
+    }
+
+    .pm-tr:last-child {
+        margin-bottom: 0;
+    }
+
+    /* All tds: no padding (we control spacing per-td) */
+    .pm-td {
+        display: block;
+        padding: 0;
+    }
+
+    /* Image cell: left column, spans all 4 rows */
+    .pm-td--image {
+        grid-column: 1;
+        grid-row: 1 / 5;
+        width: auto;
+        padding: 0;
+        align-self: start;
+    }
+
+    .pm-thumb-wrapper {
+        width: 64px;
+        height: 64px;
+    }
+
+    /* Name: middle column row 1 */
+    .pm-td--name {
+        grid-column: 2;
+        grid-row: 1;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        white-space: normal;
+        align-self: center;
+    }
+
+    /* Category: middle column row 2 */
+    .pm-td--category {
+        grid-column: 2;
+        grid-row: 2;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--admin-text-muted);
+        margin-top: 2px;
+    }
+
+    /* Price: middle column row 3 */
+    .pm-td--price {
+        grid-column: 2;
+        grid-row: 3;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 4px;
+        white-space: nowrap;
+    }
+
+    /* Stock badge: middle column row 4 */
+    .pm-td--stock {
+        grid-column: 2;
+        grid-row: 4;
+        margin-top: 6px;
+    }
+
+    /* Actions: right column, spans all rows */
+    .pm-td--actions {
+        grid-column: 3;
+        grid-row: 1 / 5;
+        align-self: center;
+        text-align: right;
+    }
+
+    .pm-actions-group {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .pm-action-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    /* ============================================================
+       HOMEPAGE SETTINGS — MOBILE STYLES
+       ============================================================ */
+
+    /* Page title */
+    .hs-page-title {
+        font-size: 2rem;
+        font-weight: 900;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+    }
+
+    /* Section cards: adjust padding */
+    .hs-card-header {
+        padding: 16px 16px 12px;
+    }
+
+    /* Hero Image Management: stack columns vertically */
+    .hero-image-body {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 16px;
+    }
+
+    /* Hero preview placeholder: full-width box */
+    .hero-preview-wrapper {
+        aspect-ratio: 16 / 7;
+        width: 100%;
+    }
+
+    /* Upload dropzone area */
+    .hero-dropzone {
+        padding: 28px 16px;
+    }
+
+    /* CANCEL + SAVE CHANGES buttons: stacked full-width */
+    .hs-card-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 10px;
+        padding: 16px;
+    }
+
+    .btn-hs-primary,
+    .btn-hs-outline {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
+        padding: 12px;
+    }
+
+    /* Product Selection section: filter row stacks */
+    .products-filter-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 16px;
+    }
+
+    .products-search-box {
+        max-width: none;
+        width: 100%;
+        height: 44px;
+    }
+
+    .products-category-select {
+        width: 100%;
+        height: 44px;
+    }
+
+    .products-selected-pill {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+        padding: 10px 14px;
+    }
+
+    /* Product grid: 2 columns on mobile (single col if narrow) */
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 0 16px 20px;
+    }
+
+    .product-card-info {
+        padding: 8px 8px 0;
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
+    }
+
+    .product-card-price {
+        text-align: left;
+        white-space: normal;
+    }
+
+    .product-card-footer {
+        padding: 8px 8px 10px;
+    }
+
+    .product-card-name {
+        font-size: 0.7rem;
+    }
+
+    .product-card-price {
+        font-size: 0.68rem;
+    }
+
+    /* ============================================================
+       ADD NEW PRODUCT — MOBILE STYLES
+       ============================================================ */
+
+    /* Page header */
+    .ap-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .ap-title {
+        font-size: 2rem;
+        font-weight: 900;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+    }
+
+    /* Hide desktop top header action buttons on mobile */
+    .ap-header-actions {
+        display: none !important;
+    }
+
+    /* Two-column section collapses into single stacked column */
+    .ap-two-col-section {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+    }
+
+    .ap-photos-col,
+    .ap-details-col {
+        width: 100%;
+    }
+
+    /* Dropzone area */
+    .ap-dropzone {
+        padding: 28px 16px;
+    }
+
+    /* Photo slot thumbnails row below dropzone */
+    .ap-photo-slots {
+        gap: 10px;
+    }
+
+    .ap-photo-slot {
+        min-height: 90px;
+    }
+
+    .ap-slot-remove {
+        width: 26px;
+        height: 26px;
+        font-size: 1.1rem;
+    }
+
+    /* Two fields rows stack vertically */
+    .ap-two-fields-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* Touch-friendly inputs, selects, & prefixes (height >= 44px) */
+    .ap-input,
+    .ap-select {
+        height: 44px;
+        font-size: 0.85rem;
+    }
+
+    .ap-input-prefix {
+        height: 44px;
+        font-size: 0.85rem;
+        padding: 0 12px;
+    }
+
+    .ap-input--prefixed {
+        height: 44px;
+        font-size: 0.85rem;
+    }
+
+    /* Stock toggle buttons (height >= 44px) */
+    .ap-stock-btn {
+        height: 44px;
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+    }
+
+    /* Color tags & add color button */
+    .ap-color-tags-row {
+        min-height: 44px;
+        gap: 10px;
+    }
+
+    .ap-color-tag {
+        padding: 8px 12px;
+        font-size: 0.72rem;
+    }
+
+    .ap-color-tag-remove {
+        font-size: 1.1rem;
+        padding: 2px 4px;
+    }
+
+    .ap-add-color-btn {
+        font-size: 0.72rem;
+        min-height: 44px;
+        padding: 8px 0;
+    }
+
+    .ap-color-input {
+        height: 44px;
+        font-size: 0.8rem;
+        width: 140px;
+    }
+
+    /* Size options checkboxes */
+    .ap-size-options {
+        gap: 20px;
+    }
+
+    .ap-size-option {
+        min-height: 44px;
+        padding: 4px 0;
+    }
+
+    .ap-size-checkbox {
+        width: 22px;
+        height: 22px;
+    }
+
+    .ap-size-checkbox:checked::after {
+        left: 5px;
+        top: 1px;
+        width: 6px;
+        height: 11px;
+    }
+
+    .ap-size-label {
+        font-size: 0.8rem;
+    }
+
+    /* Section textareas */
+    .ap-textarea {
+        font-size: 0.85rem;
+        padding: 14px;
+    }
+
+    /* Fit & Sizing table horizontal scroll */
+    .ap-sizing-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+    }
+
+    .ap-sizing-table {
+        min-width: 320px;
+    }
+
+    .ap-sizing-th,
+    .ap-sizing-td {
+        padding: 10px 12px;
+    }
+
+    .ap-sizing-input {
+        width: 72px;
+        height: 38px;
+        font-size: 0.85rem;
+    }
+
+    /* Bottom action buttons: stacked full-width (SAVE solid black top, CANCEL outline bottom) */
+    .ap-form-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding-top: 12px;
+        padding-bottom: 24px;
+    }
+
+    .ap-form-footer .btn-hs-primary,
+    .ap-form-footer .btn-hs-outline {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
+        padding: 14px;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+    }
+
+    .ap-form-footer .btn-hs-primary {
+        order: 1;
+    }
+
+    .ap-form-footer .btn-hs-outline {
+        order: 2;
+    }
+}
+
+
+/* Narrow phones: single-column product grid */
+@media screen and (max-width: 380px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
 }

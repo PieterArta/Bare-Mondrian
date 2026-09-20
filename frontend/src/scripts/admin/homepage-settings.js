@@ -1,75 +1,54 @@
 /**
  * homepage-settings.js — BARE MONDRIAN Admin
  * Homepage Settings page:
- *   - Hero image: drag-and-drop / file-select preview, cancel/save
- *   - Products: search filter, category filter, checkbox toggle, counter
+ *   - Auth guard & API connection
+ *   - Hero image: fetch current, upload new photo, cancel/save
+ *   - Products: fetch from GET /api/products/, search filter, category filter,
+ *               PATCH /api/products/{id}/featured toggle, selected counter
  */
 
 'use strict';
 
-/* -------------------------------------------------------
-   DUMMY PRODUCT DATA
-   ------------------------------------------------------- */
-var productsData = [
-    {
-        id: 'form-001',
-        name: 'FORM 001',
-        price: '1,200,000',
-        category: 'jackets',
-        imgSrc: '/assets/images/products/form-001.jpg',
-        shownOnHomepage: true
-    },
-    {
-        id: 'structure-02',
-        name: 'STRUCTURE 02',
-        price: '1,850,000',
-        category: 'jackets',
-        imgSrc: '/assets/images/products/structure-02.jpg',
-        shownOnHomepage: false
-    },
-    {
-        id: 'base-trouser',
-        name: 'BASE TROUSER',
-        price: '1,450,000',
-        category: 'trousers',
-        imgSrc: '/assets/images/products/base-trouser.jpg',
-        shownOnHomepage: false
-    },
-    {
-        id: 'void-jacket',
-        name: 'VOID JACKET',
-        price: '2,100,000',
-        category: 'jackets',
-        imgSrc: '/assets/images/products/void-jacket.jpg',
-        shownOnHomepage: false
-    },
-    {
-        id: 'essential-tee',
-        name: 'ESSENTIAL TEE',
-        price: '490,000',
-        category: 'tops',
-        imgSrc: '/assets/images/products/essential-tee.jpg',
-        shownOnHomepage: false
-    },
-    {
-        id: 'monolith-boots',
-        name: 'MONOLITH BOOTS',
-        price: '3,200,000',
-        category: 'footwear',
-        imgSrc: '/assets/images/products/monolith-boots.jpg',
-        shownOnHomepage: false
-    }
-];
+var API_BASE_URL = 'http://localhost:8000';
 
 /* -------------------------------------------------------
-   HERO IMAGE STATE
+   AUTH GUARD
    ------------------------------------------------------- */
+function guardAdmin() {
+    if (typeof window.isLoggedIn === 'function' && typeof window.getUserRole === 'function') {
+        if (!window.isLoggedIn() || window.getUserRole() !== 'admin') {
+            window.location.href = '../pages/login.html';
+            return false;
+        }
+        return true;
+    }
+    var token = localStorage.getItem('token');
+    var role   = localStorage.getItem('role');
+    if (!token || role !== 'admin') {
+        window.location.href = '../pages/login.html';
+        return false;
+    }
+    return true;
+}
+
+function getAuthHeaders() {
+    var token = localStorage.getItem('token');
+    var h = { 'Content-Type': 'application/json' };
+    if (token) h['Authorization'] = 'Bearer ' + token;
+    return h;
+}
+
+/* -------------------------------------------------------
+   STATE
+   ------------------------------------------------------- */
+var productsData = [];
+
 var heroState = {
     currentSrc: '/hero_model.png',
-    currentFilename: 'hero_new_arrival_fw24.jpg',
-    currentDimensions: '1892 x 899px',
-    pendingSrc: null,          // ObjectURL of newly chosen file (not yet saved)
-    pendingFilename: null,
+    currentFilename: 'hero_model.png',
+    currentDimensions: '',
+    pendingFile: null,
+    pendingSrc: null,
     hasUnsavedChanges: false
 };
 
@@ -94,14 +73,51 @@ var categorySelect      = document.getElementById('products-category-select');
 var selectedPill        = document.getElementById('products-selected-pill');
 
 /* -------------------------------------------------------
-   HERO — RENDER
+   HELPERS
+   ------------------------------------------------------- */
+function formatPrice(n) {
+    return 'Rp' + Number(n || 0).toLocaleString('id-ID');
+}
+
+function escapeHtml(str) {
+    return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+/* -------------------------------------------------------
+   HERO — FETCH & RENDER
    ------------------------------------------------------- */
 function renderHeroPreview(src, filename, dimensions) {
+    if (!heroPreviewImg || !heroPreviewPh) return;
     heroPreviewImg.style.display = 'block';
     heroPreviewPh.style.display = 'none';
     heroPreviewImg.src = src;
-    heroFilenameEl.textContent = filename;
-    heroDimensionsEl.textContent = dimensions || '';
+    if (heroFilenameEl) heroFilenameEl.textContent = filename;
+    if (heroDimensionsEl) heroDimensionsEl.textContent = dimensions || '';
+}
+
+function fetchHeroImage() {
+    fetch(API_BASE_URL + '/api/homepage/hero-image')
+        .then(function (res) {
+            if (!res.ok) throw new Error('Failed to load hero image');
+            return res.json();
+        })
+        .then(function (data) {
+            if (data && data.hero_image_url) {
+                var rawUrl = data.hero_image_url;
+                var fullUrl = (rawUrl.indexOf('/') === 0 && rawUrl.indexOf('/uploads/') === 0) ? (API_BASE_URL + rawUrl) : rawUrl;
+                var filename = rawUrl.substring(rawUrl.lastIndexOf('/') + 1) || 'hero_image';
+                heroState.currentSrc = fullUrl;
+                heroState.currentFilename = filename;
+                renderHeroPreview(fullUrl, filename, heroState.currentDimensions);
+            }
+        })
+        .catch(function (err) {
+            console.error('[HomepageSettings] Fetch hero image error:', err);
+        });
 }
 
 /* -------------------------------------------------------
@@ -110,63 +126,51 @@ function renderHeroPreview(src, filename, dimensions) {
 function handleFileSelected(file) {
     if (!file) return;
 
-    // Validate type
     var allowed = ['image/jpeg', 'image/png', 'image/webp'];
     if (!allowed.includes(file.type)) {
         alert('Please select a JPG, PNG, or WEBP image.');
         return;
     }
-
-    // Validate size (10 MB)
     if (file.size > 10 * 1024 * 1024) {
         alert('File size exceeds 10 MB. Please choose a smaller image.');
         return;
     }
 
-    // Revoke any existing pending object URL to avoid memory leaks
     if (heroState.pendingSrc) {
         URL.revokeObjectURL(heroState.pendingSrc);
     }
 
     var objectUrl = URL.createObjectURL(file);
+    heroState.pendingFile = file;
+    heroState.pendingSrc = objectUrl;
+    heroState.hasUnsavedChanges = true;
 
-    // Read dimensions via a temporary Image element
     var tempImg = new Image();
     tempImg.onload = function () {
-        heroState.pendingSrc = objectUrl;
-        heroState.pendingFilename = file.name;
-        heroState.hasUnsavedChanges = true;
-
         var dims = tempImg.naturalWidth + ' x ' + tempImg.naturalHeight + 'px';
         renderHeroPreview(objectUrl, file.name, dims);
     };
     tempImg.onerror = function () {
-        // Still show the preview even if dimensions can't be read
-        heroState.pendingSrc = objectUrl;
-        heroState.pendingFilename = file.name;
-        heroState.hasUnsavedChanges = true;
         renderHeroPreview(objectUrl, file.name, '');
     };
     tempImg.src = objectUrl;
 }
 
 function initHeroDropzone() {
-    // Native file input handles both click-to-browse and keyboard Enter
+    if (!heroFileInput || !heroDropzone || !dropzoneSelectBtn) return;
+
     heroFileInput.addEventListener('change', function () {
         if (heroFileInput.files && heroFileInput.files[0]) {
             handleFileSelected(heroFileInput.files[0]);
         }
-        // Reset input value so same file can be re-selected
         heroFileInput.value = '';
     });
 
-    // "SELECT FILE" button inside the dropzone — trigger the hidden input
     dropzoneSelectBtn.addEventListener('click', function (e) {
-        e.stopPropagation();   // prevent bubbling to the dropzone div
+        e.stopPropagation();
         heroFileInput.click();
     });
 
-    // Drag-and-drop events on the dropzone div
     heroDropzone.addEventListener('dragover', function (e) {
         e.preventDefault();
         heroDropzone.classList.add('dragover');
@@ -187,7 +191,6 @@ function initHeroDropzone() {
         }
     });
 
-    // Keyboard accessibility for the dropzone wrapper itself
     heroDropzone.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
@@ -200,73 +203,189 @@ function initHeroDropzone() {
    HERO — CANCEL / SAVE
    ------------------------------------------------------- */
 function initHeroActions() {
-    btnHeroCancel.addEventListener('click', function () {
-        // Revert to saved state
-        if (heroState.pendingSrc) {
-            URL.revokeObjectURL(heroState.pendingSrc);
-            heroState.pendingSrc = null;
-            heroState.pendingFilename = null;
-        }
-        heroState.hasUnsavedChanges = false;
-        renderHeroPreview(heroState.currentSrc, heroState.currentFilename, heroState.currentDimensions);
-    });
-
-    btnHeroSave.addEventListener('click', function () {
-        if (!heroState.hasUnsavedChanges) {
-            console.log('[Homepage Settings] No hero image changes to save.');
-            return;
-        }
-
-        // Commit pending → current (dummy save; real save would POST to backend)
-        if (heroState.pendingSrc) {
-            // Revoke previous current ObjectURL if it was a blob (won't error on real paths)
-            if (heroState.currentSrc && heroState.currentSrc.startsWith('blob:')) {
-                URL.revokeObjectURL(heroState.currentSrc);
+    if (btnHeroCancel) {
+        btnHeroCancel.addEventListener('click', function () {
+            if (heroState.pendingSrc) {
+                URL.revokeObjectURL(heroState.pendingSrc);
+                heroState.pendingSrc = null;
             }
-            heroState.currentSrc = heroState.pendingSrc;
-            heroState.currentFilename = heroState.pendingFilename;
-            heroState.pendingSrc = null;
-            heroState.pendingFilename = null;
-        }
-
-        heroState.hasUnsavedChanges = false;
-
-        console.log('[Homepage Settings] Hero image saved (dummy):', {
-            filename: heroState.currentFilename,
-            src: heroState.currentSrc
+            heroState.pendingFile = null;
+            heroState.hasUnsavedChanges = false;
+            renderHeroPreview(heroState.currentSrc, heroState.currentFilename, heroState.currentDimensions);
         });
+    }
 
-        alert('Changes saved! (dummy — not yet connected to backend)');
+    if (btnHeroSave) {
+        btnHeroSave.addEventListener('click', function () {
+            if (!heroState.hasUnsavedChanges || !heroState.pendingFile) {
+                alert('No unsaved hero image changes.');
+                return;
+            }
+
+            btnHeroSave.disabled = true;
+            btnHeroSave.textContent = 'SAVING...';
+
+            var formData = new FormData();
+            formData.append('file', heroState.pendingFile);
+
+            var token = localStorage.getItem('token');
+            var headers = {};
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+
+            fetch(API_BASE_URL + '/api/homepage/hero-image', {
+                method: 'POST',
+                headers: headers,
+                body: formData
+            })
+            .then(function (res) {
+                if (!res.ok) {
+                    return res.json().then(function (err) {
+                        throw new Error((err && err.detail) || 'Failed to upload hero image');
+                    }).catch(function () {
+                        throw new Error('Upload failed (status ' + res.status + ')');
+                    });
+                }
+                return res.json();
+            })
+            .then(function (data) {
+                btnHeroSave.disabled = false;
+                btnHeroSave.textContent = 'SAVE CHANGES';
+
+                var rawUrl = data.hero_image_url;
+                var fullUrl = (rawUrl.indexOf('/') === 0 && rawUrl.indexOf('/uploads/') === 0) ? (API_BASE_URL + rawUrl) : rawUrl;
+                var filename = rawUrl.substring(rawUrl.lastIndexOf('/') + 1) || 'hero_image';
+
+                if (heroState.pendingSrc) {
+                    URL.revokeObjectURL(heroState.pendingSrc);
+                    heroState.pendingSrc = null;
+                }
+
+                heroState.currentSrc = fullUrl;
+                heroState.currentFilename = filename;
+                heroState.pendingFile = null;
+                heroState.hasUnsavedChanges = false;
+
+                renderHeroPreview(fullUrl, filename, '');
+                alert('Hero image updated successfully!');
+            })
+            .catch(function (err) {
+                btnHeroSave.disabled = false;
+                btnHeroSave.textContent = 'SAVE CHANGES';
+                alert(err.message || 'Failed to update hero image.');
+            });
+        });
+    }
+}
+
+/* -------------------------------------------------------
+   PRODUCTS — FETCH
+   ------------------------------------------------------- */
+function fetchProducts() {
+    if (!productsGrid) return;
+    productsGrid.innerHTML = '<p class="products-grid-empty">LOADING PRODUCTS…</p>';
+
+    fetch(API_BASE_URL + '/api/products/', {
+        method: 'GET',
+        headers: getAuthHeaders()
+    })
+    .then(function (res) {
+        if (!res.ok) throw new Error('Failed to load products (status ' + res.status + ')');
+        return res.json();
+    })
+    .then(function (data) {
+        productsData = Array.isArray(data) ? data : (data.products || data.items || []);
+        populateCategories(productsData);
+        renderProductGrid();
+        updateSelectedCounter();
+    })
+    .catch(function (err) {
+        console.error('[HomepageSettings] Fetch products error:', err);
+        if (productsGrid) {
+            productsGrid.innerHTML = '<p class="products-grid-empty" style="color:#c0392b;">FAILED TO LOAD PRODUCTS.</p>';
+        }
     });
+}
+
+function populateCategories(products) {
+    if (!categorySelect) return;
+    var categories = ['all'];
+    products.forEach(function (p) {
+        if (p.category) {
+            var cat = String(p.category).trim().toLowerCase();
+            if (cat && categories.indexOf(cat) === -1) {
+                categories.push(cat);
+            }
+        }
+    });
+
+    var currentVal = categorySelect.value || 'all';
+    categorySelect.innerHTML = categories.map(function (cat) {
+        return '<option value="' + escapeHtml(cat) + '">' + escapeHtml(cat.toUpperCase()) + '</option>';
+    }).join('');
+
+    if (categories.indexOf(currentVal) !== -1) {
+        categorySelect.value = currentVal;
+    } else {
+        categorySelect.value = 'all';
+    }
 }
 
 /* -------------------------------------------------------
    PRODUCTS — COUNTER
    ------------------------------------------------------- */
 function updateSelectedCounter() {
-    var count = productsData.filter(function (p) { return p.shownOnHomepage; }).length;
+    if (!selectedPill) return;
+    var count = productsData.filter(function (p) { return Boolean(p.is_featured); }).length;
     selectedPill.textContent = count + ' PRODUCT' + (count !== 1 ? 'S' : '') + ' SELECTED';
 }
 
 /* -------------------------------------------------------
-   PRODUCTS — TOGGLE
+   PRODUCTS — TOGGLE FEATURED VIA API
    ------------------------------------------------------- */
 function toggleProduct(productId) {
-    var product = productsData.find(function (p) { return p.id === productId; });
+    var product = productsData.find(function (p) { return String(p.id) === String(productId); });
     if (!product) return;
-    product.shownOnHomepage = !product.shownOnHomepage;
-    syncCardUI(productId, product.shownOnHomepage);
-    updateSelectedCounter();
+
+    var targetFeatured = !product.is_featured;
+
+    fetch(API_BASE_URL + '/api/products/' + productId + '/featured', {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ is_featured: targetFeatured })
+    })
+    .then(function (res) {
+        if (!res.ok) {
+            return res.json().then(function (err) {
+                throw new Error((err && err.detail) || 'Failed to update featured status');
+            }).catch(function () {
+                throw new Error('Update failed (status ' + res.status + ')');
+            });
+        }
+        return res.json();
+    })
+    .then(function (updatedProduct) {
+        product.is_featured = updatedProduct.is_featured;
+        syncCardUI(productId, product.is_featured);
+        updateSelectedCounter();
+    })
+    .catch(function (err) {
+        console.error('[HomepageSettings] Toggle featured error:', err);
+        alert(err.message || 'Failed to update featured status.');
+    });
 }
 
 function syncCardUI(productId, isSelected) {
-    var card     = productsGrid.querySelector('[data-product-id="' + productId + '"]');
+    if (!productsGrid) return;
+    var card = productsGrid.querySelector('[data-product-id="' + productId + '"]');
     if (!card) return;
 
     var thumbCheck = card.querySelector('.product-card-thumb-check');
     var checkbox   = card.querySelector('.product-card-checkbox');
 
-    if (thumbCheck) thumbCheck.classList.toggle('checked', isSelected);
+    if (thumbCheck) {
+        thumbCheck.classList.toggle('checked', isSelected);
+        thumbCheck.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+    }
     if (checkbox)   checkbox.checked = isSelected;
     card.classList.toggle('selected', isSelected);
 }
@@ -275,27 +394,36 @@ function syncCardUI(productId, isSelected) {
    PRODUCTS — RENDER GRID
    ------------------------------------------------------- */
 function getFilteredProducts() {
-    var query    = (productsSearchInput.value || '').trim().toLowerCase();
-    var category = categorySelect.value;
+    var query    = (productsSearchInput ? productsSearchInput.value : '').trim().toLowerCase();
+    var category = categorySelect ? categorySelect.value : 'all';
 
     return productsData.filter(function (p) {
-        var matchesCategory = (category === 'all') || (p.category === category);
-        var matchesSearch   = !query || p.name.toLowerCase().includes(query);
+        var pCat            = (p.category || '').toLowerCase();
+        var pName           = (p.title || p.name || '').toLowerCase();
+        var matchesCategory = (category === 'all') || (pCat === category);
+        var matchesSearch   = !query || pName.includes(query);
         return matchesCategory && matchesSearch;
     });
 }
 
 function buildProductCard(product) {
-    var isSelected = product.shownOnHomepage;
+    var isSelected = Boolean(product.is_featured);
     var checkClass = isSelected ? 'product-card-thumb-check checked' : 'product-card-thumb-check';
     var cardClass  = isSelected ? 'product-card selected' : 'product-card';
+
+    var name   = escapeHtml(product.title || product.name || 'Product');
+    var price  = formatPrice(product.price);
+    var imgSrc = product.image_url || '';
 
     return (
         '<div class="' + cardClass + '" data-product-id="' + product.id + '">' +
             '<div class="product-card-thumb-wrapper">' +
-                '<img src="' + product.imgSrc + '" alt="' + product.name + '" class="product-card-img"' +
-                    ' onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';">' +
-                '<div class="product-card-img-placeholder" style="display:none;">' +
+                (imgSrc
+                    ? '<img src="' + escapeHtml(imgSrc) + '" alt="' + name + '" class="product-card-img"' +
+                          ' onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'flex\';">' +
+                      '<div class="product-card-img-placeholder" style="display:none;">'
+                    : '<div class="product-card-img-placeholder" style="display:flex;">'
+                ) +
                     '<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1">' +
                         '<rect x="3" y="3" width="18" height="18" rx="2"/>' +
                         '<circle cx="8.5" cy="8.5" r="1.5"/>' +
@@ -303,20 +431,20 @@ function buildProductCard(product) {
                     '</svg>' +
                 '</div>' +
                 '<div class="' + checkClass + '" data-thumb-id="' + product.id + '" role="checkbox" tabindex="0"' +
-                    ' aria-checked="' + isSelected + '" aria-label="Toggle ' + product.name + ' on homepage">' +
+                    ' aria-checked="' + isSelected + '" aria-label="Toggle ' + name + ' on homepage">' +
                     '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
                         '<polyline points="20 6 9 17 4 12"/>' +
                     '</svg>' +
                 '</div>' +
             '</div>' +
             '<div class="product-card-info">' +
-                '<span class="product-card-name">' + product.name + '</span>' +
-                '<span class="product-card-price">' + product.price + '</span>' +
+                '<span class="product-card-name">' + name + '</span>' +
+                '<span class="product-card-price">' + price + '</span>' +
             '</div>' +
             '<div class="product-card-footer">' +
                 '<input type="checkbox" class="product-card-checkbox" id="chk-' + product.id + '"' +
                     (isSelected ? ' checked' : '') + ' data-checkbox-id="' + product.id + '"' +
-                    ' aria-label="Show ' + product.name + ' on homepage">' +
+                    ' aria-label="Show ' + name + ' on homepage">' +
                 '<label for="chk-' + product.id + '" class="product-card-checkbox-label">SHOWN ON HOMEPAGE</label>' +
             '</div>' +
         '</div>'
@@ -324,6 +452,7 @@ function buildProductCard(product) {
 }
 
 function renderProductGrid() {
+    if (!productsGrid) return;
     var filtered = getFilteredProducts();
 
     if (filtered.length === 0) {
@@ -339,6 +468,8 @@ function renderProductGrid() {
    PRODUCTS — EVENT BINDING (re-bound after each render)
    ------------------------------------------------------- */
 function bindProductCardEvents() {
+    if (!productsGrid) return;
+
     // Thumbnail checkbox overlay
     productsGrid.querySelectorAll('.product-card-thumb-check').forEach(function (el) {
         el.addEventListener('click', function () {
@@ -364,21 +495,48 @@ function bindProductCardEvents() {
    PRODUCTS — FILTER CONTROLS
    ------------------------------------------------------- */
 function initProductFilters() {
-    productsSearchInput.addEventListener('input', renderProductGrid);
-    categorySelect.addEventListener('change', renderProductGrid);
+    if (productsSearchInput) productsSearchInput.addEventListener('input', renderProductGrid);
+    if (categorySelect) categorySelect.addEventListener('change', renderProductGrid);
+}
+
+/* -------------------------------------------------------
+   MOBILE SIDEBAR TOGGLE
+   ------------------------------------------------------- */
+function initSidebarToggle() {
+    var hamburgerBtn = document.getElementById('admin-hamburger-btn');
+    var sidebar      = document.getElementById('admin-sidebar');
+    var overlay      = document.getElementById('admin-sidebar-overlay');
+
+    if (hamburgerBtn && sidebar && overlay) {
+        hamburgerBtn.addEventListener('click', function () {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        overlay.addEventListener('click', function () {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
 }
 
 /* -------------------------------------------------------
    BOOT
    ------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function () {
+    if (!guardAdmin()) return;
+
     // Hero setup
-    renderHeroPreview(heroState.currentSrc, heroState.currentFilename, heroState.currentDimensions);
+    fetchHeroImage();
     initHeroDropzone();
     initHeroActions();
 
     // Products setup
-    renderProductGrid();
-    updateSelectedCounter();
+    fetchProducts();
     initProductFilters();
+
+    // Mobile navigation
+    initSidebarToggle();
 });

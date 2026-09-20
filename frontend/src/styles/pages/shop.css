@@ -302,6 +302,165 @@
   gap: 32px !important;
 }
 
+/* ─── Wishlist Button: vertical position ─── */
+.shop-wishlist-btn {
+  top: 12px;
+}
+
+/* ─── Skeleton Loading ─── */
+.shop-card--skeleton .shop-card-image-wrapper {
+  background: none;
+}
+
+.skeleton-block,
+.skeleton-line {
+  background: linear-gradient(90deg, #e8e8e8 25%, #d4d4d4 50%, #e8e8e8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 0;
+}
+
+.skeleton-block {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  display: block;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 2px;
+  margin-bottom: 6px;
+}
+
+.skeleton-line--name  { width: 75%; }
+.skeleton-line--price { width: 50%; }
+.skeleton-line--buy   { width: 30%; margin-top: 4px; }
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── State Messages (empty / error / no-results) ─── */
+.shop-state-message {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 24px;
+  text-align: center;
+  color: var(--color-gray-muted);
+}
+
+.shop-state-message svg {
+  stroke: #BDBDBD;
+  stroke-width: 1.5;
+  fill: none;
+  opacity: 0.7;
+}
+
+.shop-state-message p {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-gray-muted);
+  margin: 0;
+}
+
+.shop-state-message--error p {
+  color: #888;
+}
+
+.shop-retry-btn {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  background: transparent;
+  border: 1.5px solid var(--color-black);
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.shop-retry-btn:hover {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+/* ─── Search Overlay ─── */
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.96);
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.search-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.search-overlay-inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 700px;
+  margin-top: 80px;
+  padding: 0 24px;
+  gap: 12px;
+}
+
+.search-overlay-input {
+  flex: 1;
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--color-black);
+  padding: 12px 0;
+  outline: none;
+}
+
+.search-overlay-input::placeholder {
+  color: #BDBDBD;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+}
+
+.search-overlay-close {
+  font-family: var(--font-sans);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--color-black);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+
+.search-overlay-close:hover {
+  opacity: 1;
+}
+
 /* ==========================================================================
    Mobile Responsive — max-width: 768px (Shop-specific overrides only)
    Navbar/drawer styles are handled globally in responsive.css

@@ -14,6 +14,9 @@
 <body class="admin-page">
 <div class="admin-layout">
 
+    <!-- Sidebar overlay (mobile drawer) -->
+    <div class="admin-sidebar-overlay" id="admin-sidebar-overlay"></div>
+
     <!-- ===== SIDEBAR ===== -->
     <aside class="admin-sidebar" id="admin-sidebar">
         <div class="sidebar-top">
@@ -53,7 +56,14 @@
 
         <!-- TOP BAR -->
         <header class="admin-topbar" id="admin-topbar">
-            <span class="topbar-brand">BARE MONDRIAN ADMIN</span>
+            <button class="admin-hamburger-btn" id="admin-hamburger-btn" aria-label="Open Navigation Menu">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="4" y1="6" x2="20" y2="6" />
+                    <line x1="4" y1="12" x2="20" y2="12" />
+                    <line x1="4" y1="18" x2="20" y2="18" />
+                </svg>
+            </button>
+            <a href="dashboard.html" class="topbar-brand">BARE MONDRIAN<span class="topbar-brand-admin-text"> ADMIN</span></a>
             <div class="topbar-actions">
                 <button class="topbar-icon-btn" id="btn-topbar-notifications" aria-label="Notifications">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -262,7 +272,14 @@
                 <!-- ===== SECTION: MATERIAL & CARE ===== -->
                 <div class="ap-section" id="ap-section-material">
                     <h2 class="ap-section-title" id="ap-material-title">MATERIAL &amp; CARE</h2>
-                    <textarea id="ap-textarea-material" class="ap-textarea" rows="4" placeholder="Fabric composition and care instructions..."></textarea>
+                    <div class="ap-field-group" style="margin-bottom: 20px;">
+                        <label class="ap-field-label" for="ap-textarea-composition">COMPOSITION</label>
+                        <textarea id="ap-textarea-composition" class="ap-textarea" rows="3" placeholder="e.g. Polyester, Wool Blend (Semi-Wool)"></textarea>
+                    </div>
+                    <div class="ap-field-group">
+                        <label class="ap-field-label" for="ap-textarea-care">CARE INSTRUCTIONS</label>
+                        <textarea id="ap-textarea-care" class="ap-textarea" rows="3" placeholder="e.g. Dry clean recommended. Machine washable on a gentle cold cycle..."></textarea>
+                    </div>
                 </div>
 
                 <hr class="ap-section-divider">
@@ -286,6 +303,7 @@
     </div>
 </div>
 
-<script src="../scripts/admin/add-product.js"></script>
+<script src="../scripts/auth.js"></script>
+<script src="../scripts/admin/product-form.js"></script>
 </body>
 </html>

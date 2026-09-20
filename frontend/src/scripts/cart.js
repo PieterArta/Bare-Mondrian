@@ -2,55 +2,44 @@
 console.log("BARE MONDRIAN: cart.js loaded successfully!");
 
 // 1. Cart State with LocalStorage persistence
-let defaultCartItems = [
-    {
-        id: 'item-1',
-        name: 'STRUCTURAL HOODIE BLK',
-        size: 'L',
-        quantity: 1,
-        price: 180000,
-        image: 'assets/images/products/produk1.jpg'
-    },
-    {
-        id: 'item-2',
-        name: 'BRUTALIST SNEAKER WHT',
-        size: '43',
-        quantity: 1,
-        price: 180000,
-        image: 'assets/images/products/produk2.jpg'
-    }
-];
-
 let cartItems = [];
-try {
-    let saved = localStorage.getItem('bare_mondrian_cart');
-    if (saved) {
-        cartItems = JSON.parse(saved);
-    } else {
-        cartItems = defaultCartItems;
-        localStorage.setItem('bare_mondrian_cart', JSON.stringify(cartItems));
+
+function loadCart() {
+    try {
+        let saved = localStorage.getItem('bare_mondrian_cart');
+        if (saved !== null && saved !== undefined && String(saved).trim() !== '') {
+            let parsed = JSON.parse(saved);
+            cartItems = Array.isArray(parsed) ? parsed : [];
+        } else {
+            cartItems = [];
+        }
+    } catch (e) {
+        console.error("[Cart] Failed to load cart from localStorage", e);
+        cartItems = [];
     }
-} catch (e) {
-    cartItems = defaultCartItems;
+    console.log("[Cart] Loaded cart items from localStorage:", cartItems);
+    return cartItems;
 }
 
 function saveCart() {
     try {
         localStorage.setItem('bare_mondrian_cart', JSON.stringify(cartItems));
+        console.log("[Cart] Saved cart items to localStorage:", cartItems);
     } catch (e) {
-        console.error("Failed to save cart to localStorage", e);
+        console.error("[Cart] Failed to save cart to localStorage", e);
     }
 }
 
 // Helper: Format price as Indonesian Rupiah (e.g., Rp180.000)
 function formatPrice(amount) {
-    return 'Rp' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return 'Rp' + (Number(amount) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 }
 
 // Helper: Calculate subtotal
 function getSubtotal() {
+    loadCart();
     return cartItems.reduce(function (sum, item) {
-        return sum + item.price * item.quantity;
+        return sum + (Number(item.price) || 0) * (Number(item.quantity) || 1);
     }, 0);
 }
 
@@ -87,7 +76,7 @@ function injectCartDOM() {
 
 // 3. Render cart items and totals
 function renderCart() {
-    saveCart();
+    loadCart();
     var itemsList = document.getElementById('cart-items-list');
     var subtotalEl = document.getElementById('cart-subtotal');
     var totalEl = document.getElementById('cart-total');
@@ -96,15 +85,15 @@ function renderCart() {
 
     itemsList.innerHTML = '';
 
-    if (cartItems.length === 0) {
+    if (!cartItems || cartItems.length === 0) {
         itemsList.innerHTML =
             '<div class="cart-empty-state">' +
             '<div class="cart-empty-title">Your Cart is Empty</div>' +
             '<div class="cart-empty-text">Add some structural streetwear to get started.</div>' +
             '<a href="shop.html" class="cart-empty-shop-btn" id="cart-continue-shopping">CONTINUE SHOPPING</a>' +
             '</div>';
-        subtotalEl.textContent = formatPrice(0);
-        totalEl.textContent = formatPrice(0);
+        if (subtotalEl) subtotalEl.textContent = formatPrice(0);
+        if (totalEl) totalEl.textContent = formatPrice(0);
         return;
     }
 
@@ -118,7 +107,7 @@ function renderCart() {
             '<div class="cart-item-info">' +
             '<div class="cart-item-name-row">' +
             '<h4 class="cart-item-name">' + item.name + '</h4>' +
-            '<span class="cart-item-size">SIZE: ' + item.size + '</span>' +
+            '<span class="cart-item-size">SIZE: ' + (item.size || 'FREE SIZE') + '</span>' +
             '</div>' +
             '<div class="cart-item-bottom-row">' +
             '<div class="quantity-stepper">' +
@@ -134,15 +123,16 @@ function renderCart() {
     });
 
     var subtotal = getSubtotal();
-    subtotalEl.textContent = formatPrice(subtotal);
-    totalEl.textContent = formatPrice(subtotal);
+    if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
+    if (totalEl) totalEl.textContent = formatPrice(subtotal);
 
     // Bind stepper and remove buttons
     itemsList.querySelectorAll('.minus-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var idx = parseInt(this.getAttribute('data-index'));
-            if (cartItems[idx].quantity > 1) {
+            if (cartItems[idx] && cartItems[idx].quantity > 1) {
                 cartItems[idx].quantity--;
+                saveCart();
                 renderCart();
             }
         });
@@ -151,22 +141,29 @@ function renderCart() {
     itemsList.querySelectorAll('.plus-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var idx = parseInt(this.getAttribute('data-index'));
-            cartItems[idx].quantity++;
-            renderCart();
+            if (cartItems[idx]) {
+                cartItems[idx].quantity++;
+                saveCart();
+                renderCart();
+            }
         });
     });
 
     itemsList.querySelectorAll('.cart-item-remove-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var idx = parseInt(this.getAttribute('data-index'));
-            cartItems.splice(idx, 1);
-            renderCart();
+            if (cartItems[idx] !== undefined) {
+                cartItems.splice(idx, 1);
+                saveCart();
+                renderCart();
+            }
         });
     });
 }
 
 // 4. Open / Close the drawer
 function openCart() {
+    renderCart();
     var overlay = document.getElementById('cart-overlay');
     var drawer = document.getElementById('cart-drawer');
     if (overlay && drawer) {
@@ -217,13 +214,25 @@ if (checkoutBtn) {
     });
 }
 
+function getCartItems() {
+    return loadCart();
+}
+
+function clearCart() {
+    cartItems = [];
+    saveCart();
+    renderCart();
+}
+
 // Expose globally so onclick="" attributes and DevTools can call them
 window.openCart = openCart;
 window.closeCart = closeCart;
+window.getCartItems = getCartItems;
+window.clearCart = clearCart;
+window.getSubtotal = getSubtotal;
+window.renderCart = renderCart;
 
 // Check for openCart parameter in URL
 if (window.location.search.indexOf('openCart=true') !== -1) {
-    // Wait a brief moment for DOM render/transitions to stabilize
     setTimeout(openCart, 100);
 }
-

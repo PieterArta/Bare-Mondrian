@@ -1,11 +1,83 @@
 /* Homepage Specific Styles */
 
-/* Header Floating Over Hero Setup */
+/* ── Navbar: transparent over hero, solid slides in on scroll ── */
 body.home-page .navbar {
-  position: sticky !important;
+  position: fixed !important;
   width: 100%;
-  background-color: var(--color-bg-light) !important;
-  border-bottom: 1px solid var(--color-border) !important;
+  background-color: transparent !important;
+  border-bottom: 1px solid transparent !important;
+}
+
+/* Solid background panel behind navbar, slides in on scroll */
+body.home-page .navbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-bg-light);
+  border-bottom: 1px solid var(--color-border);
+  transform: translateY(-100%);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+}
+
+body.home-page .navbar.scrolled::before {
+  transform: translateY(0);
+}
+
+/* Desktop: black text/icons over hero */
+@media screen and (min-width: 769px) {
+  body.home-page .navbar .nav-brand,
+  body.home-page .navbar .nav-link {
+    color: var(--color-black);
+    transition: color 0.3s ease;
+  }
+
+  body.home-page .navbar .nav-link:hover {
+    color: var(--color-black);
+    opacity: 0.7;
+  }
+
+  body.home-page .navbar .nav-link.active {
+    color: var(--color-black);
+    border-bottom-color: var(--color-black);
+  }
+
+  body.home-page .navbar .icon-btn {
+    color: var(--color-black);
+    transition: color 0.3s ease;
+  }
+
+  body.home-page .navbar .icon-btn svg {
+    stroke: var(--color-black);
+    transition: stroke 0.3s ease;
+  }
+
+  /* Scrolled: restore black */
+  body.home-page .navbar.scrolled .nav-brand,
+  body.home-page .navbar.scrolled .nav-link {
+    color: var(--color-black);
+  }
+
+  body.home-page .navbar.scrolled .nav-link:hover {
+    color: var(--color-black);
+    opacity: 0.7;
+  }
+
+  body.home-page .navbar.scrolled .nav-link.active {
+    color: var(--color-black);
+    border-bottom-color: var(--color-black);
+  }
+
+  body.home-page .navbar.scrolled .icon-btn {
+    color: var(--color-black);
+  }
+
+  body.home-page .navbar.scrolled .icon-btn svg {
+    stroke: var(--color-black);
+  }
 }
 
 /* Hero Section */
@@ -129,4 +201,91 @@ body.home-page .navbar {
 .product-card:hover .product-card-cta {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ── Featured Section Header ────────────────────────────────────────────── */
+.featured-section-header {
+  max-width: 1400px;
+  margin: 0 auto 40px;
+}
+
+.featured-section-title {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Product Info Bar (name + price on dynamic cards) ───────────────────── */
+.product-card-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 14px 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.product-card:hover .product-card-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.product-card-name {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.product-card-price {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.85);
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+/* ── Skeleton Shimmer ───────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.product-card--skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s infinite linear;
+  pointer-events: none;
+  border: none;
+  cursor: default;
+}
+
+/* ── Featured Empty State ───────────────────────────────────────────────── */
+.featured-empty-state {
+  grid-column: 1 / -1;
+  padding: 60px 0;
+  text-align: center;
+  color: var(--color-muted, #999);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }

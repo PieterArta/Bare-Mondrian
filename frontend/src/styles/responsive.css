@@ -189,12 +189,12 @@
   body.home-page .navbar .mobile-hamburger-btn,
   body.home-page .navbar .nav-brand,
   body.home-page .navbar .icon-btn {
-    color: #ffffff !important;
+    color: var(--color-black) !important;
     transition: color 0.3s ease;
   }
 
   body.home-page .navbar .icon-btn svg {
-    stroke: #ffffff !important;
+    stroke: var(--color-black) !important;
     transition: stroke 0.3s ease;
   }
 

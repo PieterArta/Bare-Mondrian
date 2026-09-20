@@ -11,160 +11,21 @@
     'use strict';
 
     // ─── Config ────────────────────────────────────────────────────────────────
+    var API_BASE_URL = 'http://localhost:8000';
     var ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
     var MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
-    var SHIPPING_COST = 10000;
 
     // ─── State ─────────────────────────────────────────────────────────────────
-    var uploadedFile = null; // tracks the currently selected File object
-
-    // ─── Retrieve order ID ─────────────────────────────────────────────────────
-    // In production this value is set by the backend after order creation
-    // (e.g., embedded in a signed session or API response, NOT from the URL query string
-    // to prevent order-ID guessing/tampering). The placeholder below will be replaced
-    // with a backend-provided value once the API is wired up.
+    var uploadedFile = null;
     var orderId = null;
-    try {
-        var savedOrder = sessionStorage.getItem('bare_mondrian_pending_order');
-        if (savedOrder) {
-            var parsedOrder = JSON.parse(savedOrder);
-            // Only use the ID if it looks like a server-generated value (non-empty string)
-            if (parsedOrder && parsedOrder.orderId && typeof parsedOrder.orderId === 'string') {
-                orderId = parsedOrder.orderId;
-            }
-        }
-    } catch (e) {
-        // sessionStorage unavailable or parse error — orderId stays null
-    }
-
-    var orderIdValueEl = document.getElementById('payment-order-id-value');
-    if (orderIdValueEl) {
-        // Show placeholder text if no backend-provided ID is available yet
-        orderIdValueEl.textContent = orderId ? '#' + orderId : '#ORD-DEMO';
-    }
-
-    // ─── Retrieve cart items ────────────────────────────────────────────────────
-    // Reads from the same localStorage key used by cart.js and checkout.js
-    var defaultCartItems = [
-        {
-            id: 'item-1',
-            name: 'STRUCTURE TEE - BLK',
-            size: 'L',
-            quantity: 1,
-            price: 150000,
-            image: 'assets/images/products/produk1.jpg'
-        },
-        {
-            id: 'item-2',
-            name: 'GRID TOTE - WHT',
-            size: 'OS',
-            quantity: 1,
-            price: 200000,
-            image: 'assets/images/products/produk2.jpg'
-        }
-    ];
-
-    var cartItems = [];
-    try {
-        var saved = localStorage.getItem('bare_mondrian_cart');
-        if (saved) {
-            cartItems = JSON.parse(saved);
-        } else {
-            cartItems = defaultCartItems;
-        }
-    } catch (e) {
-        cartItems = defaultCartItems;
-    }
+    var orderData = null;
 
     // ─── Helpers ───────────────────────────────────────────────────────────────
     function formatPrice(amount) {
-        return 'Rp' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        var num = Math.round(Number(amount) || 0);
+        return 'Rp' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 
-    function getSubtotal() {
-        return cartItems.reduce(function (sum, item) {
-            return sum + item.price * item.quantity;
-        }, 0);
-    }
-
-    function getTotal() {
-        return getSubtotal() + SHIPPING_COST;
-    }
-
-    // ─── Render Order Summary ──────────────────────────────────────────────────
-    function renderOrderSummary() {
-        var listEl = document.getElementById('payment-items-list');
-        var subtotalEl = document.getElementById('payment-subtotal');
-        var shippingEl = document.getElementById('payment-shipping');
-        var totalEl = document.getElementById('payment-total');
-        var totalDisplayEl = document.getElementById('payment-total-display');
-
-        if (!listEl) return;
-
-        listEl.innerHTML = '';
-
-        if (cartItems.length === 0) {
-            listEl.innerHTML = '<p class="checkout-item-detail" style="text-align:center;padding:20px 0;">No items in order.</p>';
-        } else {
-            cartItems.forEach(function (item, index) {
-                var itemRow = document.createElement('div');
-                itemRow.className = 'checkout-item-row';
-
-                itemRow.innerHTML =
-                    '<div class="checkout-item-img-wrapper">' +
-                        '<img src="' + item.image + '" alt="' + item.name + '" class="checkout-item-img" ' +
-                            'onerror="this.onerror=null; this.style.display=\'none\';">' +
-                    '</div>' +
-                    '<div class="checkout-item-info">' +
-                        '<h4 class="checkout-item-name">' + item.name + '</h4>' +
-                        '<span class="checkout-item-detail">SIZE: ' + item.size + '</span>' +
-                        '<span class="checkout-item-qty">QTY: ' + item.quantity + '</span>' +
-                    '</div>' +
-                    '<span class="checkout-item-price">' + formatPrice(item.price * item.quantity) + '</span>';
-
-                listEl.appendChild(itemRow);
-
-                if (index < cartItems.length - 1) {
-                    var divider = document.createElement('hr');
-                    divider.className = 'checkout-items-divider';
-                    listEl.appendChild(divider);
-                }
-            });
-        }
-
-        var subtotal = getSubtotal();
-        var total = getTotal();
-
-        if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
-        if (shippingEl) shippingEl.textContent = formatPrice(SHIPPING_COST);
-        if (totalEl) totalEl.textContent = formatPrice(total);
-        if (totalDisplayEl) totalDisplayEl.textContent = formatPrice(total);
-    }
-
-    // ─── File Validation ───────────────────────────────────────────────────────
-    // CLIENT-SIDE ONLY — the backend must independently validate type, size, and
-    // file content (magic bytes) before storing or processing the upload.
-    function validateFile(file) {
-        if (!file) return { valid: false, error: 'No file selected.' };
-
-        if (ALLOWED_TYPES.indexOf(file.type) === -1) {
-            return {
-                valid: false,
-                error: 'Invalid file type. Please upload a JPEG, PNG, or WEBP image.'
-            };
-        }
-
-        if (file.size > MAX_FILE_SIZE_BYTES) {
-            return {
-                valid: false,
-                error: 'File too large. Maximum allowed size is 5MB.'
-            };
-        }
-
-        return { valid: true, error: null };
-    }
-
-    // ─── Show / hide error message ─────────────────────────────────────────────
     function showError(msg) {
         var errorEl = document.getElementById('upload-error-msg');
         if (!errorEl) return;
@@ -179,6 +40,117 @@
         errorEl.style.display = 'none';
     }
 
+    // ─── Step 1: Get Order ID from sessionStorage ──────────────────────────────
+    function getOrderId() {
+        try {
+            // Read the key set by checkout.js on successful order submission
+            var id = sessionStorage.getItem('currentOrderId');
+            if (id && String(id).trim() !== '') {
+                return String(id).trim();
+            }
+        } catch (e) {
+            // sessionStorage unavailable
+        }
+        return null;
+    }
+
+    // ─── Step 2: Fetch order from backend ─────────────────────────────────────
+    function fetchOrder(id) {
+        var headers = { 'Content-Type': 'application/json' };
+        var token = localStorage.getItem('token');
+        if (token && token.trim() !== '') {
+            headers['Authorization'] = 'Bearer ' + token.trim();
+        }
+
+        return fetch(API_BASE_URL + '/api/orders/' + id, {
+            method: 'GET',
+            headers: headers
+        }).then(function (res) {
+            if (!res.ok) {
+                throw new Error('Order not found (status ' + res.status + ')');
+            }
+            return res.json();
+        });
+    }
+
+    // ─── Step 3: Render Order Summary from API data ────────────────────────────
+    function renderOrderSummary(order) {
+        var orderIdValueEl = document.getElementById('payment-order-id-value');
+        var listEl = document.getElementById('payment-items-list');
+        var subtotalEl = document.getElementById('payment-subtotal');
+        var shippingEl = document.getElementById('payment-shipping');
+        var totalEl = document.getElementById('payment-total');
+        var totalDisplayEl = document.getElementById('payment-total-display');
+
+        if (orderIdValueEl) {
+            orderIdValueEl.textContent = '#ORD-' + String(order.id).padStart(4, '0');
+        }
+
+        if (!listEl) return;
+        listEl.innerHTML = '';
+
+        var items = order.items || [];
+
+        if (items.length === 0) {
+            listEl.innerHTML = '<p class="checkout-item-detail" style="text-align:center;padding:20px 0;">No items in order.</p>';
+        } else {
+            items.forEach(function (item, index) {
+                var itemRow = document.createElement('div');
+                itemRow.className = 'checkout-item-row';
+
+                var unitPrice = Number(item.unit_price) || 0;
+                var qty = Number(item.quantity) || 1;
+                var lineTotal = unitPrice * qty;
+
+                itemRow.innerHTML =
+                    '<div class="checkout-item-img-wrapper">' +
+                        '<div style="width:100%;height:100%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;">' +
+                            '<span style="font-size:0.6rem;color:#999;letter-spacing:0.04em;">PRODUCT</span>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="checkout-item-info">' +
+                        '<h4 class="checkout-item-name">PRODUCT #' + item.product_id + '</h4>' +
+                        '<span class="checkout-item-detail">SIZE: ' + (item.size || 'FREE SIZE').toUpperCase() + '</span>' +
+                        (item.color ? '<span class="checkout-item-detail">COLOR: ' + item.color.toUpperCase() + '</span>' : '') +
+                        '<span class="checkout-item-qty">QTY: ' + qty + '</span>' +
+                    '</div>' +
+                    '<span class="checkout-item-price">' + formatPrice(lineTotal) + '</span>';
+
+                listEl.appendChild(itemRow);
+
+                if (index < items.length - 1) {
+                    var divider = document.createElement('hr');
+                    divider.className = 'checkout-items-divider';
+                    listEl.appendChild(divider);
+                }
+            });
+        }
+
+        // Calculate totals from item data
+        var subtotal = items.reduce(function (sum, item) {
+            return sum + (Number(item.unit_price) || 0) * (Number(item.quantity) || 1);
+        }, 0);
+        var shipping = 0; // Complimentary placeholder
+        var total = subtotal + shipping;
+
+        if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
+        if (shippingEl) shippingEl.textContent = 'COMPLIMENTARY';
+        if (totalEl) totalEl.textContent = formatPrice(total);
+        if (totalDisplayEl) totalDisplayEl.textContent = formatPrice(total);
+    }
+
+    // ─── File Validation ───────────────────────────────────────────────────────
+    function validateFile(file) {
+        if (!file) return { valid: false, error: 'No file selected.' };
+        if (ALLOWED_TYPES.indexOf(file.type) === -1) {
+            return { valid: false, error: 'Invalid file type. Please upload a JPEG, PNG, or WEBP image.' };
+        }
+        if (file.size > MAX_FILE_SIZE_BYTES) {
+            return { valid: false, error: 'File too large. Maximum allowed size is 5MB.' };
+        }
+        return { valid: true, error: null };
+    }
+
     // ─── Apply selected file: preview + enable button ──────────────────────────
     function applyFile(file) {
         var result = validateFile(file);
@@ -191,7 +163,6 @@
         clearError();
         uploadedFile = file;
 
-        // Show preview
         var reader = new FileReader();
         reader.onload = function (e) {
             var previewImg = document.getElementById('upload-preview-img');
@@ -206,7 +177,6 @@
         };
         reader.readAsDataURL(file);
 
-        // Enable confirm button
         var confirmBtn = document.getElementById('confirm-payment-btn');
         if (confirmBtn) {
             confirmBtn.disabled = false;
@@ -214,7 +184,7 @@
         }
     }
 
-    // ─── Clear selected file: reset to default state ──────────────────────────
+    // ─── Clear selected file ───────────────────────────────────────────────────
     function clearFile() {
         uploadedFile = null;
 
@@ -226,11 +196,8 @@
         if (previewImg) previewImg.src = '';
         if (defaultState) defaultState.style.display = 'flex';
         if (previewState) previewState.style.display = 'none';
-
-        // Reset file input so the same file can be re-selected
         if (fileInput) fileInput.value = '';
 
-        // Disable confirm button
         var confirmBtn = document.getElementById('confirm-payment-btn');
         if (confirmBtn) {
             confirmBtn.disabled = true;
@@ -246,14 +213,13 @@
 
         if (!dropzone || !fileInput) return;
 
-        // File input change (click-to-upload path)
-        fileInput.addEventListener('change', function () {
-            if (this.files && this.files[0]) {
-                applyFile(this.files[0]);
-            }
+        // Click on dropzone triggers hidden file input
+        dropzone.addEventListener('click', function (e) {
+            if (e.target === removeBtn || (removeBtn && removeBtn.contains(e.target))) return;
+            fileInput.click();
         });
 
-        // Keyboard accessibility: Enter/Space on dropzone triggers file input
+        // Keyboard accessibility
         dropzone.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -261,7 +227,14 @@
             }
         });
 
-        // Drag-and-drop events on the dropzone
+        // File input change
+        fileInput.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                applyFile(this.files[0]);
+            }
+        });
+
+        // Drag-and-drop
         dropzone.addEventListener('dragover', function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -278,18 +251,15 @@
             e.preventDefault();
             e.stopPropagation();
             this.classList.remove('drag-over');
-
             var files = e.dataTransfer && e.dataTransfer.files;
-            if (files && files[0]) {
-                applyFile(files[0]);
-            }
+            if (files && files[0]) applyFile(files[0]);
         });
 
         // Remove button
         if (removeBtn) {
             removeBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                e.stopPropagation(); // prevent click from falling through to file input
+                e.stopPropagation();
                 clearFile();
                 clearError();
             });
@@ -302,66 +272,96 @@
         if (!confirmBtn) return;
 
         confirmBtn.addEventListener('click', function () {
-            if (!uploadedFile) return; // guard — should not happen if button is disabled
-
-            // Build a FormData payload ready for the backend endpoint.
-            // In production, POST this to /api/orders/{orderId}/payment-proof
-            // The server must:
-            //   - Verify the session/token matches the orderId
-            //   - Re-validate the file (type, size, magic bytes)
-            //   - Store the file securely (e.g., in a private cloud bucket)
-            //   - Set the order status to "pending_verification" — NOT "paid"
-            var formData = new FormData();
-            formData.append('paymentProof', uploadedFile, uploadedFile.name);
-            // The order ID comes from the backend — never trust a client-supplied value
-            if (orderId) {
-                formData.append('orderId', orderId);
+            if (!uploadedFile) return;
+            if (!orderId) {
+                showError('Order ID is missing. Please return to checkout.');
+                return;
             }
 
-            // Disable button and show pending state while request is in flight
+            var formData = new FormData();
+            // Backend endpoint uses the field name "file"
+            formData.append('file', uploadedFile, uploadedFile.name);
+
+            // Loading state
+            var originalText = this.textContent;
             this.disabled = true;
             this.setAttribute('aria-disabled', 'true');
             this.textContent = 'SUBMITTING…';
 
-            // TODO: replace with actual fetch() call once backend endpoint is ready
-            // Example:
-            // fetch('/api/orders/' + orderId + '/payment-proof', {
-            //     method: 'POST',
-            //     body: formData,
-            //     credentials: 'include' // send session cookie
-            // })
-            // .then(function(res) { if (!res.ok) throw new Error('Upload failed'); return res.json(); })
-            // .then(function(data) { showSuccessState(data); })
-            // .catch(function(err) { showError('Upload failed. Please try again.'); });
+            var headers = {};
+            var token = localStorage.getItem('token');
+            if (token && token.trim() !== '') {
+                headers['Authorization'] = 'Bearer ' + token.trim();
+            }
 
-            // Demo mode: simulate a successful submission after a short delay
-            setTimeout(function () {
-                showSuccessState();
-            }, 1200);
+            fetch(API_BASE_URL + '/api/orders/' + orderId + '/payment-proof', {
+                method: 'POST',
+                headers: headers,
+                body: formData
+            })
+                .then(function (res) {
+                    return res.json().then(function (data) {
+                        return { ok: res.ok, status: res.status, data: data };
+                    });
+                })
+                .then(function (result) {
+                    if (!result.ok) {
+                        var errMsg = (result.data && result.data.detail)
+                            ? result.data.detail
+                            : 'Upload failed. Please try again.';
+                        showError(errMsg);
+                        confirmBtn.disabled = false;
+                        confirmBtn.setAttribute('aria-disabled', 'false');
+                        confirmBtn.textContent = originalText;
+                        return;
+                    }
+
+                    // Success: clear session order ID and redirect
+                    try { sessionStorage.removeItem('currentOrderId'); } catch (e) {}
+                    window.location.href = 'order-confirmation.html?id=' + orderId;
+                })
+                .catch(function (err) {
+                    console.error('[Payment] Upload error:', err);
+                    showError('Network error. Please check your connection and try again.');
+                    confirmBtn.disabled = false;
+                    confirmBtn.setAttribute('aria-disabled', 'false');
+                    confirmBtn.textContent = originalText;
+                });
         });
     }
 
-    // ─── Success State (post-submission) ──────────────────────────────────────
-    function showSuccessState() {
-        var main = document.querySelector('.payment-container');
-        if (!main) return;
-
-        main.outerHTML =
-            '<div class="success-container">' +
-                '<div class="success-icon">✓</div>' +
-                '<h2 class="success-title">PAYMENT PROOF SUBMITTED</h2>' +
-                '<p class="success-message">' +
-                    'Thank you! Your payment proof has been received and is now ' +
-                    '<strong>pending verification</strong> by our team. ' +
-                    'We will notify you once your payment has been confirmed.' +
-                '</p>' +
-                '<a href="index.html" class="success-back-btn">RETURN TO HOME</a>' +
-            '</div>';
-    }
-
     // ─── Init ──────────────────────────────────────────────────────────────────
-    renderOrderSummary();
-    bindUploadEvents();
-    bindConfirmButton();
+    document.addEventListener('DOMContentLoaded', function () {
+        orderId = getOrderId();
+
+        if (!orderId) {
+            // No order ID — redirect back to checkout
+            window.location.href = 'checkout.html';
+            return;
+        }
+
+        // Show loading state in summary while fetching
+        var listEl = document.getElementById('payment-items-list');
+        if (listEl) {
+            listEl.innerHTML = '<p class="checkout-item-detail" style="text-align:center;padding:20px 0;color:#999;">LOADING ORDER…</p>';
+        }
+        var orderIdValueEl = document.getElementById('payment-order-id-value');
+        if (orderIdValueEl) orderIdValueEl.textContent = '#ORD-' + String(orderId).padStart(4, '0');
+
+        fetchOrder(orderId)
+            .then(function (data) {
+                orderData = data;
+                renderOrderSummary(data);
+            })
+            .catch(function (err) {
+                console.error('[Payment] Fetch order error:', err);
+                if (listEl) {
+                    listEl.innerHTML = '<p class="checkout-item-detail" style="text-align:center;padding:20px 0;color:#c0392b;">FAILED TO LOAD ORDER. PLEASE RETURN TO CHECKOUT.</p>';
+                }
+            });
+
+        bindUploadEvents();
+        bindConfirmButton();
+    });
 
 })();
