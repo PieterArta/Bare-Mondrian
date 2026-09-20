@@ -26,12 +26,13 @@ origins = [
     "http://127.0.0.1:3000",
     "http://localhost:5500",
     "http://127.0.0.1:5500",
-    "https://bare-mondrian.netlify.app",
+    "https://bare-mondrian.netlify.app",  # Production Netlify domain
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"https://.*\.netlify\.app",  # Matches any Netlify production or preview subdomains
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
