@@ -11,7 +11,7 @@
     'use strict';
 
     // ─── Config ────────────────────────────────────────────────────────────────
-    var API_BASE_URL = 'http://localhost:8000';
+    var API_BASE_URL = 'https://bare-mondrian.onrender.com';
     var ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
     var MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
 

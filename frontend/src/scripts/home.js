@@ -2,7 +2,7 @@
 
 (function initFeaturedProducts() {
     // ─── Config ────────────────────────────────────────────────────────────
-    var API_BASE_URL = 'http://localhost:8000';
+    var API_BASE_URL = 'https://bare-mondrian.onrender.com';
 
     // ─── Element refs ──────────────────────────────────────────────────────
     var section = document.getElementById('featured-products-section');

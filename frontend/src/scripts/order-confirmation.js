@@ -3,7 +3,7 @@
 (function () {
     'use strict';
 
-    var API_BASE_URL = 'http://localhost:8000';
+    var API_BASE_URL = 'https://bare-mondrian.onrender.com';
 
     // ─── Helpers ───────────────────────────────────────────────────────────────
     function formatPrice(amount) {
