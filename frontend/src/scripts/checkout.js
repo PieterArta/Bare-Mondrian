@@ -173,8 +173,11 @@
                 return res.json();
             })
             .then(function (provinces) {
+                var sortedProvinces = (provinces || []).slice().sort(function (a, b) {
+                    return (a.name || '').localeCompare(b.name || '');
+                });
                 var html = '<option value="" disabled selected>Select Province</option>';
-                (provinces || []).forEach(function (p) {
+                sortedProvinces.forEach(function (p) {
                     html += '<option value="' + p.id + '" data-name="' + escapeAttr(p.name) + '">' + escapeAttr(p.name.toUpperCase()) + '</option>';
                 });
                 provinceSelect.innerHTML = html;
