@@ -2,6 +2,7 @@
 # Publish dir is `frontend/src` (set this in Netlify UI or via this file)
 
 [build]
+  base = ""
   publish = "frontend/src"
 
 # ─── Pretty/clean URL redirects ─────────────────────────────────────────────
