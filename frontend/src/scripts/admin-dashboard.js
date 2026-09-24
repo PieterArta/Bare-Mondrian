@@ -10,7 +10,7 @@ var API_BASE_URL = 'https://bare-mondrian.onrender.com';
 function guardAdmin() {
     if (typeof window.isLoggedIn === 'function' && typeof window.getUserRole === 'function') {
         if (!window.isLoggedIn() || window.getUserRole() !== 'admin') {
-            window.location.href = '../pages/login.html';
+            window.location.href = '../pages/login';
             return false;
         }
         return true;
@@ -18,7 +18,7 @@ function guardAdmin() {
     var token = localStorage.getItem('token');
     var role = localStorage.getItem('role');
     if (!token || role !== 'admin') {
-        window.location.href = '../pages/login.html';
+        window.location.href = '../pages/login';
         return false;
     }
     return true;
@@ -189,7 +189,7 @@ function renderPendingApprovals(orders) {
     var headerHtml =
         '<div class="dashboard-card-header">' +
         '<h2 class="dashboard-card-title">PENDING APPROVALS</h2>' +
-        '<a href="orders.html" class="dashboard-card-link" id="link-view-all-pending">VIEW ALL</a>' +
+        '<a href="orders" class="dashboard-card-link" id="link-view-all-pending">VIEW ALL</a>' +
         '</div>';
 
     if (pendingOrders.length === 0) {
@@ -247,7 +247,7 @@ function renderLowStockAlerts(products) {
     var headerHtml =
         '<div class="dashboard-card-header">' +
         '<h2 class="dashboard-card-title">LOW STOCK ALERTS</h2>' +
-        '<a href="products.html" class="dashboard-card-link" id="link-view-all-stock">VIEW ALL</a>' +
+        '<a href="products" class="dashboard-card-link" id="link-view-all-stock">VIEW ALL</a>' +
         '</div>';
 
     if (lowStockProducts.length === 0) {

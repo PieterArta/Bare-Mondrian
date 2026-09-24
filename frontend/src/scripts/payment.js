@@ -321,7 +321,7 @@
                         sessionStorage.setItem('lastCompletedOrderId', orderId);
                         sessionStorage.removeItem('currentOrderId');
                     } catch (e) {}
-                    window.location.href = 'order-confirmation.html?id=' + orderId;
+                    window.location.href = '/pages/order-confirmation?id=' + orderId;
                 })
                 .catch(function (err) {
                     console.error('[Payment] Upload error:', err);
@@ -339,7 +339,7 @@
 
         if (!orderId) {
             // No order ID — redirect back to checkout
-            window.location.href = '/pages/checkout.html';
+            window.location.href = '/pages/checkout';
             return;
         }
 

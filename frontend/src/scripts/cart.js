@@ -90,7 +90,7 @@ function renderCart() {
             '<div class="cart-empty-state">' +
             '<div class="cart-empty-title">Your Cart is Empty</div>' +
             '<div class="cart-empty-text">Add some structural streetwear to get started.</div>' +
-            '<a href="shop.html" class="cart-empty-shop-btn" id="cart-continue-shopping">CONTINUE SHOPPING</a>' +
+            '<a href="shop" class="cart-empty-shop-btn" id="cart-continue-shopping">CONTINUE SHOPPING</a>' +
             '</div>';
         if (subtotalEl) subtotalEl.textContent = formatPrice(0);
         if (totalEl) totalEl.textContent = formatPrice(0);
@@ -210,7 +210,7 @@ if (cartOverlay) {
 if (checkoutBtn) {
     checkoutBtn.addEventListener('click', function () {
         closeCart();
-        window.location.href = '/pages/checkout.html';
+        window.location.href = '/pages/checkout';
     });
 }
 

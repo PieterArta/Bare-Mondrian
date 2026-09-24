@@ -50,9 +50,9 @@
           }
 
           if (role === 'admin') {
-            window.location.href = '../admin/dashboard.html';
+            window.location.href = '../admin/dashboard';
           } else {
-            window.location.href = 'index.html';
+            window.location.href = 'index';
           }
         } else {
           if (formError) showFormError(formError, 'Google login failed. Invalid response from server.');
@@ -165,9 +165,9 @@
 
     // Determine correct login path based on current directory
     if (window.location.pathname.indexOf('/admin/') !== -1) {
-      window.location.href = '../pages/login.html';
+      window.location.href = '../pages/login';
     } else {
-      window.location.href = 'login.html';
+      window.location.href = 'login';
     }
   }
 
@@ -299,11 +299,11 @@
 
       btn.addEventListener('click', function (e) {
         if (!isLoggedIn()) {
-          // If NOT logged in: navigate to login.html
+          // If NOT logged in: navigate to login
           if (window.location.pathname.indexOf('/admin/') !== -1) {
-            window.location.href = '../pages/login.html';
-          } else if (window.location.pathname.indexOf('login.html') === -1) {
-            window.location.href = 'login.html';
+            window.location.href = '../pages/login';
+          } else if (window.location.pathname.indexOf('login') === -1) {
+            window.location.href = 'login';
           }
           return;
         }
@@ -428,9 +428,9 @@
 
             // Redirect based on role
             if (role === 'admin') {
-              window.location.href = '../admin/dashboard.html';
+              window.location.href = '../admin/dashboard';
             } else {
-              window.location.href = 'index.html';
+              window.location.href = 'index';
             }
           } else {
             showFormError(formError, 'Login failed. Invalid response from server.');
@@ -617,8 +617,8 @@
               if (data.user.full_name) localStorage.setItem('user_name', data.user.full_name);
             }
 
-            // Customer registration redirects to index.html
-            window.location.href = 'index.html';
+            // Customer registration redirects to index
+            window.location.href = 'index';
           }
         })
         .catch(function (err) {

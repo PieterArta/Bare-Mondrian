@@ -21,7 +21,7 @@
     function guardAdmin() {
         if (typeof window.isLoggedIn === 'function' && typeof window.getUserRole === 'function') {
             if (!window.isLoggedIn() || window.getUserRole() !== 'admin') {
-                window.location.href = '../pages/login.html';
+                window.location.href = '../pages/login';
                 return false;
             }
             return true;
@@ -29,7 +29,7 @@
         var token = localStorage.getItem('token');
         var role   = localStorage.getItem('role');
         if (!token || role !== 'admin') {
-            window.location.href = '../pages/login.html';
+            window.location.href = '../pages/login';
             return false;
         }
         return true;
@@ -393,7 +393,7 @@
         .then(function (newProduct) {
             setSaveLoading(false);
             alert('Product created successfully!');
-            window.location.href = 'products.html';
+            window.location.href = 'products';
         })
         .catch(function (err) {
             setSaveLoading(false);
@@ -404,7 +404,7 @@
     function handleCancel() {
         var confirmed = window.confirm('Discard changes and go back to Product Management?');
         if (confirmed) {
-            window.location.href = 'products.html';
+            window.location.href = 'products';
         }
     }
 

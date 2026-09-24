@@ -722,8 +722,8 @@ const API_BASE_URL = 'https://bare-mondrian.onrender.com';
                 console.log('[Product Detail] Opening cart drawer via window.openCart()');
                 window.openCart();
             } else {
-                console.log('[Product Detail] Navigating to shop.html?openCart=true');
-                window.location.href = '/pages/shop.html?openCart=true';
+                console.log('[Product Detail] Navigating to shop?openCart=true');
+                window.location.href = '/pages/shop?openCart=true';
             }
         });
     }
@@ -734,7 +734,7 @@ const API_BASE_URL = 'https://bare-mondrian.onrender.com';
             console.log('[Product Detail] "BUY NOW" button clicked');
             var product = getSelectedProductOptions();
             addProductToCartState(product);
-            window.location.href = '/pages/checkout.html';
+            window.location.href = '/pages/checkout';
         });
     }
 

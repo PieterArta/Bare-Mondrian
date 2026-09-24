@@ -382,7 +382,7 @@
                         }
 
                         // Redirect to Payment page
-                        window.location.href = '/pages/payment.html';
+                        window.location.href = '/pages/payment';
                     } else {
                         showError('Order confirmation failed. Invalid response from server.');
                         if (confirmBtn) {

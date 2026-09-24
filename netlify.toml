@@ -1,18 +1,23 @@
 # netlify.toml — BARE MONDRIAN
-# Publish dir is `frontend/src` (set this in Netlify UI or via this file)
+# Publish dir is `frontend/src`
 
 [build]
   base = ""
   publish = "frontend/src"
 
 # ─── Pretty/clean URL redirects ─────────────────────────────────────────────
-# These let visitors use /shop, /about, /cart, etc. without the .html extension
-# or the /pages/ prefix, while still serving the actual files from /pages/*.html.
+# Maps clean URLs (both root level and /pages/* or /admin/*) to their .html files.
 
+# Root clean URLs
 [[redirects]]
   from = "/"
   to   = "/pages/index.html"
-  status = 200   # 200 = rewrite (URL stays as "/")
+  status = 200
+
+[[redirects]]
+  from = "/index"
+  to   = "/pages/index.html"
+  status = 200
 
 [[redirects]]
   from = "/shop"
@@ -54,6 +59,62 @@
   to   = "/pages/register.html"
   status = 200
 
+[[redirects]]
+  from = "/order-confirmation"
+  to   = "/pages/order-confirmation.html"
+  status = 200
+
+# /pages/* clean URLs
+[[redirects]]
+  from = "/pages/index"
+  to   = "/pages/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/shop"
+  to   = "/pages/shop.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/about"
+  to   = "/pages/about.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/cart"
+  to   = "/pages/cart.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/checkout"
+  to   = "/pages/checkout.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/payment"
+  to   = "/pages/payment.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/product-detail"
+  to   = "/pages/product-detail.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/login"
+  to   = "/pages/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/register"
+  to   = "/pages/register.html"
+  status = 200
+
+[[redirects]]
+  from = "/pages/order-confirmation"
+  to   = "/pages/order-confirmation.html"
+  status = 200
+
 # Admin routes
 [[redirects]]
   from = "/admin"
@@ -78,6 +139,11 @@
 [[redirects]]
   from = "/admin/add-product"
   to   = "/admin/add-product.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/edit-product"
+  to   = "/admin/edit-product.html"
   status = 200
 
 [[redirects]]
