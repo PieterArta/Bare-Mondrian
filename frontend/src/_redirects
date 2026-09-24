@@ -1,0 +1,16 @@
+/                   /pages/index.html            200
+/shop               /pages/shop.html             200
+/about              /pages/about.html            200
+/cart               /pages/cart.html             200
+/checkout           /pages/checkout.html         200
+/payment            /pages/payment.html          200
+/product-detail     /pages/product-detail.html     200
+/login              /pages/login.html            200
+/register           /pages/register.html         200
+/admin              /admin/dashboard.html        200
+/admin/dashboard    /admin/dashboard.html        200
+/admin/orders       /admin/orders.html           200
+/admin/products     /admin/products.html         200
+/admin/add-product  /admin/add-product.html      200
+/admin/homepage-settings /admin/homepage-settings.html 200
+/admin/login        /admin/login.html            200

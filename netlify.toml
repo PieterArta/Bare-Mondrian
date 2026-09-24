@@ -2,7 +2,7 @@
 # Publish dir is `frontend/src` (set this in Netlify UI or via this file)
 
 [build]
-  publish = "src/pages"
+  publish = "frontend/src"
 
 # ─── Pretty/clean URL redirects ─────────────────────────────────────────────
 # These let visitors use /shop, /about, /cart, etc. without the .html extension
