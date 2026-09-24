@@ -232,56 +232,6 @@ const API_BASE_URL = 'https://bare-mondrian.onrender.com';
             applyFiltersAndSort();
         });
     }
-
-    // ── Navbar Search ────────────────────────────────────────────────────
-    var searchOverlay = document.getElementById('search-overlay');
-    var searchInput = document.getElementById('search-input') ||
-        document.getElementById('navbar-search-input');
-    var searchBtn = document.getElementById('btn-search');
-
-    if (!searchInput && searchBtn) {
-        var overlay = document.createElement('div');
-        overlay.id = 'search-overlay';
-        overlay.className = 'search-overlay';
-        overlay.innerHTML =
-            '<div class="search-overlay-inner">' +
-            '<input type="text" id="search-input" class="search-overlay-input" ' +
-            'placeholder="SEARCH PRODUCTS..." autocomplete="off" aria-label="Search products">' +
-            '<button class="search-overlay-close" id="search-overlay-close" aria-label="Close search">&times;</button>' +
-            '</div>';
-        document.body.appendChild(overlay);
-
-        searchInput = document.getElementById('search-input');
-        var closeBtn = document.getElementById('search-overlay-close');
-
-        searchBtn.addEventListener('click', function () {
-            overlay.classList.add('active');
-            searchInput.focus();
-        });
-
-        closeBtn.addEventListener('click', function () {
-            overlay.classList.remove('active');
-        });
-
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && overlay.classList.contains('active')) {
-                overlay.classList.remove('active');
-            }
-        });
-    }
-
-    if (searchInput) {
-        var searchTimer = null;
-        searchInput.addEventListener('input', function () {
-            clearTimeout(searchTimer);
-            var val = searchInput.value;
-            searchTimer = setTimeout(function () {
-                currentSearch = val;
-                applyFiltersAndSort();
-            }, 250);
-        });
-    }
-
     // ── Kick off ─────────────────────────────────────────────────────────
     fetchProducts();
 })();
