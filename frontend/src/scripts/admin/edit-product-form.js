@@ -366,12 +366,16 @@
         var careTextarea = document.getElementById('ap-textarea-care');
         var shipTextarea = document.getElementById('ap-textarea-shipping');
 
+        // Sizing chart: {"S/M": {bust: X, ...}, "L/XL": {bust: Y, ...}}
         var sizing = {};
         document.querySelectorAll('.ap-sizing-input').forEach(function (inp) {
-            var measure = inp.getAttribute('data-measure');
-            var size = inp.getAttribute('data-size');
-            if (!sizing[measure]) sizing[measure] = {};
-            sizing[measure][size] = parseFloat(inp.value) || 0;
+            var measure   = inp.getAttribute('data-measure');
+            var rawSize   = inp.getAttribute('data-size');
+            var sizeGroup = (rawSize === 'sm') ? 'S/M' : (rawSize === 'lxl' ? 'L/XL' : rawSize);
+            var val       = parseFloat(inp.value) || 0;
+
+            if (!sizing[sizeGroup]) sizing[sizeGroup] = {};
+            sizing[sizeGroup][measure] = val;
         });
 
         var sizes = Array.from(document.querySelectorAll('.ap-size-checkbox:checked')).map(function (cb) {
@@ -470,12 +474,17 @@
 
         if (product.sizing_chart) {
             document.querySelectorAll('.ap-sizing-input').forEach(function (inp) {
-                var measure = inp.getAttribute('data-measure');
-                var size = inp.getAttribute('data-size');
-                if (product.sizing_chart[measure] && product.sizing_chart[measure][size] !== undefined) {
-                    inp.value = product.sizing_chart[measure][size];
-                } else if (product.sizing_chart[size] && product.sizing_chart[size][measure] !== undefined) {
-                    inp.value = product.sizing_chart[size][measure];
+                var measure   = inp.getAttribute('data-measure');
+                var rawSize   = inp.getAttribute('data-size');
+                var sizeGroup = (rawSize === 'sm') ? 'S/M' : (rawSize === 'lxl' ? 'L/XL' : rawSize);
+
+                // Correct format: {"S/M": {bust: X}, "L/XL": {bust: Y}}
+                if (product.sizing_chart[sizeGroup] && product.sizing_chart[sizeGroup][measure] !== undefined) {
+                    inp.value = product.sizing_chart[sizeGroup][measure];
+                }
+                // Legacy fallback: {bust: {sm: X, lxl: Y}} (old save format)
+                else if (product.sizing_chart[measure] && product.sizing_chart[measure][rawSize] !== undefined) {
+                    inp.value = product.sizing_chart[measure][rawSize];
                 }
             });
         }
