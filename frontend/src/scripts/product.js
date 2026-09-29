@@ -408,25 +408,86 @@ const API_BASE_URL = 'https://bare-mondrian.onrender.com';
             return;
         }
 
-        var sizeKeys = Object.keys(sizingChart); // e.g. ["S/M", "L/XL"]
+        // Helper: normalize size names ("sm" -> "S/M", "lxl" -> "L/XL")
+        function normalizeSizeName(sz) {
+            var upper = String(sz || '').trim().toUpperCase();
+            if (upper === 'SM' || upper === 'S/M') return 'S/M';
+            if (upper === 'LXL' || upper === 'L/XL') return 'L/XL';
+            return upper;
+        }
+
+        // Helper: format measurement key for display ("sleeve_length" -> "Sleeve Length")
+        var LABEL_MAP = {
+            'bust': 'Bust',
+            'shoulder_width': 'Shoulder Width',
+            'armhole': 'Armhole',
+            'length': 'Length',
+            'sleeve_length': 'Sleeve Length',
+            'sleeve_width': 'Sleeve Width'
+        };
+
+        function formatMeasureLabel(key) {
+            var k = String(key || '').toLowerCase().trim();
+            if (LABEL_MAP[k]) return LABEL_MAP[k];
+            return String(key).replace(/_/g, ' ').replace(/\b\w/g, function (l) { return l.toUpperCase(); });
+        }
+
+        // Detect schema format & normalize so outer keys are sizes ("S/M", "L/XL")
+        var outerKeys = Object.keys(sizingChart);
+        if (outerKeys.length === 0) return;
+
+        var normalizedChart = {};
+        var knownMeasures = ['bust', 'shoulder_width', 'armhole', 'length', 'sleeve_length', 'sleeve_width'];
+        var isLegacyFormat = outerKeys.some(function (k) {
+            return knownMeasures.indexOf(String(k).toLowerCase()) !== -1;
+        });
+
+        if (isLegacyFormat) {
+            // Legacy schema: { bust: { sm: 110, lxl: 130 }, ... }
+            outerKeys.forEach(function (measureKey) {
+                var innerObj = sizingChart[measureKey];
+                if (innerObj && typeof innerObj === 'object') {
+                    Object.keys(innerObj).forEach(function (rawSize) {
+                        var normSize = normalizeSizeName(rawSize);
+                        if (!normalizedChart[normSize]) normalizedChart[normSize] = {};
+                        normalizedChart[normSize][measureKey] = innerObj[rawSize];
+                    });
+                }
+            });
+        } else {
+            // New schema: { "S/M": { bust: 110, ... }, "L/XL": { ... } }
+            outerKeys.forEach(function (rawSize) {
+                var normSize = normalizeSizeName(rawSize);
+                if (!normalizedChart[normSize]) normalizedChart[normSize] = {};
+                var innerObj = sizingChart[rawSize];
+                if (innerObj && typeof innerObj === 'object') {
+                    Object.keys(innerObj).forEach(function (measureKey) {
+                        normalizedChart[normSize][measureKey] = innerObj[measureKey];
+                    });
+                }
+            });
+        }
+
+        var sizeKeys = Object.keys(normalizedChart); // e.g. ["S/M", "L/XL"]
         if (sizeKeys.length === 0) return;
 
-        // Collect all measurement names from the first size group (e.g. Bust, Shoulder Width...)
-        var measurementNames = Object.keys(sizingChart[sizeKeys[0]] || {});
+        // Collect all measurement names from the first size group
+        var measurementNames = Object.keys(normalizedChart[sizeKeys[0]] || {});
 
         var html = '<table class="measurements-table"><thead><tr><th></th>';
         sizeKeys.forEach(function (key, idx) {
-            var colClass = idx === 0 ? 'col-sm active' : 'col-lxl';
+            var colClass = (key === 'S/M' || idx === 0) ? 'col-sm active' : 'col-lxl';
             html += '<th class="' + colClass + '">' + escapeHtml(key) + '</th>';
         });
         html += '</tr></thead><tbody>';
 
         measurementNames.forEach(function (measureName) {
-            html += '<tr><td>' + escapeHtml(measureName) + '</td>';
+            var displayLabel = formatMeasureLabel(measureName);
+            html += '<tr><td>' + escapeHtml(displayLabel) + '</td>';
             sizeKeys.forEach(function (key, idx) {
-                var colClass = idx === 0 ? 'col-sm active' : 'col-lxl';
-                var val = (sizingChart[key] && sizingChart[key][measureName]) !== undefined
-                    ? sizingChart[key][measureName]
+                var colClass = (key === 'S/M' || idx === 0) ? 'col-sm active' : 'col-lxl';
+                var val = (normalizedChart[key] && normalizedChart[key][measureName]) !== undefined
+                    ? normalizedChart[key][measureName]
                     : '-';
                 html += '<td class="' + colClass + '">' + escapeHtml(val) + '</td>';
             });
