@@ -376,14 +376,15 @@ const API_BASE_URL = 'https://bare-mondrian.onrender.com';
 
     function bindSizeListeners() {
         var sizeBtns = document.querySelectorAll('.size-toggle-btn');
-        var smCells = document.querySelectorAll('.col-sm');
-        var lxlCells = document.querySelectorAll('.col-lxl');
 
         sizeBtns.forEach(function (btn) {
             btn.addEventListener('click', function () {
                 var selectedSize = this.getAttribute('data-size');
                 sizeBtns.forEach(function (b) { b.classList.remove('active'); });
                 this.classList.add('active');
+
+                var smCells = document.querySelectorAll('.col-sm');
+                var lxlCells = document.querySelectorAll('.col-lxl');
 
                 // Sync table columns if S/M vs L/XL or generic indices
                 if (selectedSize === 'S/M' || selectedSize.indexOf('S') !== -1) {
@@ -657,8 +658,7 @@ const API_BASE_URL = 'https://bare-mondrian.onrender.com';
         } catch (ex) { console.error('[Product Detail] Failed to save cart:', ex); }
     }
 
-    // Initial binding for static elements
-    bindSizeListeners();
+    // Initial binding for static color elements
     bindColorListeners();
 
     // Buttons
