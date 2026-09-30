@@ -3,7 +3,9 @@
 (function () {
     'use strict';
 
-    var API_BASE_URL = 'https://bare-mondrian.onrender.com';
+    var API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:8000' 
+    : 'https://bare-mondrian.onrender.com';
 
     // ─── Shipping State ──────────────────────────────────────────────────────
     var currentShippingCost = 0;

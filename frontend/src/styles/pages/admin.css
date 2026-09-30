@@ -65,21 +65,17 @@
 }
 
 .sidebar-brand-main {
-    font-family: var(--font-sans);
+    font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 1.05rem;
-    letter-spacing: 0.04em;
+    font-size: 1.55rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--color-black);
+    line-height: 1;
 }
 
 .sidebar-brand-sub {
-    font-family: var(--font-sans);
-    font-weight: 400;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--color-black);
+    display: none;
 }
 
 /* Sidebar Nav */
@@ -183,13 +179,14 @@
 }
 
 .topbar-brand {
-    font-family: var(--font-sans);
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--color-black);
     text-decoration: none;
+    line-height: 1;
 }
 
 .topbar-actions {
@@ -2674,9 +2671,10 @@
     }
 
     .topbar-brand {
-        font-size: 0.9rem;
+        font-family: var(--font-serif);
+        font-size: 1.1rem;
         font-weight: 700;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.06em;
         margin-right: auto;
     }
 
@@ -3660,3 +3658,221 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================================
+   PHOTO CROP MODAL STYLES
+   ============================================================ */
+.crop-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(3px);
+}
+
+.crop-modal-container {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-black);
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+}
+
+.crop-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--admin-border-light);
+    background-color: var(--color-white);
+}
+
+.crop-modal-title {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-black);
+    margin: 0;
+}
+
+.crop-modal-subtitle {
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--admin-text-muted);
+    margin: 3px 0 0 0;
+}
+
+.crop-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--color-black);
+    padding: 0 4px;
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
+}
+
+.crop-modal-close:hover {
+    opacity: 1;
+}
+
+.crop-modal-body {
+    padding: 20px;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F8F8F8;
+    min-height: 280px;
+}
+
+.crop-modal-img-wrapper {
+    width: 100%;
+    max-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.crop-modal-img-wrapper img {
+    max-width: 100%;
+    max-height: 420px;
+    display: block;
+}
+
+.crop-modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--admin-border-light);
+    background-color: var(--color-white);
+}
+
+/* Cropper customization for BARE MONDRIAN theme */
+.cropper-view-box {
+    outline: 2px solid #000000 !important;
+    outline-color: #000000 !important;
+}
+
+.cropper-line {
+    background-color: #000000 !important;
+}
+
+.cropper-point {
+    background-color: #000000 !important;
+}
+
+/* ============================================================
+   ABOUT US IMAGE UPLOAD SECTION
+   ============================================================ */
+.about-img-upload-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/* Preview Box: landscape 4:3 ratio */
+.about-img-preview-box {
+    position: relative;
+    flex-shrink: 0;
+    width: 200px;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--admin-border-light);
+    background-color: var(--admin-gray-bg);
+    overflow: hidden;
+}
+
+.about-img-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #BDBDBD;
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.about-img-uploading {
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-black);
+}
+
+.about-img-controls {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.about-img-dropzone {
+    padding: 20px 16px;
+}
+
+.about-img-remove-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: none;
+    border: 1px solid var(--admin-border-light);
+    color: var(--admin-text-muted);
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.about-img-remove-btn:hover {
+    border-color: var(--admin-red);
+    color: var(--admin-red);
+}
+
+@media screen and (max-width: 600px) {
+    .about-img-upload-row {
+        flex-direction: column;
+    }
+    .about-img-preview-box {
+        width: 100%;
+        height: 200px;
+    }
+}
+

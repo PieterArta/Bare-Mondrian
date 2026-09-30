@@ -1,7 +1,9 @@
 // product.js — Shop Page & Product Detail Page API Integration + Interactivity
 
 // ─── Config ───────────────────────────────────────────────────────────────
-const API_BASE_URL = 'https://bare-mondrian.onrender.com';
+const API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:8000' 
+    : 'https://bare-mondrian.onrender.com';
 
 // ─── Shop Page: API-driven product grid ───────────────────────────────────
 (function initShopPage() {
@@ -498,6 +500,160 @@ const API_BASE_URL = 'https://bare-mondrian.onrender.com';
         tableWrapper.innerHTML = html;
     }
 
+    var carouselCurrentIndex = 0;
+    var carouselPhotos = [];
+
+    // ── Photo Carousel Logic ─────────────────────────────────────────────
+    function setupPhotoCarousel(product) {
+        var imgEl = document.getElementById('detail-product-img');
+        var prevBtn = document.getElementById('carousel-prev');
+        var nextBtn = document.getElementById('carousel-next');
+        var indicatorsEl = document.getElementById('carousel-indicators');
+
+        if (!imgEl) return;
+
+        // Build array of valid photo URLs from photos array, with image_url fallback
+        var photos = [];
+        if (Array.isArray(product.photos) && product.photos.length > 0) {
+            photos = product.photos.filter(function (u) {
+                return typeof u === 'string' && u.trim().length > 0;
+            });
+        }
+        if (photos.length === 0 && product.image_url && typeof product.image_url === 'string' && product.image_url.trim().length > 0) {
+            photos = [product.image_url.trim()];
+        }
+
+        carouselPhotos = photos;
+        carouselCurrentIndex = 0;
+
+        function updateCarouselDisplay(index) {
+            if (carouselPhotos.length === 0) {
+                // 0 photos fallback: show placeholder box/image & hide controls
+                imgEl.src = 'assets/images/products/produk3.jpg';
+                imgEl.alt = product.title || 'Product Placeholder';
+                if (prevBtn) prevBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'none';
+                if (indicatorsEl) {
+                    indicatorsEl.innerHTML = '';
+                    indicatorsEl.style.display = 'none';
+                }
+                return;
+            }
+
+            // Wrap index within bounds
+            if (index < 0) index = carouselPhotos.length - 1;
+            if (index >= carouselPhotos.length) index = 0;
+            carouselCurrentIndex = index;
+
+            var newSrc = carouselPhotos[carouselCurrentIndex];
+
+            // Fade transition
+            imgEl.style.opacity = '0.4';
+            setTimeout(function () {
+                imgEl.src = newSrc;
+                imgEl.alt = (product.title || 'Product') + ' - Photo ' + (carouselCurrentIndex + 1);
+                imgEl.onerror = function () {
+                    this.onerror = null;
+                    this.src = 'assets/images/products/produk3.jpg';
+                };
+                imgEl.style.opacity = '1';
+            }, 120);
+
+            // Controls visibility based on photo count
+            if (carouselPhotos.length <= 1) {
+                if (prevBtn) prevBtn.style.display = 'none';
+                if (nextBtn) nextBtn.style.display = 'none';
+                if (indicatorsEl) {
+                    indicatorsEl.innerHTML = '';
+                    indicatorsEl.style.display = 'none';
+                }
+            } else {
+                if (prevBtn) prevBtn.style.display = 'flex';
+                if (nextBtn) nextBtn.style.display = 'flex';
+                if (indicatorsEl) {
+                    indicatorsEl.style.display = 'flex';
+                    var thumbs = indicatorsEl.querySelectorAll('.carousel-thumb-btn');
+                    thumbs.forEach(function (btn, i) {
+                        if (i === carouselCurrentIndex) {
+                            btn.classList.add('active');
+                        } else {
+                            btn.classList.remove('active');
+                        }
+                    });
+                }
+            }
+        }
+
+        // Render thumbnail indicators if > 1 photo
+        if (indicatorsEl) {
+            if (carouselPhotos.length > 1) {
+                var html = '';
+                carouselPhotos.forEach(function (url, idx) {
+                    var activeClass = idx === 0 ? ' active' : '';
+                    html += '<button type="button" class="carousel-thumb-btn' + activeClass + '" data-index="' + idx + '" aria-label="Photo ' + (idx + 1) + '">' +
+                        '<img src="' + escapeHtml(url) + '" alt="Thumbnail ' + (idx + 1) + '">' +
+                        '</button>';
+                });
+                indicatorsEl.innerHTML = html;
+                indicatorsEl.style.display = 'flex';
+
+                var thumbBtns = indicatorsEl.querySelectorAll('.carousel-thumb-btn');
+                thumbBtns.forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        var idx = parseInt(this.getAttribute('data-index'), 10);
+                        updateCarouselDisplay(idx);
+                    });
+                });
+            } else {
+                indicatorsEl.innerHTML = '';
+                indicatorsEl.style.display = 'none';
+            }
+        }
+
+        // Bind Arrow Navigation Buttons
+        if (prevBtn) {
+            prevBtn.onclick = function (e) {
+                e.preventDefault();
+                updateCarouselDisplay(carouselCurrentIndex - 1);
+            };
+        }
+        if (nextBtn) {
+            nextBtn.onclick = function (e) {
+                e.preventDefault();
+                updateCarouselDisplay(carouselCurrentIndex + 1);
+            };
+        }
+
+        // Add Mobile Touch Swipe Navigation
+        var imgWrapper = imgEl.parentElement;
+        if (imgWrapper && !imgWrapper._hasSwipeListener) {
+            imgWrapper._hasSwipeListener = true;
+            var touchStartX = 0;
+            imgWrapper.addEventListener('touchstart', function (e) {
+                if (e.touches && e.touches.length > 0) {
+                    touchStartX = e.touches[0].clientX;
+                }
+            }, { passive: true });
+
+            imgWrapper.addEventListener('touchend', function (e) {
+                if (e.changedTouches && e.changedTouches.length > 0) {
+                    var touchEndX = e.changedTouches[0].clientX;
+                    var diff = touchStartX - touchEndX;
+                    if (Math.abs(diff) > 40 && carouselPhotos.length > 1) {
+                        if (diff > 0) {
+                            updateCarouselDisplay(carouselCurrentIndex + 1);
+                        } else {
+                            updateCarouselDisplay(carouselCurrentIndex - 1);
+                        }
+                    }
+                }
+            }, { passive: true });
+        }
+
+        // Initial Display
+        updateCarouselDisplay(0);
+    }
+
     // ── Main Render Function ─────────────────────────────────────────────
     function renderProductDetails(product) {
         currentProduct = product;
@@ -509,21 +665,8 @@ const API_BASE_URL = 'https://bare-mondrian.onrender.com';
             metaDesc.setAttribute('content', product.description);
         }
 
-        // Product Image
-        var imgEl = document.querySelector('.detail-product-img');
-        if (imgEl) {
-            if (product.image_url) {
-                imgEl.src = product.image_url;
-                imgEl.alt = product.title;
-                imgEl.onerror = function () {
-                    this.onerror = null;
-                    this.src = 'assets/images/products/produk3.jpg';
-                };
-            } else {
-                imgEl.src = 'assets/images/products/produk3.jpg';
-                imgEl.alt = product.title;
-            }
-        }
+        // Setup Photo Carousel
+        setupPhotoCarousel(product);
 
         // Title & Price
         var titleEl = document.querySelector('.detail-product-title');

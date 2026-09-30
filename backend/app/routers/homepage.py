@@ -9,11 +9,12 @@ from app.core.database import get_db
 from app.middleware.auth_middleware import require_admin
 from app.models.product import Product
 from app.schemas.product_schema import ProductResponse
-from app.services.upload_service import save_upload, _UPLOAD_ROOT
+from app.services.upload_service import save_upload
 
 router = APIRouter()
 
-_SETTINGS_FILE = _UPLOAD_ROOT / "homepage_settings.json"
+_DATA_DIR = Path(__file__).resolve().parent.parent.parent / "data"
+_SETTINGS_FILE = _DATA_DIR / "homepage_settings.json"
 
 
 def _load_settings() -> dict:
@@ -27,7 +28,7 @@ def _load_settings() -> dict:
 
 
 def _save_settings(data: dict):
-    _UPLOAD_ROOT.mkdir(parents=True, exist_ok=True)
+    _DATA_DIR.mkdir(parents=True, exist_ok=True)
     with open(_SETTINGS_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
@@ -65,31 +66,45 @@ def get_featured_products(db: Session = Depends(get_db)):
     )
 
 
+from pydantic import BaseModel
+from typing import Optional
+
+class HomepageSettingsUpdate(BaseModel):
+    hero_image_url: Optional[str] = None
+    collection_image_url: Optional[str] = None
+
 # ---------------------------------------------------------------------------
-# GET /api/homepage/hero-image
+# GET /api/homepage/settings
 # ---------------------------------------------------------------------------
 @router.get(
-    "/hero-image",
-    summary="Get current hero image URL",
+    "/settings",
+    summary="Get current homepage settings",
 )
-def get_hero_image():
+def get_homepage_settings():
     settings = _load_settings()
-    return {"hero_image_url": settings.get("hero_image_url", "/hero_model.png")}
+    return {
+        "hero_image_url": settings.get("hero_image_url", "/hero_model.png"),
+        "collection_image_url": settings.get("collection_image_url", "/about-story.png")
+    }
 
 
 # ---------------------------------------------------------------------------
-# POST /api/homepage/hero-image  — admin only
+# PUT /api/homepage/settings  — admin only
 # ---------------------------------------------------------------------------
-@router.post(
-    "/hero-image",
-    summary="Upload new hero image (admin only)",
+@router.put(
+    "/settings",
+    summary="Update homepage settings (admin only)",
 )
-def update_hero_image(
-    file: UploadFile = File(...),
+def update_homepage_settings(
+    payload: HomepageSettingsUpdate,
     _admin=Depends(require_admin),
 ):
-    url = save_upload(file, sub_folder="hero")
     settings = _load_settings()
-    settings["hero_image_url"] = url
+    if payload.hero_image_url is not None:
+        settings["hero_image_url"] = payload.hero_image_url
+    if payload.collection_image_url is not None:
+        settings["collection_image_url"] = payload.collection_image_url
+    
     _save_settings(settings)
-    return {"hero_image_url": url}
+    return settings
+

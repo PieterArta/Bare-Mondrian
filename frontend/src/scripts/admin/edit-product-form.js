@@ -6,7 +6,9 @@
 (function () {
     'use strict';
 
-    var API_BASE_URL = 'https://bare-mondrian.onrender.com';
+    var API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:8000' 
+    : 'https://bare-mondrian.onrender.com';
     var MAX_SLOTS = 6;
 
     // State
@@ -113,47 +115,166 @@
         if (loader) loader.style.display = isLoading ? 'flex' : 'none';
     }
 
-    function addPhotos(files) {
-        Array.from(files).forEach(function (file) {
-            var slotIdx = photoSlots.indexOf(null);
-            if (slotIdx === -1) return;
+    /* -------------------------------------------------------
+       PHOTO UPLOADER & CROPPER FLOW
+       ------------------------------------------------------- */
+    var activeCropper = null;
+    var cropQueue = [];
+    var cropQueueIndex = 0;
 
+    function closeCropModal() {
+        var overlay = document.getElementById('crop-modal-overlay');
+        if (overlay) overlay.style.display = 'none';
+        if (activeCropper) {
+            activeCropper.destroy();
+            activeCropper = null;
+        }
+        var imgEl = document.getElementById('crop-modal-img');
+        if (imgEl) imgEl.src = '';
+    }
+
+    function processCropQueue() {
+        if (cropQueueIndex >= cropQueue.length) {
+            closeCropModal();
+            cropQueue = [];
+            cropQueueIndex = 0;
+            return;
+        }
+
+        var fileItem = cropQueue[cropQueueIndex];
+        var file = fileItem.file;
+
+        var overlay = document.getElementById('crop-modal-overlay');
+        var imgEl = document.getElementById('crop-modal-img');
+        var subtitle = document.getElementById('crop-modal-subtitle');
+        var confirmBtn = document.getElementById('crop-modal-confirm');
+        var cancelBtn = document.getElementById('crop-modal-cancel');
+        var closeBtn = document.getElementById('crop-modal-close');
+
+        if (!overlay || !imgEl) return;
+
+        if (subtitle) {
+            subtitle.textContent = 'PHOTO ' + (cropQueueIndex + 1) + ' OF ' + cropQueue.length;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            imgEl.src = e.target.result;
+            overlay.style.display = 'flex';
+
+            if (activeCropper) {
+                activeCropper.destroy();
+            }
+
+            // Initialize Cropper.js with 3:4 portrait aspect ratio (fashion product standard)
+            activeCropper = new Cropper(imgEl, {
+                aspectRatio: 3 / 4,
+                viewMode: 1,
+                autoCropArea: 0.9,
+                dragMode: 'move',
+                background: false,
+                responsive: true,
+                restore: false
+            });
+
+            confirmBtn.onclick = function () {
+                if (!activeCropper) return;
+
+                // Generate cropped image Blob
+                activeCropper.getCroppedCanvas({
+                    maxWidth: 1200,
+                    maxHeight: 1600
+                }).toBlob(function (blob) {
+                    if (!blob) {
+                        alert('Failed to crop image');
+                        return;
+                    }
+
+                    var croppedFile = new File([blob], file.name, {
+                        type: 'image/jpeg',
+                        lastModified: Date.now()
+                    });
+
+                    var slotIdx = photoSlots.indexOf(null);
+                    if (slotIdx !== -1) {
+                        photoSlots[slotIdx] = 'loading';
+                        setSlotLoading(slotIdx, true);
+                        uploadPhotoSlot(croppedFile, slotIdx);
+                    }
+
+                    cropQueueIndex++;
+                    processCropQueue();
+                }, 'image/jpeg', 0.9);
+            };
+
+            cancelBtn.onclick = function () {
+                cropQueueIndex++;
+                processCropQueue();
+            };
+
+            if (closeBtn) {
+                closeBtn.onclick = function () {
+                    closeCropModal();
+                    cropQueue = [];
+                    cropQueueIndex = 0;
+                };
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function addPhotos(files) {
+        var validFiles = [];
+        Array.from(files).forEach(function (file) {
             var allowed = ['image/jpeg', 'image/png', 'image/webp'];
             if (!allowed.includes(file.type)) return;
             if (file.size > 5 * 1024 * 1024) {
                 alert(file.name + ' exceeds 5 MB and was skipped.');
                 return;
             }
+            validFiles.push(file);
+        });
 
-            photoSlots[slotIdx] = 'loading';
-            setSlotLoading(slotIdx, true);
+        if (validFiles.length === 0) return;
 
-            var formData = new FormData();
-            formData.append('file', file);
+        var freeSlotsCount = photoSlots.filter(function (s) { return s === null; }).length;
+        if (freeSlotsCount === 0) {
+            alert('Maximum ' + MAX_SLOTS + ' photos allowed.');
+            return;
+        }
 
-            var token = localStorage.getItem('token');
-            var headers = {};
-            if (token) headers['Authorization'] = 'Bearer ' + token;
+        validFiles = validFiles.slice(0, freeSlotsCount);
+        cropQueue = validFiles.map(function (f) { return { file: f }; });
+        cropQueueIndex = 0;
+        processCropQueue();
+    }
 
-            fetch(API_BASE_URL + '/api/upload/product-photo', {
-                method: 'POST',
-                headers: headers,
-                body: formData
-            })
-            .then(function(res) {
-                if (!res.ok) throw new Error('Upload failed');
-                return res.json();
-            })
-            .then(function(data) {
-                photoSlots[slotIdx] = data.url;
-                updateSlotUI(slotIdx);
-            })
-            .catch(function(err) {
-                console.error(err);
-                photoSlots[slotIdx] = null;
-                updateSlotUI(slotIdx);
-                alert('Failed to upload ' + file.name);
-            });
+    function uploadPhotoSlot(file, slotIdx) {
+        var formData = new FormData();
+        formData.append('file', file);
+
+        var token = localStorage.getItem('token');
+        var headers = {};
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+
+        fetch(API_BASE_URL + '/api/upload/product-photo', {
+            method: 'POST',
+            headers: headers,
+            body: formData
+        })
+        .then(function (res) {
+            if (!res.ok) throw new Error('Upload failed');
+            return res.json();
+        })
+        .then(function (data) {
+            photoSlots[slotIdx] = data.url;
+            updateSlotUI(slotIdx);
+        })
+        .catch(function (err) {
+            console.error(err);
+            photoSlots[slotIdx] = null;
+            updateSlotUI(slotIdx);
+            alert('Failed to upload ' + file.name);
         });
     }
 

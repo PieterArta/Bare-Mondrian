@@ -2,7 +2,9 @@
 
 (function initFeaturedProducts() {
     // ─── Config ────────────────────────────────────────────────────────────
-    var API_BASE_URL = 'https://bare-mondrian.onrender.com';
+    var API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:8000' 
+    : 'https://bare-mondrian.onrender.com';
 
     // ─── Element refs ──────────────────────────────────────────────────────
     var section = document.getElementById('featured-products-section');
@@ -110,6 +112,31 @@
             });
     }
 
+    // ─── Fetch Settings ──────────────────────────────────────────────────
+    function fetchHomepageSettings() {
+        fetch(API_BASE_URL + '/api/homepage/settings')
+            .then(function (res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
+            .then(function (data) {
+                if (data) {
+                    var heroImg = document.getElementById('hero-img');
+                    if (heroImg && data.hero_image_url) {
+                        heroImg.src = data.hero_image_url;
+                    }
+                    var collectionImg = document.getElementById('shop-collection-img');
+                    if (collectionImg && data.collection_image_url) {
+                        collectionImg.src = data.collection_image_url;
+                    }
+                }
+            })
+            .catch(function (err) {
+                console.error('[Home] Failed to load homepage settings:', err);
+            });
+    }
+
     // ─── Boot ──────────────────────────────────────────────────────────────
+    fetchHomepageSettings();
     fetchFeaturedProducts();
 })();

@@ -71,13 +71,14 @@
   }
 
   .nav-brand {
-    font-family: var(--font-sans);
+    font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 0.08em;
+    font-size: 1.3rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--color-black);
     margin-right: auto;
+    line-height: 1;
   }
 
   .nav-icons {

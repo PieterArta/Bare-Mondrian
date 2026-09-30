@@ -204,9 +204,17 @@
     gap: 32px;
 }
 
-.product-image-wrapper {
+.product-carousel-container {
     width: 100%;
     max-width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.product-image-wrapper {
+    position: relative;
+    width: 100%;
     border: 1px solid var(--color-black);
     background-color: #E0E0E0;
     aspect-ratio: 3/4;
@@ -220,6 +228,79 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: opacity 0.25s ease;
+}
+
+/* Carousel Navigation Arrows */
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.88);
+    color: var(--color-black);
+    border: 1px solid var(--color-black);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.carousel-arrow:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.carousel-prev {
+    left: 12px;
+}
+
+.carousel-next {
+    right: 12px;
+}
+
+/* Carousel Thumbnail Indicators */
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.carousel-thumb-btn {
+    width: 44px;
+    height: 58px;
+    padding: 0;
+    border: 1px solid #D0D0D0;
+    background-color: #F5F5F5;
+    cursor: pointer;
+    overflow: hidden;
+    opacity: 0.5;
+    transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0;
+}
+
+.carousel-thumb-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.carousel-thumb-btn:hover {
+    opacity: 0.85;
+}
+
+.carousel-thumb-btn.active {
+    opacity: 1;
+    border: 1.5px solid var(--color-black);
 }
 
 .product-info-block {
@@ -442,6 +523,7 @@
     }
 
     /* Product image: smaller on mobile */
+    .product-carousel-container,
     .product-image-wrapper {
         max-width: 100%;
     }

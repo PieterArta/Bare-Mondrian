@@ -8,7 +8,7 @@
     <meta name="description" content="FORM 001 - structured jacket. High-end minimalist streetwear by BARE MONDRIAN.">
     <link rel="stylesheet" href="../styles/base.css">
     <link rel="stylesheet" href="../styles/components.css?v=5">
-    <link rel="stylesheet" href="../styles/pages/product-detail.css?v=6">
+    <link rel="stylesheet" href="../styles/pages/product-detail.css?v=7">
     <link rel="stylesheet" href="../styles/responsive.css?v=2">
 </head>
 
@@ -24,7 +24,7 @@
             </svg>
         </button>
 
-        <a href="index" class="nav-brand">BARE MONDRIAN</a>
+        <a href="index" class="nav-brand">BARE</a>
 
         <nav class="nav-links">
             <a href="index" class="nav-link" id="nav-home">HOME</a>
@@ -105,11 +105,24 @@
             </div>
         </section>
 
-        <!-- Middle Column: Main Image & Info Accordions -->
+        <!-- Middle Column: Main Image Carousel & Info Accordions -->
         <section class="product-photo-info-column">
-            <div class="product-image-wrapper">
-                <img src="assets/images/products/form-001-espresso.jpg" alt="Foto Produk" class="detail-product-img"
-                    onerror="this.onerror=null; this.src='assets/images/products/produk3.jpg';">
+            <div class="product-carousel-container" id="product-carousel">
+                <div class="product-image-wrapper">
+                    <button type="button" class="carousel-arrow carousel-prev" id="carousel-prev" aria-label="Previous photo" style="display: none;">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <img src="assets/images/products/form-001-espresso.jpg" alt="Foto Produk" class="detail-product-img" id="detail-product-img"
+                        onerror="this.onerror=null; this.src='assets/images/products/produk3.jpg';">
+                    <button type="button" class="carousel-arrow carousel-next" id="carousel-next" aria-label="Next photo" style="display: none;">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <div class="carousel-indicators" id="carousel-indicators" style="display: none;"></div>
             </div>
 
             <div class="product-info-block">
@@ -323,7 +336,7 @@
     <!-- Scripts -->
     <script src="../scripts/auth.js"></script>
     <script src="../scripts/cart.js?v=5"></script>
-    <script src="../scripts/product.js?v=6"></script>
+    <script src="../scripts/product.js?v=7"></script>
 
 </body>
 

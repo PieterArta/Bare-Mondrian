@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../styles/base.css">
     <link rel="stylesheet" href="../styles/components.css">
     <link rel="stylesheet" href="../styles/pages/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
 </head>
 
 <body class="admin-page">
@@ -23,7 +24,6 @@
             <div class="sidebar-top">
                 <a href="dashboard" class="sidebar-brand" id="sidebar-brand">
                     <span class="sidebar-brand-main">BARE</span>
-                    <span class="sidebar-brand-sub">MONDRIAN</span>
                 </a>
 
                 <nav class="sidebar-nav" id="sidebar-nav">
@@ -95,7 +95,7 @@
                         <line x1="4" y1="18" x2="20" y2="18" />
                     </svg>
                 </button>
-                <a href="dashboard" class="topbar-brand" id="topbar-brand">BARE MONDRIAN<span class="topbar-brand-admin-text"> ADMIN</span></a>
+                <a href="dashboard" class="topbar-brand" id="topbar-brand">BARE<span class="topbar-brand-admin-text"> ADMIN</span></a>
                 <div class="topbar-actions">
                     <button class="topbar-icon-btn" id="btn-topbar-notifications" aria-label="Notifications">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -122,21 +122,25 @@
                 </div>
                 <hr class="hs-page-divider" id="hs-page-divider">
 
-                <!-- ===== SECTION 1: HERO IMAGE MANAGEMENT ===== -->
-                <section class="hs-card" id="hero-section" aria-labelledby="hero-section-title">
+                <!-- ===== SECTION 1: HOMEPAGE IMAGES MANAGEMENT ===== -->
+                <section class="hs-card" id="images-section" aria-labelledby="images-section-title">
                     <div class="hs-card-header">
-                        <h2 class="hs-card-title" id="hero-section-title">HERO IMAGE MANAGEMENT</h2>
-                        <p class="hs-card-subtitle">Manage the primary 'New Arrival' photo displayed on the homepage.</p>
+                        <h2 class="hs-card-title" id="images-section-title">HOMEPAGE IMAGES</h2>
+                        <p class="hs-card-subtitle">Manage the Hero and Shop Collection images displayed on the homepage.</p>
                     </div>
                     <hr class="hs-card-divider">
 
-                    <div class="hero-image-body">
+                    <!-- HERO IMAGE -->
+                    <div class="hs-card-header" style="padding-top: 24px;">
+                        <h3 class="hs-card-title" style="font-size: 0.85rem;">HERO IMAGE (16:9 RATIO)</h3>
+                    </div>
+                    <div class="hero-image-body" style="padding-top: 12px; border-bottom: 1px solid var(--color-border-light); padding-bottom: 32px; margin-bottom: 24px;">
                         <!-- LEFT: Current Hero -->
                         <div class="hero-current-col" id="hero-current-col">
                             <span class="hero-col-label">CURRENT HERO IMAGE</span>
                             <div class="hero-preview-wrapper" id="hero-preview-wrapper">
                                 <img
-                                    src="../hero_model.png"
+                                    src=""
                                     alt="Current hero image"
                                     class="hero-preview-img"
                                     id="hero-preview-img"
@@ -152,8 +156,8 @@
                                 <span class="hero-live-badge" id="hero-live-badge">LIVE</span>
                             </div>
                             <div class="hero-meta-row">
-                                <span class="hero-filename" id="hero-filename">hero_new_arrival_fw24.jpg</span>
-                                <span class="hero-dimensions" id="hero-dimensions">1892 x 899px</span>
+                                <span class="hero-filename" id="hero-filename"></span>
+                                <span class="hero-dimensions" id="hero-dimensions"></span>
                             </div>
                         </div>
 
@@ -167,7 +171,6 @@
                                 tabindex="0"
                                 aria-label="Drop zone: drag and drop a hero image or click to browse"
                             >
-                                <!-- Hidden real file input -->
                                 <input
                                     type="file"
                                     id="hero-file-input"
@@ -182,12 +185,71 @@
                                     <line x1="12" y1="18" x2="12" y2="12"/>
                                     <polyline points="9 15 12 12 15 15"/>
                                 </svg>
-
                                 <p class="dropzone-heading">DRAG AND DROP FILE HERE</p>
                                 <p class="dropzone-subtext">or click to browse from your computer</p>
+                                <button class="dropzone-select-btn" id="hero-dropzone-select-btn" type="button">SELECT FILE</button>
+                                <p class="dropzone-caption">MAX FILE SIZE 10MB. JPG, PNG, WEBP.</p>
+                            </div>
+                        </div>
+                    </div>
 
-                                <button class="dropzone-select-btn" id="dropzone-select-btn" type="button">SELECT FILE</button>
+                    <!-- SHOP COLLECTION IMAGE -->
+                    <div class="hs-card-header">
+                        <h3 class="hs-card-title" style="font-size: 0.85rem;">SHOP COLLECTION IMAGE (3:4 RATIO)</h3>
+                    </div>
+                    <div class="hero-image-body" style="padding-top: 12px; margin-bottom: 24px;">
+                        <!-- LEFT: Current Collection -->
+                        <div class="hero-current-col" id="collection-current-col">
+                            <span class="hero-col-label">CURRENT COLLECTION IMAGE</span>
+                            <div class="hero-preview-wrapper" id="collection-preview-wrapper" style="aspect-ratio: 3 / 4; max-width: 250px;">
+                                <img
+                                    src=""
+                                    alt="Current collection image"
+                                    class="hero-preview-img"
+                                    id="collection-preview-img"
+                                    onerror="this.style.display='none'; document.getElementById('collection-preview-placeholder').style.display='flex';"
+                                >
+                                <div class="hero-preview-placeholder" id="collection-preview-placeholder" style="display:none;">
+                                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                </div>
+                                <span class="hero-live-badge" id="collection-live-badge">LIVE</span>
+                            </div>
+                            <div class="hero-meta-row" style="max-width: 250px;">
+                                <span class="hero-filename" id="collection-filename"></span>
+                                <span class="hero-dimensions" id="collection-dimensions"></span>
+                            </div>
+                        </div>
 
+                        <!-- RIGHT: Upload New Photo -->
+                        <div class="hero-upload-col" id="collection-upload-col">
+                            <span class="hero-col-label">UPLOAD NEW PHOTO</span>
+                            <div
+                                class="hero-dropzone"
+                                id="collection-dropzone"
+                                role="button"
+                                tabindex="0"
+                                aria-label="Drop zone: drag and drop a collection image or click to browse"
+                            >
+                                <input
+                                    type="file"
+                                    id="collection-file-input"
+                                    class="hero-file-input"
+                                    accept=".jpg,.jpeg,.png,.webp"
+                                    aria-label="Select collection image file"
+                                >
+                                <svg class="dropzone-icon" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="12" y1="18" x2="12" y2="12"/>
+                                    <polyline points="9 15 12 12 15 15"/>
+                                </svg>
+                                <p class="dropzone-heading">DRAG AND DROP FILE HERE</p>
+                                <p class="dropzone-subtext">or click to browse from your computer</p>
+                                <button class="dropzone-select-btn" id="collection-dropzone-select-btn" type="button">SELECT FILE</button>
                                 <p class="dropzone-caption">MAX FILE SIZE 10MB. JPG, PNG, WEBP.</p>
                             </div>
                         </div>
@@ -195,8 +257,8 @@
 
                     <!-- Section Footer Actions -->
                     <div class="hs-card-footer">
-                        <button class="btn-hs-outline" id="btn-hero-cancel" type="button">CANCEL</button>
-                        <button class="btn-hs-primary" id="btn-hero-save" type="button">SAVE CHANGES</button>
+                        <button class="btn-hs-outline" id="btn-images-cancel" type="button">CANCEL</button>
+                        <button class="btn-hs-primary" id="btn-images-save" type="button">SAVE CHANGES</button>
                     </div>
                 </section>
 
@@ -251,6 +313,29 @@
         </div>
     </div>
 
+    <!-- ===== PHOTO CROP MODAL ===== -->
+    <div class="crop-modal-overlay" id="crop-modal-overlay" style="display: none;">
+        <div class="crop-modal-container">
+            <div class="crop-modal-header">
+                <div>
+                    <h3 class="crop-modal-title">ADJUST HOMEPAGE IMAGE CROP</h3>
+                    <p class="crop-modal-subtitle" id="crop-modal-subtitle">ASPECT RATIO</p>
+                </div>
+                <button type="button" class="crop-modal-close" id="crop-modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="crop-modal-body">
+                <div class="crop-modal-img-wrapper">
+                    <img id="crop-modal-img" src="" alt="Crop preview">
+                </div>
+            </div>
+            <div class="crop-modal-actions">
+                <button type="button" class="btn-hs-outline" id="crop-modal-cancel">CANCEL</button>
+                <button type="button" class="btn-hs-primary" id="crop-modal-confirm">CROP &amp; CONTINUE</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script src="../scripts/auth.js"></script>
     <script src="../scripts/admin/homepage-settings.js"></script>
 

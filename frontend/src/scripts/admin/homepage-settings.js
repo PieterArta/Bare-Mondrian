@@ -2,14 +2,16 @@
  * homepage-settings.js — BARE MONDRIAN Admin
  * Homepage Settings page:
  *   - Auth guard & API connection
- *   - Hero image: fetch current, upload new photo, cancel/save
+ *   - Hero image & Collection image: fetch current, upload new photo via Cropper.js, cancel/save
  *   - Products: fetch from GET /api/products/, search filter, category filter,
  *               PATCH /api/products/{id}/featured toggle, selected counter
  */
 
 'use strict';
 
-var API_BASE_URL = 'https://bare-mondrian.onrender.com';
+var API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:8000' 
+    : 'https://bare-mondrian.onrender.com';
 
 /* -------------------------------------------------------
    AUTH GUARD
@@ -43,28 +45,28 @@ function getAuthHeaders() {
    ------------------------------------------------------- */
 var productsData = [];
 
-var heroState = {
-    currentSrc: '/hero_model.png',
-    currentFilename: 'hero_model.png',
-    currentDimensions: '',
-    pendingFile: null,
-    pendingSrc: null,
-    hasUnsavedChanges: false
+var imagesState = {
+    hero: {
+        currentUrl: '',
+        currentFilename: '',
+        pendingUrl: null, // this will hold the Cloudinary URL after crop+upload
+        hasChanges: false
+    },
+    collection: {
+        currentUrl: '',
+        currentFilename: '',
+        pendingUrl: null, // this will hold the Cloudinary URL after crop+upload
+        hasChanges: false
+    }
 };
+
+var activeCropper = null;
 
 /* -------------------------------------------------------
    DOM REFERENCES
    ------------------------------------------------------- */
-// Hero
-var heroPreviewImg      = document.getElementById('hero-preview-img');
-var heroPreviewPh       = document.getElementById('hero-preview-placeholder');
-var heroFilenameEl      = document.getElementById('hero-filename');
-var heroDimensionsEl    = document.getElementById('hero-dimensions');
-var heroDropzone        = document.getElementById('hero-dropzone');
-var heroFileInput       = document.getElementById('hero-file-input');
-var dropzoneSelectBtn   = document.getElementById('dropzone-select-btn');
-var btnHeroCancel       = document.getElementById('btn-hero-cancel');
-var btnHeroSave         = document.getElementById('btn-hero-save');
+var btnImagesCancel = document.getElementById('btn-images-cancel');
+var btnImagesSave   = document.getElementById('btn-images-save');
 
 // Products
 var productsGrid        = document.getElementById('products-grid');
@@ -88,42 +90,81 @@ function escapeHtml(str) {
 }
 
 /* -------------------------------------------------------
-   HERO — FETCH & RENDER
+   IMAGES — FETCH & RENDER
    ------------------------------------------------------- */
-function renderHeroPreview(src, filename, dimensions) {
-    if (!heroPreviewImg || !heroPreviewPh) return;
-    heroPreviewImg.style.display = 'block';
-    heroPreviewPh.style.display = 'none';
-    heroPreviewImg.src = src;
-    if (heroFilenameEl) heroFilenameEl.textContent = filename;
-    if (heroDimensionsEl) heroDimensionsEl.textContent = dimensions || '';
+function renderPreview(type) {
+    var previewImg = document.getElementById(type + '-preview-img');
+    var previewPh  = document.getElementById(type + '-preview-placeholder');
+    var filenameEl = document.getElementById(type + '-filename');
+    var dimsEl     = document.getElementById(type + '-dimensions');
+    
+    var state = imagesState[type];
+    var urlToRender = state.pendingUrl || state.currentUrl;
+    var filenameToRender = state.pendingUrl ? 'Uploaded image' : state.currentFilename;
+
+    if (!previewImg || !previewPh) return;
+    
+    if (urlToRender) {
+        previewImg.style.display = 'block';
+        previewPh.style.display = 'none';
+        previewImg.src = urlToRender;
+        if (filenameEl) filenameEl.textContent = filenameToRender;
+        if (dimsEl) {
+            var tempImg = new Image();
+            tempImg.onload = function() { dimsEl.textContent = tempImg.naturalWidth + ' x ' + tempImg.naturalHeight + 'px'; };
+            tempImg.onerror = function() { dimsEl.textContent = ''; };
+            tempImg.src = urlToRender;
+        }
+    } else {
+        previewImg.style.display = 'none';
+        previewPh.style.display = 'flex';
+        if (filenameEl) filenameEl.textContent = 'No image';
+        if (dimsEl) dimsEl.textContent = '';
+    }
 }
 
-function fetchHeroImage() {
-    fetch(API_BASE_URL + '/api/homepage/hero-image')
+function fetchHomepageSettings() {
+    fetch(API_BASE_URL + '/api/homepage/settings')
         .then(function (res) {
-            if (!res.ok) throw new Error('Failed to load hero image');
+            if (!res.ok) throw new Error('Failed to load homepage settings');
             return res.json();
         })
         .then(function (data) {
-            if (data && data.hero_image_url) {
-                var rawUrl = data.hero_image_url;
-                var fullUrl = (rawUrl.indexOf('/') === 0 && rawUrl.indexOf('/uploads/') === 0) ? (API_BASE_URL + rawUrl) : rawUrl;
-                var filename = rawUrl.substring(rawUrl.lastIndexOf('/') + 1) || 'hero_image';
-                heroState.currentSrc = fullUrl;
-                heroState.currentFilename = filename;
-                renderHeroPreview(fullUrl, filename, heroState.currentDimensions);
+            if (data) {
+                var heroUrl = data.hero_image_url || '';
+                var heroFullUrl = (heroUrl.indexOf('/') === 0 && heroUrl.indexOf('/uploads/') === 0) ? (API_BASE_URL + heroUrl) : heroUrl;
+                imagesState.hero.currentUrl = heroFullUrl;
+                imagesState.hero.currentFilename = heroUrl.substring(heroUrl.lastIndexOf('/') + 1) || 'hero_image';
+                
+                var collectionUrl = data.collection_image_url || '';
+                var collectionFullUrl = (collectionUrl.indexOf('/') === 0 && collectionUrl.indexOf('/uploads/') === 0) ? (API_BASE_URL + collectionUrl) : collectionUrl;
+                imagesState.collection.currentUrl = collectionFullUrl;
+                imagesState.collection.currentFilename = collectionUrl.substring(collectionUrl.lastIndexOf('/') + 1) || 'collection_image';
+
+                renderPreview('hero');
+                renderPreview('collection');
             }
         })
         .catch(function (err) {
-            console.error('[HomepageSettings] Fetch hero image error:', err);
+            console.error('[HomepageSettings] Fetch settings error:', err);
         });
 }
 
 /* -------------------------------------------------------
-   HERO — FILE SELECTION
+   CROPPER & UPLOAD
    ------------------------------------------------------- */
-function handleFileSelected(file) {
+function closeCropModal() {
+    var overlay = document.getElementById('crop-modal-overlay');
+    if (overlay) overlay.style.display = 'none';
+    if (activeCropper) {
+        activeCropper.destroy();
+        activeCropper = null;
+    }
+    var imgEl = document.getElementById('crop-modal-img');
+    if (imgEl) imgEl.src = '';
+}
+
+function handleFileSelected(file, type) {
     if (!file) return;
 
     var allowed = ['image/jpeg', 'image/png', 'image/webp'];
@@ -136,142 +177,228 @@ function handleFileSelected(file) {
         return;
     }
 
-    if (heroState.pendingSrc) {
-        URL.revokeObjectURL(heroState.pendingSrc);
+    var overlay = document.getElementById('crop-modal-overlay');
+    var imgEl = document.getElementById('crop-modal-img');
+    var confirmBtn = document.getElementById('crop-modal-confirm');
+    var cancelBtn = document.getElementById('crop-modal-cancel');
+    var closeBtn = document.getElementById('crop-modal-close');
+    var subtitleEl = document.getElementById('crop-modal-subtitle');
+
+    if (!overlay || !imgEl || typeof Cropper === 'undefined') {
+        uploadImage(file, type);
+        return;
     }
 
-    var objectUrl = URL.createObjectURL(file);
-    heroState.pendingFile = file;
-    heroState.pendingSrc = objectUrl;
-    heroState.hasUnsavedChanges = true;
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        imgEl.src = e.target.result;
+        overlay.style.display = 'flex';
 
-    var tempImg = new Image();
-    tempImg.onload = function () {
-        var dims = tempImg.naturalWidth + ' x ' + tempImg.naturalHeight + 'px';
-        renderHeroPreview(objectUrl, file.name, dims);
+        if (activeCropper) {
+            activeCropper.destroy();
+        }
+
+        var aspectRatio = type === 'hero' ? 16 / 9 : 3 / 4;
+        if (subtitleEl) {
+            subtitleEl.textContent = type === 'hero' ? '16:9 LANDSCAPE RATIO' : '3:4 PORTRAIT RATIO';
+        }
+
+        activeCropper = new Cropper(imgEl, {
+            aspectRatio: aspectRatio,
+            viewMode: 1,
+            autoCropArea: 0.9,
+            dragMode: 'move',
+            background: false,
+            responsive: true,
+            restore: false
+        });
+
+        confirmBtn.onclick = function () {
+            if (!activeCropper) return;
+
+            activeCropper.getCroppedCanvas({
+                maxWidth: 1920,
+                maxHeight: 1920
+            }).toBlob(function (blob) {
+                if (!blob) {
+                    alert('Failed to crop image');
+                    return;
+                }
+
+                var croppedFile = new File([blob], file.name, {
+                    type: 'image/jpeg',
+                    lastModified: Date.now()
+                });
+
+                closeCropModal();
+                uploadImage(croppedFile, type);
+            }, 'image/jpeg', 0.9);
+        };
+
+        cancelBtn.onclick = function () { closeCropModal(); };
+        closeBtn.onclick = function () { closeCropModal(); };
     };
-    tempImg.onerror = function () {
-        renderHeroPreview(objectUrl, file.name, '');
-    };
-    tempImg.src = objectUrl;
+    reader.readAsDataURL(file);
 }
 
-function initHeroDropzone() {
-    if (!heroFileInput || !heroDropzone || !dropzoneSelectBtn) return;
+function uploadImage(file, type) {
+    // Show some uploading state, simple alert or button state here...
+    var btn = document.getElementById('btn-images-save');
+    var originalText = btn.textContent;
+    btn.textContent = 'UPLOADING...';
+    btn.disabled = true;
 
-    heroFileInput.addEventListener('change', function () {
-        if (heroFileInput.files && heroFileInput.files[0]) {
-            handleFileSelected(heroFileInput.files[0]);
+    var formData = new FormData();
+    formData.append('file', file);
+
+    var token = localStorage.getItem('token');
+    var headers = {};
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+
+    fetch(API_BASE_URL + '/api/upload/product-photo', {
+        method: 'POST',
+        headers: headers,
+        body: formData
+    })
+    .then(function (res) {
+        if (!res.ok) throw new Error('Upload failed');
+        return res.json();
+    })
+    .then(function (data) {
+        btn.textContent = originalText;
+        btn.disabled = false;
+        
+        imagesState[type].pendingUrl = data.url;
+        imagesState[type].hasChanges = true;
+        renderPreview(type);
+    })
+    .catch(function (err) {
+        btn.textContent = originalText;
+        btn.disabled = false;
+        console.error('Image upload error:', err);
+        alert('Image upload failed. Please try again.');
+    });
+}
+
+function initDropzone(type) {
+    var fileInput = document.getElementById(type + '-file-input');
+    var dropzone  = document.getElementById(type + '-dropzone');
+    var selectBtn = document.getElementById(type + '-dropzone-select-btn');
+
+    if (!fileInput || !dropzone || !selectBtn) return;
+
+    fileInput.addEventListener('change', function () {
+        if (fileInput.files && fileInput.files[0]) {
+            handleFileSelected(fileInput.files[0], type);
         }
-        heroFileInput.value = '';
+        fileInput.value = '';
     });
 
-    dropzoneSelectBtn.addEventListener('click', function (e) {
+    selectBtn.addEventListener('click', function (e) {
         e.stopPropagation();
-        heroFileInput.click();
+        fileInput.click();
     });
 
-    heroDropzone.addEventListener('dragover', function (e) {
+    dropzone.addEventListener('dragover', function (e) {
         e.preventDefault();
-        heroDropzone.classList.add('dragover');
+        dropzone.classList.add('dragover');
     });
 
-    heroDropzone.addEventListener('dragleave', function (e) {
-        if (!heroDropzone.contains(e.relatedTarget)) {
-            heroDropzone.classList.remove('dragover');
+    dropzone.addEventListener('dragleave', function (e) {
+        if (!dropzone.contains(e.relatedTarget)) {
+            dropzone.classList.remove('dragover');
         }
     });
 
-    heroDropzone.addEventListener('drop', function (e) {
+    dropzone.addEventListener('drop', function (e) {
         e.preventDefault();
-        heroDropzone.classList.remove('dragover');
+        dropzone.classList.remove('dragover');
         var files = e.dataTransfer.files;
         if (files && files[0]) {
-            handleFileSelected(files[0]);
+            handleFileSelected(files[0], type);
         }
     });
 
-    heroDropzone.addEventListener('keydown', function (e) {
+    dropzone.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            heroFileInput.click();
+            fileInput.click();
         }
     });
 }
 
 /* -------------------------------------------------------
-   HERO — CANCEL / SAVE
+   IMAGES — CANCEL / SAVE
    ------------------------------------------------------- */
-function initHeroActions() {
-    if (btnHeroCancel) {
-        btnHeroCancel.addEventListener('click', function () {
-            if (heroState.pendingSrc) {
-                URL.revokeObjectURL(heroState.pendingSrc);
-                heroState.pendingSrc = null;
-            }
-            heroState.pendingFile = null;
-            heroState.hasUnsavedChanges = false;
-            renderHeroPreview(heroState.currentSrc, heroState.currentFilename, heroState.currentDimensions);
+function initImagesActions() {
+    if (btnImagesCancel) {
+        btnImagesCancel.addEventListener('click', function () {
+            imagesState.hero.pendingUrl = null;
+            imagesState.hero.hasChanges = false;
+            imagesState.collection.pendingUrl = null;
+            imagesState.collection.hasChanges = false;
+            renderPreview('hero');
+            renderPreview('collection');
         });
     }
 
-    if (btnHeroSave) {
-        btnHeroSave.addEventListener('click', function () {
-            if (!heroState.hasUnsavedChanges || !heroState.pendingFile) {
-                alert('No unsaved hero image changes.');
+    if (btnImagesSave) {
+        btnImagesSave.addEventListener('click', function () {
+            if (!imagesState.hero.hasChanges && !imagesState.collection.hasChanges) {
+                alert('No unsaved image changes.');
                 return;
             }
 
-            btnHeroSave.disabled = true;
-            btnHeroSave.textContent = 'SAVING...';
+            btnImagesSave.disabled = true;
+            btnImagesSave.textContent = 'SAVING...';
 
-            var formData = new FormData();
-            formData.append('file', heroState.pendingFile);
+            var payload = {};
+            if (imagesState.hero.hasChanges) {
+                payload.hero_image_url = imagesState.hero.pendingUrl;
+            }
+            if (imagesState.collection.hasChanges) {
+                payload.collection_image_url = imagesState.collection.pendingUrl;
+            }
 
-            var token = localStorage.getItem('token');
-            var headers = {};
-            if (token) headers['Authorization'] = 'Bearer ' + token;
-
-            fetch(API_BASE_URL + '/api/homepage/hero-image', {
-                method: 'POST',
-                headers: headers,
-                body: formData
+            fetch(API_BASE_URL + '/api/homepage/settings', {
+                method: 'PUT',
+                headers: getAuthHeaders(),
+                body: JSON.stringify(payload)
             })
             .then(function (res) {
                 if (!res.ok) {
                     return res.json().then(function (err) {
-                        throw new Error((err && err.detail) || 'Failed to upload hero image');
+                        throw new Error((err && err.detail) || 'Failed to update homepage settings');
                     }).catch(function () {
-                        throw new Error('Upload failed (status ' + res.status + ')');
+                        throw new Error('Update failed (status ' + res.status + ')');
                     });
                 }
                 return res.json();
             })
             .then(function (data) {
-                btnHeroSave.disabled = false;
-                btnHeroSave.textContent = 'SAVE CHANGES';
-
-                var rawUrl = data.hero_image_url;
-                var fullUrl = (rawUrl.indexOf('/') === 0 && rawUrl.indexOf('/uploads/') === 0) ? (API_BASE_URL + rawUrl) : rawUrl;
-                var filename = rawUrl.substring(rawUrl.lastIndexOf('/') + 1) || 'hero_image';
-
-                if (heroState.pendingSrc) {
-                    URL.revokeObjectURL(heroState.pendingSrc);
-                    heroState.pendingSrc = null;
+                btnImagesSave.disabled = false;
+                btnImagesSave.textContent = 'SAVE CHANGES';
+                
+                // Update local state with saved URLs
+                if (payload.hero_image_url) {
+                    imagesState.hero.currentUrl = payload.hero_image_url;
+                    imagesState.hero.pendingUrl = null;
+                    imagesState.hero.hasChanges = false;
                 }
-
-                heroState.currentSrc = fullUrl;
-                heroState.currentFilename = filename;
-                heroState.pendingFile = null;
-                heroState.hasUnsavedChanges = false;
-
-                renderHeroPreview(fullUrl, filename, '');
-                alert('Hero image updated successfully!');
+                if (payload.collection_image_url) {
+                    imagesState.collection.currentUrl = payload.collection_image_url;
+                    imagesState.collection.pendingUrl = null;
+                    imagesState.collection.hasChanges = false;
+                }
+                
+                renderPreview('hero');
+                renderPreview('collection');
+                alert('Homepage images updated successfully!');
             })
             .catch(function (err) {
-                btnHeroSave.disabled = false;
-                btnHeroSave.textContent = 'SAVE CHANGES';
-                alert(err.message || 'Failed to update hero image.');
+                btnImagesSave.disabled = false;
+                btnImagesSave.textContent = 'SAVE CHANGES';
+                alert(err.message || 'Failed to update homepage settings.');
             });
         });
     }
@@ -470,7 +597,6 @@ function renderProductGrid() {
 function bindProductCardEvents() {
     if (!productsGrid) return;
 
-    // Thumbnail checkbox overlay
     productsGrid.querySelectorAll('.product-card-thumb-check').forEach(function (el) {
         el.addEventListener('click', function () {
             toggleProduct(el.getAttribute('data-thumb-id'));
@@ -483,7 +609,6 @@ function bindProductCardEvents() {
         });
     });
 
-    // "SHOWN ON HOMEPAGE" checkbox
     productsGrid.querySelectorAll('.product-card-checkbox').forEach(function (el) {
         el.addEventListener('change', function () {
             toggleProduct(el.getAttribute('data-checkbox-id'));
@@ -528,10 +653,11 @@ function initSidebarToggle() {
 document.addEventListener('DOMContentLoaded', function () {
     if (!guardAdmin()) return;
 
-    // Hero setup
-    fetchHeroImage();
-    initHeroDropzone();
-    initHeroActions();
+    // Images setup
+    fetchHomepageSettings();
+    initDropzone('hero');
+    initDropzone('collection');
+    initImagesActions();
 
     // Products setup
     fetchProducts();

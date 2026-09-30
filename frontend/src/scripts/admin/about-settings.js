@@ -1,11 +1,11 @@
 /**
  * about-settings.js — BARE MONDRIAN Admin
- * Manage About Us page text content (Paragraph 1 and Paragraph 2).
+ * Manage About Us page content: 4:3 aspect ratio image (Cropper.js + Cloudinary upload) + Paragraph 1 & 2.
  */
 
 'use strict';
 
-var API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+var API_BASE_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:8000'
     : 'https://bare-mondrian.onrender.com';
 
@@ -41,14 +41,22 @@ function getAuthHeaders() {
    ------------------------------------------------------- */
 var loadedState = {
     paragraph_1: '',
-    paragraph_2: ''
+    paragraph_2: '',
+    image_url: null
 };
+
+// Pending image URL set after Cloudinary upload but before form save
+var pendingImageUrl = null;
 
 // DOM refs resolved in DOMContentLoaded
 var p1Input, p2Input, errP1, errP2, statusMsg, btnCancel, btnSave, form;
+var imgPreview, imgPlaceholder, imgUploading, imgRemoveBtn, imgFileInput, imgDropzone;
+
+// Cropper instance
+var activeCropper = null;
 
 /* -------------------------------------------------------
-   HELPERS
+   STATUS HELPERS
    ------------------------------------------------------- */
 function showStatus(msg, isError) {
     if (!statusMsg) return;
@@ -73,23 +81,170 @@ function clearErrors() {
 }
 
 /* -------------------------------------------------------
+   IMAGE PREVIEW UI
+   ------------------------------------------------------- */
+function setImagePreview(url) {
+    if (!imgPreview) return;
+    if (url) {
+        imgPreview.src = url;
+        imgPreview.style.display = 'block';
+        if (imgPlaceholder) imgPlaceholder.style.display = 'none';
+        if (imgRemoveBtn) imgRemoveBtn.style.display = 'inline-flex';
+    } else {
+        imgPreview.src = '';
+        imgPreview.style.display = 'none';
+        if (imgPlaceholder) imgPlaceholder.style.display = 'flex';
+        if (imgRemoveBtn) imgRemoveBtn.style.display = 'none';
+    }
+}
+
+function setImageUploading(isLoading) {
+    if (imgUploading) imgUploading.style.display = isLoading ? 'flex' : 'none';
+}
+
+/* -------------------------------------------------------
+   CROPPER & UPLOAD FLOW
+   ------------------------------------------------------- */
+function closeCropModal() {
+    var overlay = document.getElementById('crop-modal-overlay');
+    if (overlay) overlay.style.display = 'none';
+    if (activeCropper) {
+        activeCropper.destroy();
+        activeCropper = null;
+    }
+    var imgEl = document.getElementById('crop-modal-img');
+    if (imgEl) imgEl.src = '';
+}
+
+function handleFileSelection(file) {
+    var allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.type)) {
+        showStatus('Only JPEG, PNG, or WEBP images are accepted.', true);
+        return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+        showStatus(file.name + ' exceeds 5 MB limit.', true);
+        return;
+    }
+
+    var overlay = document.getElementById('crop-modal-overlay');
+    var imgEl = document.getElementById('crop-modal-img');
+    var confirmBtn = document.getElementById('crop-modal-confirm');
+    var cancelBtn = document.getElementById('crop-modal-cancel');
+    var closeBtn = document.getElementById('crop-modal-close');
+
+    if (!overlay || !imgEl || typeof Cropper === 'undefined') {
+        // Fallback to direct upload if Cropper or modal HTML is absent
+        uploadAboutImage(file);
+        return;
+    }
+
+    var reader = new FileReader();
+    reader.onload = function (e) {
+        imgEl.src = e.target.result;
+        overlay.style.display = 'flex';
+
+        if (activeCropper) {
+            activeCropper.destroy();
+        }
+
+        // Initialize Cropper.js with 4:3 landscape ratio (specifically for About Us image)
+        activeCropper = new Cropper(imgEl, {
+            aspectRatio: 4 / 3,
+            viewMode: 1,
+            autoCropArea: 0.9,
+            dragMode: 'move',
+            background: false,
+            responsive: true,
+            restore: false
+        });
+
+        confirmBtn.onclick = function () {
+            if (!activeCropper) return;
+
+            activeCropper.getCroppedCanvas({
+                maxWidth: 1600,
+                maxHeight: 1200
+            }).toBlob(function (blob) {
+                if (!blob) {
+                    showStatus('Failed to crop image', true);
+                    return;
+                }
+
+                var croppedFile = new File([blob], file.name, {
+                    type: 'image/jpeg',
+                    lastModified: Date.now()
+                });
+
+                closeCropModal();
+                uploadAboutImage(croppedFile);
+            }, 'image/jpeg', 0.9);
+        };
+
+        cancelBtn.onclick = function () {
+            closeCropModal();
+        };
+
+        closeBtn.onclick = function () {
+            closeCropModal();
+        };
+    };
+
+    reader.readAsDataURL(file);
+}
+
+function uploadAboutImage(file) {
+    setImageUploading(true);
+
+    var formData = new FormData();
+    formData.append('file', file);
+
+    var token = localStorage.getItem('token');
+    var headers = {};
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+
+    fetch(API_BASE_URL + '/api/upload/product-photo', {
+        method: 'POST',
+        headers: headers,
+        body: formData
+    })
+    .then(function (res) {
+        if (!res.ok) throw new Error('Upload failed (status ' + res.status + ')');
+        return res.json();
+    })
+    .then(function (data) {
+        setImageUploading(false);
+        pendingImageUrl = data.url;
+        setImagePreview(pendingImageUrl);
+    })
+    .catch(function (err) {
+        setImageUploading(false);
+        console.error('[AboutSettings] Image upload error:', err);
+        showStatus('Image upload failed. Please try again.', true);
+    });
+}
+
+/* -------------------------------------------------------
    FETCH & RENDER
    ------------------------------------------------------- */
 function fetchAboutContent() {
-    if (!p1Input || !p2Input) return;
-
     fetch(API_BASE_URL + '/api/about-us')
         .then(function (res) {
             if (!res.ok) throw new Error('Failed to load About Us content');
             return res.json();
         })
         .then(function (data) {
-            if (data) {
-                loadedState.paragraph_1 = data.paragraph_1 || '';
-                loadedState.paragraph_2 = data.paragraph_2 || '';
-                p1Input.value = loadedState.paragraph_1;
-                p2Input.value = loadedState.paragraph_2;
-            }
+            if (!data) return;
+            loadedState.paragraph_1 = data.paragraph_1 || '';
+            loadedState.paragraph_2 = data.paragraph_2 || '';
+            loadedState.image_url = data.image_url || null;
+
+            if (p1Input) p1Input.value = loadedState.paragraph_1;
+            if (p2Input) p2Input.value = loadedState.paragraph_2;
+
+            // Show existing image if present
+            pendingImageUrl = loadedState.image_url;
+            setImagePreview(loadedState.image_url);
         })
         .catch(function (err) {
             console.error('[AboutSettings] Fetch error:', err);
@@ -115,7 +270,6 @@ function handleSave() {
         if (errP2) { errP2.textContent = 'Paragraph 2 cannot be empty.'; errP2.style.display = 'block'; }
         hasError = true;
     }
-
     if (hasError) return;
 
     if (btnSave) {
@@ -123,17 +277,19 @@ function handleSave() {
         btnSave.textContent = 'SAVING...';
     }
 
+    var imageUrlToSave = pendingImageUrl !== undefined ? pendingImageUrl : loadedState.image_url;
+
     fetch(API_BASE_URL + '/api/about-us', {
         method: 'PUT',
         headers: getAuthHeaders(),
         body: JSON.stringify({
             paragraph_1: val1,
-            paragraph_2: val2
+            paragraph_2: val2,
+            image_url: imageUrlToSave || null
         })
     })
     .then(function (res) {
         if (res.status === 401) {
-            // Stale or mismatched JWT — clear storage and force re-login
             localStorage.removeItem('token');
             localStorage.removeItem('role');
             window.location.href = '../pages/login';
@@ -149,17 +305,21 @@ function handleSave() {
         return res.json();
     })
     .then(function (data) {
+        if (!data) return;
         if (btnSave) {
             btnSave.disabled = false;
             btnSave.textContent = 'SAVE CHANGES';
         }
-
         loadedState.paragraph_1 = data.paragraph_1 || val1;
         loadedState.paragraph_2 = data.paragraph_2 || val2;
-        p1Input.value = loadedState.paragraph_1;
-        p2Input.value = loadedState.paragraph_2;
+        loadedState.image_url = data.image_url || null;
+        pendingImageUrl = loadedState.image_url;
 
-        showStatus('About Us page content updated successfully!', false);
+        if (p1Input) p1Input.value = loadedState.paragraph_1;
+        if (p2Input) p2Input.value = loadedState.paragraph_2;
+        setImagePreview(loadedState.image_url);
+
+        showStatus('About Us page updated successfully!', false);
     })
     .catch(function (err) {
         if (btnSave) {
@@ -175,6 +335,64 @@ function handleCancel() {
     clearErrors();
     if (p1Input) p1Input.value = loadedState.paragraph_1;
     if (p2Input) p2Input.value = loadedState.paragraph_2;
+    pendingImageUrl = loadedState.image_url;
+    setImagePreview(loadedState.image_url);
+}
+
+/* -------------------------------------------------------
+   IMAGE REMOVE
+   ------------------------------------------------------- */
+function handleRemoveImage() {
+    pendingImageUrl = null;
+    setImagePreview(null);
+}
+
+/* -------------------------------------------------------
+   IMAGE DROPZONE INIT
+   ------------------------------------------------------- */
+function initImageUpload() {
+    imgFileInput = document.getElementById('about-img-file-input');
+    imgDropzone  = document.getElementById('about-img-dropzone');
+    imgPreview   = document.getElementById('about-img-preview');
+    imgPlaceholder = document.getElementById('about-img-placeholder');
+    imgUploading = document.getElementById('about-img-uploading');
+    imgRemoveBtn = document.getElementById('about-img-remove-btn');
+
+    if (!imgFileInput || !imgDropzone) return;
+
+    imgDropzone.addEventListener('click', function (e) {
+        if (e.target !== imgFileInput) imgFileInput.click();
+    });
+
+    imgDropzone.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); imgFileInput.click(); }
+    });
+
+    imgFileInput.addEventListener('change', function () {
+        if (imgFileInput.files && imgFileInput.files.length > 0) {
+            handleFileSelection(imgFileInput.files[0]);
+        }
+        imgFileInput.value = '';
+    });
+
+    imgDropzone.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        imgDropzone.classList.add('dragover');
+    });
+    imgDropzone.addEventListener('dragleave', function () {
+        imgDropzone.classList.remove('dragover');
+    });
+    imgDropzone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        imgDropzone.classList.remove('dragover');
+        if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+            handleFileSelection(e.dataTransfer.files[0]);
+        }
+    });
+
+    if (imgRemoveBtn) {
+        imgRemoveBtn.addEventListener('click', handleRemoveImage);
+    }
 }
 
 /* -------------------------------------------------------
@@ -206,7 +424,6 @@ function initSidebarToggle() {
 document.addEventListener('DOMContentLoaded', function () {
     if (!guardAdmin()) return;
 
-    // Resolve DOM refs now that the document is ready
     p1Input   = document.getElementById('about-paragraph-1');
     p2Input   = document.getElementById('about-paragraph-2');
     errP1     = document.getElementById('err-paragraph-1');
@@ -216,9 +433,10 @@ document.addEventListener('DOMContentLoaded', function () {
     btnSave   = document.getElementById('btn-about-save');
     form      = document.getElementById('about-settings-form');
 
+    initImageUpload();
     fetchAboutContent();
 
-    if (btnSave) btnSave.addEventListener('click', handleSave);
+    if (btnSave)   btnSave.addEventListener('click', handleSave);
     if (btnCancel) btnCancel.addEventListener('click', handleCancel);
     if (form) {
         form.addEventListener('submit', function (e) {
