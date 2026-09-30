@@ -2,3 +2,7 @@
 .aider*
 .env
 backend/.env
+__pycache__/
+*.py[cod]
+*.sqlite3
+backend/uploads/about_us_settings.json

@@ -152,6 +152,11 @@
   status = 200
 
 [[redirects]]
+  from = "/admin/about-settings"
+  to   = "/admin/about-settings.html"
+  status = 200
+
+[[redirects]]
   from = "/admin/login"
   to   = "/admin/login.html"
   status = 200

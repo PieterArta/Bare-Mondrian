@@ -7,6 +7,7 @@ python-jose[cryptography]
 pydantic-settings
 pydantic
 httpx
+psycopg[binary]
 psycopg2-binary
 google-auth==2.58.0
 requests==2.34.2
