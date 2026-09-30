@@ -37,21 +37,15 @@ function getAuthHeaders() {
 }
 
 /* -------------------------------------------------------
-   STATE & DOM REFS
+   STATE
    ------------------------------------------------------- */
 var loadedState = {
     paragraph_1: '',
     paragraph_2: ''
 };
 
-var p1Input = document.getElementById('about-paragraph-1');
-var p2Input = document.getElementById('about-paragraph-2');
-var errP1 = document.getElementById('err-paragraph-1');
-var errP2 = document.getElementById('err-paragraph-2');
-var statusMsg = document.getElementById('about-status-message');
-var btnCancel = document.getElementById('btn-about-cancel');
-var btnSave = document.getElementById('btn-about-save');
-var form = document.getElementById('about-settings-form');
+// DOM refs resolved in DOMContentLoaded
+var p1Input, p2Input, errP1, errP2, statusMsg, btnCancel, btnSave, form;
 
 /* -------------------------------------------------------
    HELPERS
@@ -138,6 +132,13 @@ function handleSave() {
         })
     })
     .then(function (res) {
+        if (res.status === 401) {
+            // Stale or mismatched JWT — clear storage and force re-login
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            window.location.href = '../pages/login';
+            return;
+        }
         if (!res.ok) {
             return res.json().then(function (err) {
                 throw new Error((err && err.detail) || 'Failed to update About Us content');
@@ -204,6 +205,16 @@ function initSidebarToggle() {
    ------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function () {
     if (!guardAdmin()) return;
+
+    // Resolve DOM refs now that the document is ready
+    p1Input   = document.getElementById('about-paragraph-1');
+    p2Input   = document.getElementById('about-paragraph-2');
+    errP1     = document.getElementById('err-paragraph-1');
+    errP2     = document.getElementById('err-paragraph-2');
+    statusMsg = document.getElementById('about-status-message');
+    btnCancel = document.getElementById('btn-about-cancel');
+    btnSave   = document.getElementById('btn-about-save');
+    form      = document.getElementById('about-settings-form');
 
     fetchAboutContent();
 
