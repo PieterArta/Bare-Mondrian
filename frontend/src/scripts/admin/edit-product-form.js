@@ -7,11 +7,11 @@
     'use strict';
 
     var API_BASE_URL = 'https://bare-mondrian.onrender.com';
-    var MAX_SLOTS = 3;
+    var MAX_SLOTS = 6;
 
     // State
     var colorList = [];
-    var photoSlots = [null, null, null]; // String URL or { file: File, url: string }
+    var photoSlots = Array(6).fill(null);
 
     // ─── AUTH GUARD ────────────────────────────────────────────────────────
     function guardAdmin() {
@@ -82,17 +82,18 @@
 
     // ─── PHOTO SLOTS & UPLOAD ─────────────────────────────────────────────
     function updateSlotUI(slotIndex) {
-        var item  = photoSlots[slotIndex];
+        var src   = photoSlots[slotIndex];
         var img   = document.getElementById('ap-slot-img-' + slotIndex);
         var ph    = document.getElementById('ap-slot-ph-' + slotIndex);
         var label = document.getElementById('ap-main-label-' + slotIndex);
         var rmBtn = document.getElementById('ap-slot-rm-' + slotIndex);
+        var loader = document.getElementById('ap-slot-loading-' + slotIndex);
 
         if (!img || !ph) return;
 
-        var src = item ? (typeof item === 'string' ? item : item.url) : null;
+        if (loader) loader.style.display = 'none';
 
-        if (src) {
+        if (src && src !== 'loading') {
             img.src = src;
             img.style.display = 'block';
             ph.style.display  = 'none';
@@ -107,15 +108,14 @@
         }
     }
 
+    function setSlotLoading(slotIndex, isLoading) {
+        var loader = document.getElementById('ap-slot-loading-' + slotIndex);
+        if (loader) loader.style.display = isLoading ? 'flex' : 'none';
+    }
+
     function addPhotos(files) {
         Array.from(files).forEach(function (file) {
-            var slotIdx = -1;
-            for (var i = 0; i < MAX_SLOTS; i++) {
-                if (!photoSlots[i]) {
-                    slotIdx = i;
-                    break;
-                }
-            }
+            var slotIdx = photoSlots.indexOf(null);
             if (slotIdx === -1) return;
 
             var allowed = ['image/jpeg', 'image/png', 'image/webp'];
@@ -125,17 +125,39 @@
                 return;
             }
 
-            var url = URL.createObjectURL(file);
-            photoSlots[slotIdx] = { file: file, url: url };
-            updateSlotUI(slotIdx);
+            photoSlots[slotIdx] = 'loading';
+            setSlotLoading(slotIdx, true);
+
+            var formData = new FormData();
+            formData.append('file', file);
+
+            var token = localStorage.getItem('token');
+            var headers = {};
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+
+            fetch(API_BASE_URL + '/api/upload/product-photo', {
+                method: 'POST',
+                headers: headers,
+                body: formData
+            })
+            .then(function(res) {
+                if (!res.ok) throw new Error('Upload failed');
+                return res.json();
+            })
+            .then(function(data) {
+                photoSlots[slotIdx] = data.url;
+                updateSlotUI(slotIdx);
+            })
+            .catch(function(err) {
+                console.error(err);
+                photoSlots[slotIdx] = null;
+                updateSlotUI(slotIdx);
+                alert('Failed to upload ' + file.name);
+            });
         });
     }
 
     function removePhoto(slotIndex) {
-        var item = photoSlots[slotIndex];
-        if (item && typeof item === 'object' && item.url && item.url.indexOf('blob:') === 0) {
-            URL.revokeObjectURL(item.url);
-        }
         photoSlots[slotIndex] = null;
         updateSlotUI(slotIndex);
     }
@@ -189,30 +211,7 @@
         }
     }
 
-    function getImageUrl(item) {
-        return new Promise(function (resolve) {
-            if (!item) {
-                resolve(null);
-                return;
-            }
-            if (typeof item === 'string') {
-                resolve(item);
-                return;
-            }
-            if (item.file) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    resolve(e.target.result);
-                };
-                reader.onerror = function () {
-                    resolve(null);
-                };
-                reader.readAsDataURL(item.file);
-                return;
-            }
-            resolve(item.url || null);
-        });
-    }
+    // getImageUrl removed as Cloudinary upload is immediate
 
     // ─── COLOR TAGS STATE & HELPERS ───────────────────────────────────────
     function renderColorTags() {
@@ -382,6 +381,10 @@
             return cb.value;
         });
 
+        var validPhotos = photoSlots.filter(function(url) { return url && url !== 'loading'; });
+        var imageUrl = validPhotos.length > 0 ? validPhotos[0] : null;
+        var photosArray = validPhotos.length > 0 ? validPhotos : [];
+
         return {
             title: inputName ? inputName.value.trim() : '',
             category: selectCategory ? selectCategory.value : '',
@@ -389,6 +392,8 @@
             stock: parseInt(inputStockQty ? inputStockQty.value : '0', 10) || 0,
             colors: colorList.slice(),
             sizes: sizes,
+            image_url: imageUrl,
+            photos: photosArray,
             description: descTextarea ? descTextarea.value.trim() : '',
             composition: compTextarea ? compTextarea.value.trim() : '',
             care_instructions: careTextarea ? careTextarea.value.trim() : '',
@@ -493,6 +498,15 @@
             photoSlots[0] = product.image_url;
             updateSlotUI(0);
         }
+        
+        if (Array.isArray(product.photos)) {
+            product.photos.forEach(function(url, idx) {
+                if (idx < MAX_SLOTS) {
+                    photoSlots[idx] = url;
+                    updateSlotUI(idx);
+                }
+            });
+        }
     }
 
     // ─── SAVE / DELETE / CANCEL ACTIONS ──────────────────────────────────
@@ -523,17 +537,13 @@
         clearFormError();
         setSaveLoading(true);
 
-        getImageUrl(photoSlots[0]).then(function (imageUrl) {
-            var payload = collectFormData();
-            if (imageUrl) {
-                payload.image_url = imageUrl;
-            }
+        var payload = collectFormData();
 
-            fetch(API_BASE_URL + '/api/products/' + productId, {
-                method: 'PUT',
-                headers: getAuthHeaders(),
-                body: JSON.stringify(payload)
-            })
+        fetch(API_BASE_URL + '/api/products/' + productId, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(payload)
+        })
             .then(function (res) {
                 if (!res.ok) {
                     return res.json().then(function (err) {
@@ -550,9 +560,8 @@
                 window.location.href = 'products';
             })
             .catch(function (err) {
-                setSaveLoading(false);
-                showFormError(err.message || 'An error occurred while saving.');
-            });
+            setSaveLoading(false);
+            showFormError(err.message || 'An error occurred while saving.');
         });
     }
 

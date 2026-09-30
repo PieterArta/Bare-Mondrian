@@ -8,10 +8,10 @@
     'use strict';
 
     var API_BASE_URL = 'https://bare-mondrian.onrender.com';
-    var MAX_SLOTS = 3;
+    var MAX_SLOTS = 6;
 
     // State
-    var photoSlots = [null, null, null]; // ObjectURL or null per slot
+    var photoSlots = Array(6).fill(null);
     var colorTags = ['ESPRESSO', 'OBSIDIAN'];
     var stockStatus = 'IN STOCK';
 
@@ -81,8 +81,11 @@
         var ph    = document.getElementById('ap-slot-ph-' + slotIndex);
         var label = document.getElementById('ap-main-label-' + slotIndex);
         var rmBtn = document.getElementById('ap-slot-rm-' + slotIndex);
+        var loader = document.getElementById('ap-slot-loading-' + slotIndex);
 
         if (!img || !ph) return;
+
+        if (loader) loader.style.display = 'none';
 
         if (src) {
             img.src = src;
@@ -99,6 +102,11 @@
         }
     }
 
+    function setSlotLoading(slotIndex, isLoading) {
+        var loader = document.getElementById('ap-slot-loading-' + slotIndex);
+        if (loader) loader.style.display = isLoading ? 'flex' : 'none';
+    }
+
     function addPhotos(files) {
         Array.from(files).forEach(function (file) {
             var slotIdx = photoSlots.indexOf(null);
@@ -111,17 +119,41 @@
                 return;
             }
 
-            var url = URL.createObjectURL(file);
-            photoSlots[slotIdx] = url;
-            updateSlotUI(slotIdx);
+            // Temporarily reserve slot
+            photoSlots[slotIdx] = 'loading';
+            setSlotLoading(slotIdx, true);
+
+            var formData = new FormData();
+            formData.append('file', file);
+
+            var token = localStorage.getItem('token');
+            var headers = {};
+            if (token) headers['Authorization'] = 'Bearer ' + token;
+
+            fetch(API_BASE_URL + '/api/upload/product-photo', {
+                method: 'POST',
+                headers: headers,
+                body: formData
+            })
+            .then(function(res) {
+                if (!res.ok) throw new Error('Upload failed');
+                return res.json();
+            })
+            .then(function(data) {
+                photoSlots[slotIdx] = data.url;
+                updateSlotUI(slotIdx);
+            })
+            .catch(function(err) {
+                console.error(err);
+                photoSlots[slotIdx] = null;
+                updateSlotUI(slotIdx);
+                alert('Failed to upload ' + file.name);
+            });
         });
     }
 
     function removePhoto(slotIndex) {
         if (photoSlots[slotIndex]) {
-            if (typeof photoSlots[slotIndex] === 'string' && photoSlots[slotIndex].indexOf('blob:') === 0) {
-                URL.revokeObjectURL(photoSlots[slotIndex]);
-            }
             photoSlots[slotIndex] = null;
         }
         updateSlotUI(slotIndex);
@@ -335,8 +367,10 @@
             return cb.value;
         });
 
-        // Determine image URL (use slot 0 photo if present, otherwise default placeholder)
-        var imageUrl = photoSlots[0] || '/assets/images/products/structure-02-wht.jpg';
+        // Determine image URL and photos array
+        var validPhotos = photoSlots.filter(function(url) { return url && url !== 'loading'; });
+        var imageUrl = validPhotos.length > 0 ? validPhotos[0] : '/assets/images/products/structure-02-wht.jpg';
+        var photosArray = validPhotos.length > 0 ? validPhotos : [];
 
         return {
             title:             inputName ? inputName.value.trim() : '',
@@ -346,6 +380,7 @@
             colors:            colorTags.slice(),
             sizes:             sizes,
             image_url:         imageUrl,
+            photos:            photosArray,
             description:       descTextarea ? descTextarea.value.trim() : '',
             composition:       compTextarea ? compTextarea.value.trim() : '',
             care_instructions: careTextarea ? careTextarea.value.trim() : '',

@@ -29,6 +29,7 @@ class Product(Base):
     colors = Column(JSON, nullable=True, default=list)
 
     image_url = Column(String(512), nullable=True)
+    photos = Column(JSON, nullable=True, default=list)
     category = Column(String(255), index=True, nullable=True)
 
     # ── Featured ─────────────────────────────────────────────────────────────

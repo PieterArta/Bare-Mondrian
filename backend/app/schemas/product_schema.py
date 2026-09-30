@@ -22,6 +22,7 @@ class ProductBase(BaseModel):
     sizes: Optional[List[str]] = Field(default_factory=list, description="Available sizes e.g. ['S','M','L']")
     colors: Optional[List[str]] = Field(default_factory=list, description="Available colors e.g. ['Black','White']")
     image_url: Optional[str] = Field(None, description="URL of the product image")
+    photos: Optional[List[str]] = Field(default_factory=list, description="Array of product photo URLs")
     category: Optional[str] = Field(None, max_length=255, description="Product category")
 
     # Featured
@@ -59,6 +60,7 @@ class ProductUpdate(BaseModel):
     sizes: Optional[List[str]] = None
     colors: Optional[List[str]] = None
     image_url: Optional[str] = None
+    photos: Optional[List[str]] = None
     category: Optional[str] = Field(None, max_length=255)
     is_featured: Optional[bool] = None
     featured_order: Optional[int] = None

@@ -13,3 +13,4 @@ google-auth==2.58.0
 requests==2.34.2
 email-validator==2.3.0
 python-multipart==0.0.32
+cloudinary
