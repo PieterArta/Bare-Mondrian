@@ -46,13 +46,14 @@ def read_root():
 
 
 # Import and register routers
-from app.routers import products, auth, orders, homepage, shipping
+from app.routers import products, auth, orders, homepage, shipping, about
 
 app.include_router(products.router, prefix="/api/products", tags=["Products"])
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(orders.router, prefix="/api/orders", tags=["Orders"])
 app.include_router(homepage.router, prefix="/api/homepage", tags=["Homepage"])
 app.include_router(shipping.router, prefix="/api/shipping", tags=["Shipping"])
+app.include_router(about.router, prefix="/api/about-us", tags=["About Us"])
 
 # Serve uploaded files (payment proofs, etc.) as static assets
 _uploads_dir = Path(__file__).resolve().parent.parent / "uploads"
