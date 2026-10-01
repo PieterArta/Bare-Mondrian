@@ -116,7 +116,8 @@ function formatProducts(order) {
             if (item.size) details.push(item.size);
             if (item.color) details.push(item.color);
             var meta = details.length ? ' (' + details.join('/') + ')' : '';
-            return item.quantity + 'x Product #' + item.product_id + meta;
+            var name = item.product_name || ('Product #' + (item.product_id || 'Unknown'));
+            return item.quantity + 'x ' + name + meta;
         }).join(', ');
     }
     return '—';
