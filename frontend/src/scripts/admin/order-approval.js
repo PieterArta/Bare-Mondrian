@@ -458,6 +458,13 @@ function fetchOrders() {
         headers: getAuthHeaders()
     })
     .then(function (res) {
+        if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            localStorage.removeItem('user');
+            window.location.href = '../login.html';
+            throw new Error('Session expired');
+        }
         if (!res.ok) throw new Error('Failed to load orders (status ' + res.status + ')');
         return res.json();
     })
