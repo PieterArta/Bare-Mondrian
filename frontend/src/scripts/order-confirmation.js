@@ -63,13 +63,19 @@
             orderIdEl.textContent = '#ORD-' + String(order.id).padStart(4, '0');
         }
 
-        // Total Paid — sum of (unit_price × quantity) for all items
-        var items = order.items || [];
-        var subtotal = items.reduce(function (sum, item) {
-            return sum + (Number(item.unit_price) || 0) * (Number(item.quantity) || 1);
-        }, 0);
+        // Total Paid — read the backend-computed total (items subtotal + shipping_cost).
+        // This is the same value shown on Checkout and Payment.
+        var total = Number(order.total);
+        if (!total || isNaN(total)) {
+            // Fallback: compute manually if the API is older and doesn't include total
+            var items = order.items || [];
+            var subtotal = items.reduce(function (sum, item) {
+                return sum + (Number(item.unit_price) || 0) * (Number(item.quantity) || 1);
+            }, 0);
+            total = subtotal + (Number(order.shipping_cost) || 0);
+        }
         var totalEl = document.getElementById('conf-total');
-        if (totalEl) totalEl.textContent = formatPrice(subtotal);
+        if (totalEl) totalEl.textContent = formatPrice(total);
 
         // Status badge
         var statusEl = document.getElementById('conf-status');

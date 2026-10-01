@@ -33,10 +33,66 @@
     color: var(--color-gray-muted);
     text-transform: uppercase;
     margin-top: 10px;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
 }
 
-/* ─── QRIS Section ───────────────────────────────────────────── */
+/* ─── Shipping Address Block ─────────────────────────────────── */
+.payment-shipping-block {
+    border: 1px solid var(--color-border, #e0e0e0);
+    padding: 16px 20px;
+    margin-bottom: 32px;
+}
+
+.payment-shipping-block-label {
+    font-family: var(--font-sans);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-gray-muted);
+    margin-bottom: 10px;
+}
+
+.payment-address-courier {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-black);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.payment-address-line {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--color-black);
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* ─── Already-paid notice ────────────────────────────────────── */
+.payment-already-paid-note {
+    background: #fff8e1;
+    border: 1px solid #f0c040;
+    color: #7a5900;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 10px 16px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+}
+
+
+
+/* ─── Shared Dynamic Instruction Sections ────────────────────── */
+.payment-instructions-area {
+    margin-bottom: 32px;
+}
+
 .qris-section {
     border: 1px solid var(--color-black);
     padding: 32px 40px 36px;
@@ -44,7 +100,6 @@
     flex-direction: column;
     align-items: center;
     gap: 0;
-    margin-bottom: 32px;
 }
 
 .qris-label {
@@ -97,6 +152,8 @@
     color: var(--color-gray-muted);
     text-transform: uppercase;
 }
+
+
 
 /* Total amount below QRIS */
 .payment-total-amount {

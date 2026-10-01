@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, computed_field
 
 
 # ---------------------------------------------------------------------------
@@ -23,6 +23,8 @@ class OrderItemResponse(BaseModel):
     size: Optional[str]
     color: Optional[str]
     unit_price: float
+    product_name: Optional[str] = None       # snapshotted at order creation
+    product_image_url: Optional[str] = None  # snapshotted at order creation
 
 
 # ---------------------------------------------------------------------------
@@ -48,6 +50,7 @@ class ShippingInfo(BaseModel):
 class OrderCreate(BaseModel):
     shipping: ShippingInfo
     items: List[OrderItemCreate] = Field(..., min_length=1, description="At least one item required")
+    payment_method: Optional[str] = Field("qris", description="Selected payment method")
 
 
 # ---------------------------------------------------------------------------
@@ -58,6 +61,7 @@ class OrderResponse(BaseModel):
 
     id: int
     status: str
+    payment_method: Optional[str] = None
     payment_proof_url: Optional[str]
 
     # Shipping fields (flattened from DB columns)
@@ -76,3 +80,18 @@ class OrderResponse(BaseModel):
     items: List[OrderItemResponse]
     created_at: datetime
     updated_at: datetime
+
+    # ── Computed totals exposed in the API response ──────────────────────
+    # These are the authoritative numbers every page must display.
+    @computed_field  # type: ignore[misc]
+    @property
+    def subtotal(self) -> float:
+        return sum(
+            (item.unit_price or 0.0) * (item.quantity or 1)
+            for item in (self.items or [])
+        )
+
+    @computed_field  # type: ignore[misc]
+    @property
+    def total(self) -> float:
+        return self.subtotal + (self.shipping_cost or 0.0)

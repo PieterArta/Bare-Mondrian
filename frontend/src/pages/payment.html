@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PAYMENT — BARE MONDRIAN</title>
-    <meta name="description" content="BARE MONDRIAN Payment page. Upload your QRIS payment proof to complete your order.">
+    <title>PAYMENT — BARE</title>
+    <meta name="description" content="BARE Payment page. Upload your QRIS payment proof to complete your order.">
     <!--
         SECURITY NOTE: This page handles payment proof uploads and must ONLY be served
         over HTTPS in production. Netlify/Vercel enforce this by default. Do NOT serve
@@ -42,40 +42,41 @@
             <!--
                 SECURITY NOTE: The order ID below must come from the backend session/response
                 when the order is created — it must NOT be generated or guessed from the frontend.
-                The value is populated by payment.js from a server-provided source (e.g. API response
-                or a signed token stored after checkout). Never trust a client-supplied order ID.
+                The value is populated by payment.js from sessionStorage (set by checkout.js).
             -->
             <p class="payment-order-id" id="payment-order-id">ORDER ID: <span id="payment-order-id-value">—</span></p>
 
-            <!-- QRIS Box -->
-            <div class="qris-section">
-                <p class="qris-label">SCAN TO PAY WITH QRIS</p>
-                <div class="qris-box" id="qris-box">
-                    <!--
-                        SECURITY NOTE: The actual QRIS image (with embedded merchant credentials)
-                        must be served from a secure backend endpoint — NOT hardcoded here.
-                        This placeholder src path is intentional; it will be replaced with a
-                        dynamically fetched, authenticated URL in production.
-                    -->
-                    <img
-                        src="assets/images/qris/qris-placeholder.png"
-                        alt="QRIS Payment Code Placeholder"
-                        class="qris-img"
-                        id="qris-img"
-                        onerror="this.onerror=null; this.style.display='none'; document.getElementById('qris-fallback').style.display='flex';"
-                    >
-                    <div class="qris-fallback" id="qris-fallback">
-                        <span class="qris-fallback-label">QRIS</span>
+            <!-- Shipping Address Block -->
+            <div class="payment-shipping-block" id="payment-shipping-block">
+                <p class="payment-shipping-block-label">SHIP TO</p>
+                <div id="payment-shipping-address">
+                    <!-- Populated by payment.js -->
+                </div>
+            </div>
+
+            <!-- Already-paid notice (hidden unless proof already uploaded) -->
+            <div class="payment-already-paid-note" id="payment-already-paid-note" style="display:none;">
+                A payment proof has already been submitted for this order.
+            </div>
+
+
+            <!-- Dynamic Payment Instructions Area -->
+            <div class="payment-instructions-area" id="payment-instructions-area">
+
+                <!-- QRIS Box (default) -->
+                <div class="qris-section" id="qris-section">
+                    <p class="qris-label">SCAN TO PAY WITH QRIS</p>
+                    <div class="qris-box" id="qris-box">
+                        <img src="assets/images/products/qris.jpeg" alt="QRIS Payment Code" class="qris-img" id="qris-img"
+                            onerror="this.onerror=null; this.style.display='none'; document.getElementById('qris-fallback').style.display='flex';">
+                        <div class="qris-fallback" id="qris-fallback"><span class="qris-fallback-label">QRIS</span>
+                        </div>
                     </div>
+                    <p class="payment-total-amount" id="payment-total-display-qris">—</p>
+                    <p class="payment-instruction">Scan the QRIS code above using your mobile banking or e-wallet app,
+                        then upload your payment proof below.</p>
                 </div>
 
-                <!-- Total Amount -->
-                <p class="payment-total-amount" id="payment-total-display">Rp0</p>
-
-                <!-- Instructional text -->
-                <p class="payment-instruction">
-                    Scan the QRIS code above using your mobile banking or e-wallet app, then upload your payment proof below.
-                </p>
             </div>
 
             <hr class="section-divider payment-divider">
@@ -85,28 +86,21 @@
                 <label class="upload-section-label" for="payment-proof-input">UPLOAD PAYMENT PROOF</label>
 
                 <!-- Drag & Drop Upload Box -->
-                <div
-                    class="upload-dropzone"
-                    id="upload-dropzone"
-                    role="button"
-                    tabindex="0"
-                    aria-label="Upload payment proof. Drag and drop an image here or click to select."
-                >
+                <div class="upload-dropzone" id="upload-dropzone" role="button" tabindex="0"
+                    aria-label="Upload payment proof. Drag and drop an image here or click to select.">
                     <!-- Hidden real file input -->
-                    <input
-                        type="file"
-                        id="payment-proof-input"
-                        name="paymentProof"
-                        accept="image/jpeg,image/png,image/webp"
-                        class="upload-file-input"
-                        aria-label="Select payment proof image"
-                    >
+                    <input type="file" id="payment-proof-input" name="paymentProof"
+                        accept="image/jpeg,image/png,image/webp" class="upload-file-input"
+                        aria-label="Select payment proof image">
 
                     <!-- Default state: icon + text -->
                     <div class="upload-default-state" id="upload-default-state">
-                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path d="M4 16V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                            <path d="M12 4V15M12 4L8.5 7.5M12 4L15.5 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <svg class="upload-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true">
+                            <path d="M4 16V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V16"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                            <path d="M12 4V15M12 4L8.5 7.5M12 4L15.5 7.5" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                         <p class="upload-dropzone-text">DRAG FILE HERE OR CLICK TO UPLOAD</p>
                         <p class="upload-dropzone-hint">JPEG, PNG, WEBP — MAX 5MB</p>
@@ -117,12 +111,8 @@
                         <img src="" alt="Payment proof preview" class="upload-preview-img" id="upload-preview-img">
                         <div class="upload-preview-meta">
                             <span class="upload-preview-filename" id="upload-preview-filename"></span>
-                            <button
-                                type="button"
-                                class="upload-remove-btn"
-                                id="upload-remove-btn"
-                                aria-label="Remove uploaded file"
-                            >✕ REMOVE</button>
+                            <button type="button" class="upload-remove-btn" id="upload-remove-btn"
+                                aria-label="Remove uploaded file">✕ REMOVE</button>
                         </div>
                     </div>
                 </div>
@@ -133,23 +123,17 @@
                 <!--
                     SECURITY NOTE: This button submits the proof for human review only.
                     It must NOT mark the payment as verified/successful from the frontend.
-                    Real approval happens server-side by an admin. The status after submission
-                    should be "pending_verification" — never "paid" or "approved".
+                    Real approval happens server-side by an admin.
                 -->
-                <button
-                    type="button"
-                    class="confirm-payment-btn"
-                    id="confirm-payment-btn"
-                    disabled
-                    aria-disabled="true"
-                >
+                <button type="button" class="confirm-payment-btn" id="confirm-payment-btn" disabled
+                    aria-disabled="true">
                     CONFIRM PAYMENT
                 </button>
             </div>
 
         </section>
 
-        <!-- Right Column: Order Summary (same card as checkout.html) -->
+        <!-- Right Column: Order Summary -->
         <section class="checkout-summary-column">
             <div class="order-summary-card">
                 <div class="order-summary-header">
@@ -162,16 +146,16 @@
                     <div class="checkout-totals-section">
                         <div class="totals-row">
                             <span>SUBTOTAL</span>
-                            <span id="payment-subtotal">Rp0</span>
+                            <span id="payment-subtotal">—</span>
                         </div>
                         <div class="totals-row shipping-row">
                             <span>SHIPPING</span>
-                            <span id="payment-shipping">Rp10.000</span>
+                            <span id="payment-shipping">—</span>
                         </div>
                         <hr class="totals-divider">
                         <div class="totals-row total-row">
                             <span>TOTAL</span>
-                            <span id="payment-total">Rp0</span>
+                            <span id="payment-total">—</span>
                         </div>
                     </div>
                 </div>
@@ -182,14 +166,10 @@
 
     <!-- Simple Centered Footer -->
     <footer class="checkout-footer">
-        &copy; 2026 BARE MONDRIAN. SECURE CHECKOUT.
+        &copy; 2026 BARE. SECURE CHECKOUT.
     </footer>
 
     <!-- Scripts -->
-    <!--
-        cart.js is loaded first so its cart state (localStorage) is accessible.
-        payment.js reads the cart state and order ID from storage/session.
-    -->
     <script src="../scripts/cart.js"></script>
     <script src="../scripts/auth.js"></script>
     <script src="../scripts/payment.js"></script>

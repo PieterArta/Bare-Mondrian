@@ -94,19 +94,18 @@ function getDisplayId(id) {
 }
 
 function calculateTotal(order) {
-    if (order.total !== undefined && typeof order.total === 'number') {
+    if (order.total !== undefined && order.total !== null) {
         return formatPrice(order.total);
     }
-    if (typeof order.total === 'string') {
-        return order.total;
-    }
+    // Fallback if total is missing
+    var itemsTotal = 0;
     if (Array.isArray(order.items)) {
-        var total = order.items.reduce(function (sum, item) {
+        itemsTotal = order.items.reduce(function (sum, item) {
             return sum + ((Number(item.unit_price) || 0) * (Number(item.quantity) || 1));
         }, 0);
-        return formatPrice(total);
     }
-    return formatPrice(0);
+    var shipping = Number(order.shipping_cost) || 0;
+    return formatPrice(itemsTotal + shipping);
 }
 
 function formatProducts(order) {
