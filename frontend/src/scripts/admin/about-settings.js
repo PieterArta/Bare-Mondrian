@@ -242,8 +242,9 @@ function fetchAboutContent() {
             if (p1Input) p1Input.value = loadedState.paragraph_1;
             if (p2Input) p2Input.value = loadedState.paragraph_2;
 
-            // Show existing image if present
-            pendingImageUrl = loadedState.image_url;
+            // Show existing image — but do NOT set pendingImageUrl here.
+            // pendingImageUrl is only set when the user uploads a NEW image.
+            // handleSave() will fall back to loadedState.image_url when pendingImageUrl is null.
             setImagePreview(loadedState.image_url);
         })
         .catch(function (err) {
@@ -277,7 +278,9 @@ function handleSave() {
         btnSave.textContent = 'SAVING...';
     }
 
-    var imageUrlToSave = pendingImageUrl !== undefined ? pendingImageUrl : loadedState.image_url;
+    // Use the newly uploaded URL if available; otherwise keep the existing saved image.
+    // pendingImageUrl is null until the user explicitly uploads a new photo.
+    var imageUrlToSave = pendingImageUrl !== null ? pendingImageUrl : loadedState.image_url;
 
     fetch(API_BASE_URL + '/api/about-us', {
         method: 'PUT',
@@ -335,7 +338,8 @@ function handleCancel() {
     clearErrors();
     if (p1Input) p1Input.value = loadedState.paragraph_1;
     if (p2Input) p2Input.value = loadedState.paragraph_2;
-    pendingImageUrl = loadedState.image_url;
+    // Discard any in-progress upload; revert preview to the last saved image
+    pendingImageUrl = null;
     setImagePreview(loadedState.image_url);
 }
 

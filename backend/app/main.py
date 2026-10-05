@@ -6,9 +6,10 @@ from app.core.config import settings
 from app.core.database import Base, engine
 
 # Import all models here so SQLAlchemy registers them before create_all()
-from app.models.user import User          # noqa: F401
-from app.models.product import Product    # noqa: F401
-from app.models.order import Order, OrderItem  # noqa: F401
+from app.models.user import User                      # noqa: F401
+from app.models.product import Product                # noqa: F401
+from app.models.order import Order, OrderItem         # noqa: F401
+from app.models.site_settings import SiteSetting      # noqa: F401
 
 # Create all registered tables
 Base.metadata.create_all(bind=engine)
