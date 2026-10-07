@@ -5,8 +5,185 @@
   base = ""
   publish = "frontend/src"
 
-# ─── Pretty/clean URL redirects ─────────────────────────────────────────────
-# Maps clean URLs (both root level and /pages/* or /admin/*) to their .html files.
+# ─── 301 Force Redirects (evaluated first) ──────────────────────────────────
+# Redirect old /pages/*.html and /admin/*.html paths to clean URLs
+
+[[redirects]]
+  from = "/pages/index.html"
+  to   = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/index"
+  to   = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/"
+  to   = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/shop.html"
+  to   = "/shop"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/shop"
+  to   = "/shop"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/about.html"
+  to   = "/about"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/about"
+  to   = "/about"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/cart.html"
+  to   = "/cart"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/cart"
+  to   = "/cart"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/checkout.html"
+  to   = "/checkout"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/checkout"
+  to   = "/checkout"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/payment.html"
+  to   = "/payment"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/payment"
+  to   = "/payment"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/product-detail.html"
+  to   = "/product-detail"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/product-detail"
+  to   = "/product-detail"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/login.html"
+  to   = "/login"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/login"
+  to   = "/login"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/register.html"
+  to   = "/register"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/register"
+  to   = "/register"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/order-confirmation.html"
+  to   = "/order-confirmation"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/pages/order-confirmation"
+  to   = "/order-confirmation"
+  status = 301
+  force = true
+
+# Admin 301 Force Redirects
+[[redirects]]
+  from = "/admin/dashboard.html"
+  to   = "/admin/dashboard"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/admin/orders.html"
+  to   = "/admin/orders"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/admin/products.html"
+  to   = "/admin/products"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/admin/add-product.html"
+  to   = "/admin/add-product"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/admin/edit-product.html"
+  to   = "/admin/edit-product"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/admin/homepage-settings.html"
+  to   = "/admin/homepage-settings"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/admin/about-settings.html"
+  to   = "/admin/about-settings"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/admin/login.html"
+  to   = "/admin/login"
+  status = 301
+  force = true
+
+# ─── 200 Rewrites (Clean URLs -> Physical HTML Files) ───────────────────────
 
 # Root clean URLs
 [[redirects]]
@@ -64,57 +241,6 @@
   to   = "/pages/order-confirmation.html"
   status = 200
 
-# /pages/* clean URLs
-[[redirects]]
-  from = "/pages/index"
-  to   = "/pages/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/pages/shop"
-  to   = "/pages/shop.html"
-  status = 200
-
-[[redirects]]
-  from = "/pages/about"
-  to   = "/pages/about.html"
-  status = 200
-
-[[redirects]]
-  from = "/pages/cart"
-  to   = "/pages/cart.html"
-  status = 200
-
-[[redirects]]
-  from = "/pages/checkout"
-  to   = "/pages/checkout.html"
-  status = 200
-
-[[redirects]]
-  from = "/pages/payment"
-  to   = "/pages/payment.html"
-  status = 200
-
-[[redirects]]
-  from = "/pages/product-detail"
-  to   = "/pages/product-detail.html"
-  status = 200
-
-[[redirects]]
-  from = "/pages/login"
-  to   = "/pages/login.html"
-  status = 200
-
-[[redirects]]
-  from = "/pages/register"
-  to   = "/pages/register.html"
-  status = 200
-
-[[redirects]]
-  from = "/pages/order-confirmation"
-  to   = "/pages/order-confirmation.html"
-  status = 200
-
 # Admin routes
 [[redirects]]
   from = "/admin"
@@ -160,3 +286,4 @@
   from = "/admin/login"
   to   = "/admin/login.html"
   status = 200
+

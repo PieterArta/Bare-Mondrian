@@ -375,7 +375,7 @@
                         sessionStorage.removeItem('currentOrderId');
                     } catch (e) {}
 
-                    window.location.href = '/pages/order-confirmation?id=' + orderId;
+                    window.location.href = '/order-confirmation?id=' + orderId;
                 })
                 .catch(function (err) {
                     console.error('[Payment] Upload error:', err);
@@ -393,7 +393,7 @@
 
         if (!orderId) {
             // No order in progress — send back to checkout
-            window.location.href = '/pages/checkout';
+            window.location.href = '/checkout';
             return;
         }
 

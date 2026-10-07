@@ -16,7 +16,7 @@
     function guardAdmin() {
         if (typeof window.isLoggedIn === 'function' && typeof window.getUserRole === 'function') {
             if (!window.isLoggedIn() || window.getUserRole() !== 'admin') {
-                window.location.href = '../pages/login';
+                window.location.href = '/login';
                 return false;
             }
             return true;
@@ -24,7 +24,7 @@
         var token = localStorage.getItem('token');
         var role = localStorage.getItem('role');
         if (!token || role !== 'admin') {
-            window.location.href = '../pages/login';
+            window.location.href = '/login';
             return false;
         }
         return true;
@@ -538,7 +538,7 @@
         .catch(function (err) {
             console.error('[EditProduct] Fetch error:', err);
             alert('Product not found or failed to load.');
-            window.location.href = 'products';
+            window.location.href = '/admin/products';
         });
     }
 
@@ -675,7 +675,7 @@
             .then(function () {
                 setSaveLoading(false);
                 alert('Product updated successfully.');
-                window.location.href = 'products';
+                window.location.href = '/admin/products';
             })
             .catch(function (err) {
             setSaveLoading(false);
@@ -709,7 +709,7 @@
                 });
             }
             alert('Product deleted successfully.');
-            window.location.href = 'products';
+            window.location.href = '/admin/products';
         })
         .catch(function (err) {
             showFormError(err.message || 'Failed to delete product.');
@@ -725,7 +725,7 @@
         var saveBottom = document.getElementById('btn-save-bottom');
 
         function goBack() {
-            window.location.href = 'products';
+            window.location.href = '/admin/products';
         }
 
         if (cancelTop) cancelTop.addEventListener('click', goBack);
@@ -777,7 +777,7 @@
         var productId = getProductId();
         if (!productId) {
             alert('No product ID provided in URL.');
-            window.location.href = 'products';
+            window.location.href = '/admin/products';
             return;
         }
 

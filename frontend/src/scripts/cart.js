@@ -210,7 +210,7 @@ if (cartOverlay) {
 if (checkoutBtn) {
     checkoutBtn.addEventListener('click', function () {
         closeCart();
-        window.location.href = '/pages/checkout';
+        window.location.href = '/checkout';
     });
 }
 

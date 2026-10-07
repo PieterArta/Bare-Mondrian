@@ -48,9 +48,9 @@
           }
 
           if (role === 'admin') {
-            window.location.href = '../admin/dashboard';
+            window.location.href = '/admin/dashboard';
           } else {
-            window.location.href = 'index';
+            window.location.href = '/';
           }
         } else {
           if (formError) showFormError(formError, 'Google login failed. Invalid response from server.');
@@ -161,12 +161,8 @@
     localStorage.removeItem('user_email');
     localStorage.removeItem('user_name');
 
-    // Determine correct login path based on current directory
-    if (window.location.pathname.indexOf('/admin/') !== -1) {
-      window.location.href = '../pages/login';
-    } else {
-      window.location.href = 'login';
-    }
+    // Always use clean absolute path
+    window.location.href = '/login';
   }
 
   // Expose helpers globally for use across the site
@@ -298,10 +294,8 @@
       btn.addEventListener('click', function (e) {
         if (!isLoggedIn()) {
           // If NOT logged in: navigate to login
-          if (window.location.pathname.indexOf('/admin/') !== -1) {
-            window.location.href = '../pages/login';
-          } else if (window.location.pathname.indexOf('login') === -1) {
-            window.location.href = 'login';
+          if (window.location.pathname.indexOf('/login') === -1) {
+            window.location.href = '/login';
           }
           return;
         }
@@ -426,9 +420,9 @@
 
             // Redirect based on role
             if (role === 'admin') {
-              window.location.href = '../admin/dashboard';
+              window.location.href = '/admin/dashboard';
             } else {
-              window.location.href = 'index';
+              window.location.href = '/';
             }
           } else {
             showFormError(formError, 'Login failed. Invalid response from server.');
@@ -615,8 +609,8 @@
               if (data.user.full_name) localStorage.setItem('user_name', data.user.full_name);
             }
 
-            // Customer registration redirects to index
-            window.location.href = 'index';
+            // Customer registration redirects to home
+            window.location.href = '/';
           }
         })
         .catch(function (err) {

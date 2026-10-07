@@ -872,7 +872,7 @@
                 window.openCart();
             } else {
                 console.log('[Product Detail] Navigating to shop?openCart=true');
-                window.location.href = '/pages/shop?openCart=true';
+                window.location.href = '/shop?openCart=true';
             }
         });
     }
@@ -883,7 +883,7 @@
             console.log('[Product Detail] "BUY NOW" button clicked');
             var product = getSelectedProductOptions();
             addProductToCartState(product);
-            window.location.href = '/pages/checkout';
+            window.location.href = '/checkout';
         });
     }
 

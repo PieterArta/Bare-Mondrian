@@ -8,7 +8,7 @@
 function guardAdmin() {
     if (typeof window.isLoggedIn === 'function' && typeof window.getUserRole === 'function') {
         if (!window.isLoggedIn() || window.getUserRole() !== 'admin') {
-            window.location.href = '../pages/login';
+            window.location.href = '/login';
             return false;
         }
         return true;
@@ -16,7 +16,7 @@ function guardAdmin() {
     var token = localStorage.getItem('token');
     var role = localStorage.getItem('role');
     if (!token || role !== 'admin') {
-        window.location.href = '../pages/login';
+        window.location.href = '/login';
         return false;
     }
     return true;
