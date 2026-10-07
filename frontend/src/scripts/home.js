@@ -1,11 +1,6 @@
 // home.js — Homepage Featured Products API Integration
 
 (function initFeaturedProducts() {
-    // ─── Config ────────────────────────────────────────────────────────────
-    var API_BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:8000' 
-    : 'https://bare-mondrian.onrender.com';
-
     // ─── Element refs ──────────────────────────────────────────────────────
     var section = document.getElementById('featured-products-section');
     var header  = document.getElementById('featured-section-header');

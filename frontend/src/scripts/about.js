@@ -7,10 +7,6 @@
 (function initAboutContent() {
     'use strict';
 
-    var API_BASE_URL = window.location.hostname === 'localhost'
-        ? 'http://localhost:8000'
-        : 'https://bare-mondrian.onrender.com';
-
     var p1El  = document.getElementById('about-p1');
     var p2El  = document.getElementById('about-p2');
     var imgEl = document.getElementById('about-portrait-img');

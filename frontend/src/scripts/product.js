@@ -1,10 +1,5 @@
 // product.js — Shop Page & Product Detail Page API Integration + Interactivity
 
-// ─── Config ───────────────────────────────────────────────────────────────
-const API_BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:8000' 
-    : 'https://bare-mondrian.onrender.com';
-
 // ─── Shop Page: API-driven product grid ───────────────────────────────────
 (function initShopPage() {
     var grid = document.getElementById('shop-grid');
