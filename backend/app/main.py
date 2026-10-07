@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
@@ -22,21 +23,29 @@ app = FastAPI(
 )
 
 # CORS Middleware setup
-origins = [
+_DEFAULT_CORS_ORIGINS = [
+    "https://baremondrian.com",
+    "https://www.baremondrian.com",
+    "https://baremondrian.netlify.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:5500",
     "http://127.0.0.1:5500",
-    "https://bare-mondrian.netlify.app",  # Production Netlify domain
+    "http://localhost:5173",
 ]
+
+def _get_cors_origins() -> list:
+    raw_origins = os.environ.get("CORS_ALLOWED_ORIGINS", "")
+    if raw_origins.strip():
+        return [origin.strip().rstrip("/") for origin in raw_origins.split(",") if origin.strip()]
+    return [origin.rstrip("/") for origin in _DEFAULT_CORS_ORIGINS]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_origin_regex=r"https://.*\.netlify\.app",  # Matches any Netlify production or preview subdomains
+    allow_origins=_get_cors_origins(),
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 
