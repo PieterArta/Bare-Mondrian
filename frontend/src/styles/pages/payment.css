@@ -21,7 +21,8 @@
     flex: 1.6;
     display: flex;
     flex-direction: column;
-    gap: 0; /* controlled manually with margins below */
+    gap: 0;
+    /* controlled manually with margins below */
 }
 
 /* ─── Order ID ───────────────────────────────────────────────── */
@@ -245,7 +246,8 @@
     justify-content: center;
     gap: 10px;
     padding: 28px 24px;
-    pointer-events: none; /* clicks pass through to file input */
+    pointer-events: none;
+    /* clicks pass through to file input */
     width: 100%;
 }
 
@@ -298,7 +300,8 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    pointer-events: none; /* prevents clicks sinking into file input */
+    pointer-events: none;
+    /* prevents clicks sinking into file input */
 }
 
 .upload-preview-filename {
@@ -322,7 +325,8 @@
     padding: 4px 10px;
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease;
-    pointer-events: auto; /* re-enable so it can be clicked inside preview-meta */
+    pointer-events: auto;
+    /* re-enable so it can be clicked inside preview-meta */
     position: relative;
     z-index: 2;
 }
